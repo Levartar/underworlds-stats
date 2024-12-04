@@ -8,6 +8,7 @@ import { WARBAAND_CONFIG } from '../models/warband-config';
 import { chartOptions } from '../chart-options';
 import { SheetData, SheetWarband } from '../models/spreadsheet.model';
 import { DataStoreService } from '../store/sheet-data.store'
+import { darkenColor } from '../helpers/color.helpers';
 
 @Component({
   selector: 'app-dashboard',
@@ -131,7 +132,7 @@ export class DashboardComponent implements OnInit {
               label: "Games",
               data: this.gamesByWarbandChartData,
               backgroundColor: this.warbandChartColors,
-              hoverBackgroundColor: this.warbandChartColors,
+              hoverBackgroundColor: this.warbandChartColors.map(color=>darkenColor(color,48)),
               borderWidth: 1
             }
           ]
