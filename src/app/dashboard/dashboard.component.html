@@ -4,7 +4,13 @@
     
     <p>Played Games by Warband</p>
     <div style="width: 50%; margin: auto;">
-      <canvas id="gamesByWarbandChart"></canvas>
+    <app-doughnut-chart
+        *ngIf="isDataReady"
+        [labels]="warbandNameChartLabels"
+        [data]="gamesByWarbandChartData"
+        [colors]="warbandChartColors">
+    </app-doughnut-chart>
+      <!-- <canvas id="gamesByWarbandChart"></canvas> -->
     </div>
 
     <p>Metascore by Warband</p>

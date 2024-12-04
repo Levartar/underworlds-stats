@@ -2,18 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import { Chart } from 'chart.js/auto';
 import { forkJoin } from 'rxjs';
 import { ChartOptions } from 'chart.js'
+import { NgIf } from '@angular/common';
 
 import { GoogleSheetService } from '../services/google-sheet.service';
-import { WARBAAND_CONFIG } from '../models/warband-config';
 import { chartOptions } from '../chart-options';
 import { SheetData, SheetWarband } from '../models/spreadsheet.model';
 import { DataStoreService } from '../store/sheet-data.store'
 import { darkenColor } from '../helpers/color.helpers';
+import { DoughnutChartComponent } from '../components/doughnut-chart/doughnut-chart.component';
+
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [],
+  imports: [DoughnutChartComponent,NgIf],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -24,11 +26,13 @@ export class DashboardComponent implements OnInit {
   gamesByWarband: { [key: string]: {count:number;color:string}} = {};
   sortedWarbands: {name:string; count: number; color: string}[] = [];
 
+
   // Chart data
   warbandNameChartLabels: string[] = [];
   gamesByWarbandChartData: number[] = [];
   warbandChartColors: string[] = [];
   chart: Chart | null = null;
+  isDataReady: boolean = false;
 
   constructor(
     private googleSheetService: GoogleSheetService,
@@ -61,26 +65,11 @@ export class DashboardComponent implements OnInit {
           })
         );
         this.dataStoreService.setWarbandData(parsedWarbandData);
-
-
-        // Process game data
-        //const parsedGameData = this.googleSheetService.parseCsvData(gameData);
-        //this.processData(parsedGameData);
-//
-        //// Process warband data
-        //const parsedWarbandData = this.googleSheetService.parseWarbandCsvData(warbandData);
-        //this.warbandData = parsedWarbandData;
-        //this.sortWarbandsBySize();
-
-        // Render the chart only after both are processed
-        //this.renderChart();
-        //console.log(parsedWarbandData)
       });
     }
     // Subscribe to data from the store
     this.dataStoreService.gameData$.subscribe((data) => {
       if (data) {
-        console.log(data)
         this.processData(data);
         this.sortWarbandsBySize();
         this.renderChart();
@@ -99,7 +88,6 @@ export class DashboardComponent implements OnInit {
       }
       this.gamesByWarband[warband].count++;
     });
-    console.log(this.gamesByWarband)
   }
 
   sortWarbandsBySize(): void {
@@ -113,6 +101,7 @@ export class DashboardComponent implements OnInit {
     this.warbandNameChartLabels = this.sortedWarbands.map(wb=>wb.name);
     this.gamesByWarbandChartData = this.sortedWarbands.map(wb => wb.count);
     this.warbandChartColors = this.sortedWarbands.map(wb => wb.color);
+    this.isDataReady = true;
   }
 
   renderChart(): void {
