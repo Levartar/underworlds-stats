@@ -15,6 +15,9 @@ export interface SheetData {
     gW: number; // "G-W"
     gL: number; // "G-L"
     gT: number; // "G-T"
+    color: string | null; //color
+    icon: string | null; //Icon
+    legality: boolean |null //legality
   }
 
 // src/app/models/parsed-row.model.ts
