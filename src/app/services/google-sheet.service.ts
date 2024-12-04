@@ -22,8 +22,10 @@ export class GoogleSheetService {
   parseCsvData(csv: string): ParsedRow[] {
     const rows = csv.split('\n');
     const headers = rows[0].split(',');
+
+    //Filter Data for empty entries
   
-    return rows.slice(1).map(row => {
+    const filteredRows = rows.slice(1).map(row => {
       const values = row.split(',');
       return {
         date: values[headers.indexOf('Date')]?.trim(),
@@ -42,6 +44,7 @@ export class GoogleSheetService {
         gT: Number(values[headers.indexOf('G-T')]?.trim()),
       } as ParsedRow;
     });
+    return filteredRows.filter(row => row.date && row.date.trim() !== '')
   }
   
 }
