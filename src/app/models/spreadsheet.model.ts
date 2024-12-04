@@ -1,5 +1,5 @@
 // src/app/models/parsed-row.model.ts
-export interface ParsedRow {
+export interface SheetData {
     //[key: string]: string; // Use dynamic keys if necessary
     date: string; // "Date" - ISO string or a simple string format
     p1Warband: string; // "P1 Warband"
@@ -15,5 +15,15 @@ export interface ParsedRow {
     gW: number; // "G-W"
     gL: number; // "G-L"
     gT: number; // "G-T"
+  }
+
+// src/app/models/parsed-row.model.ts
+export interface SheetWarband {
+    //[key: string]: string; // Use dynamic keys if necessary
+    name: string; // "name"
+    legality: string; // "legality" true or false if tournament legal
+    colorA: string; // primary color in hexcode
+    colorB: string; // secondary color in hexcode
+    icon: string; // string link to icon
   }
   

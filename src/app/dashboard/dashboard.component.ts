@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Chart } from 'chart.js/auto';
+import { forkJoin } from 'rxjs';
 import {ChartOptions } from 'chart.js'
 
 import { GoogleSheetService } from '../services/google-sheet.service';
 import { WARBAAND_CONFIG } from '../models/warband-config';
+import { chartOptions } from '../chart-options';
+import { SheetData, SheetWarband } from '../models/spreadsheet.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,6 +17,8 @@ import { WARBAAND_CONFIG } from '../models/warband-config';
 })
 export class DashboardComponent implements OnInit {
   totalGames: number = 0;
+  warbandData: SheetWarband[] = [];
+  gameData: SheetData[] = [];
   gamesByWarband: { [key: string]: number } = {};
   sortedWarbands: { name: string; count: number; color: string }[] = [];
 
@@ -26,10 +31,22 @@ export class DashboardComponent implements OnInit {
   constructor(private googleSheetService: GoogleSheetService) {}
 
   ngOnInit(): void {
-    this.googleSheetService.fetchSheetData().subscribe((data) => {
-      this.processData(this.googleSheetService.parseCsvData(data));
+    forkJoin({
+      gameData: this.googleSheetService.fetchSheetData(),
+      warbandData: this.googleSheetService.fetchSheetWarband()
+    }).subscribe(({ gameData, warbandData }) => {
+      // Process game data
+      const parsedGameData = this.googleSheetService.parseCsvData(gameData);
+      this.processData(parsedGameData);
+
+      // Process warband data
+      const parsedWarbandData = this.googleSheetService.parseWarbandCsvData(warbandData);
+      this.warbandData = parsedWarbandData;
       this.sortWarbandsBySize();
-      this.renderChart()
+
+      // Render the chart only after both are processed
+      this.renderChart();
+      console.log(parsedWarbandData)
     });
   }
 
@@ -44,14 +61,15 @@ export class DashboardComponent implements OnInit {
   }
 
   sortWarbandsBySize(): void {
-    // Map stats to sorted array using configuration
+    //Get Color From Warband Data Sheet
     this.sortedWarbands = Object.entries(this.gamesByWarband)
       .map(([name, count]) => {
-        const config = WARBAAND_CONFIG.find(wb => wb.name === name);
+        const color = this.warbandData.find(wb => 
+          wb.name === name)?.colorB;
         return {
           name,
           count,
-          color: config?.color || '#000000' // Default to black if not found
+          color: color || '#000000' // Default to black if not found
         };
       })
       .sort((a, b) => b.count - a.count); // Sort by size
@@ -84,23 +102,7 @@ export class DashboardComponent implements OnInit {
             }
           ]
         },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'right',
-            },
-            tooltip: {
-              enabled: true,
-            },
-          },
-          elements: {
-            arc: {
-              borderWidth: 2,
-            },
-          },
-        }
+        options: chartOptions
       });
     }
   }
