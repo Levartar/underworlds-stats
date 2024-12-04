@@ -25,11 +25,22 @@ export class GoogleSheetService {
   
     return rows.slice(1).map(row => {
       const values = row.split(',');
-      const result: ParsedRow = {};
-      headers.forEach((header, index) => {
-        result[header.trim()] = values[index]?.trim();
-      });
-      return result;
+      return {
+        date: values[headers.indexOf('Date')]?.trim(),
+        p1Warband: values[headers.indexOf('P1 Warband')]?.trim(),
+        p1Deck1: values[headers.indexOf('P1 Deck1')]?.trim(),
+        p1Deck2: values[headers.indexOf('P1 Deck2')]?.trim(),
+        wins: Number(values[headers.indexOf('Wins')]?.trim()),
+        losses: Number(values[headers.indexOf('Losses')]?.trim()),
+        ties: Number(values[headers.indexOf('Ties')]?.trim()),
+        p2Warband: values[headers.indexOf('P2 Warband')]?.trim(),
+        p2Deck1: values[headers.indexOf('P2 Deck1')]?.trim(),
+        p2Deck2: values[headers.indexOf('P2 Deck2')]?.trim(),
+        tag: values[headers.indexOf('Tag')]?.trim() || null,
+        gW: Number(values[headers.indexOf('G-W')]?.trim()),
+        gL: Number(values[headers.indexOf('G-L')]?.trim()),
+        gT: Number(values[headers.indexOf('G-T')]?.trim()),
+      } as ParsedRow;
     });
   }
   
