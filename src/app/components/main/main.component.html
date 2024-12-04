@@ -1,0 +1,7 @@
+<p>main works!</p>
+<div *ngIf="data">
+    <h2>Warhammer Stats</h2>
+    <div *ngFor="let item of data">
+      {{ item | json }}
+    </div>
+  </div>
