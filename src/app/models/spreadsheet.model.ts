@@ -29,4 +29,18 @@ export interface SheetWarband {
     colorB: string; // secondary color in hexcode
     icon: string; // string link to icon
   }
+
+  export interface WarbandData {
+    //[key: string]: string; // Use dynamic keys if necessary
+    name: string; // "name"
+    metaScore: number;
+    gamesPlayed: number;
+    gamesWon: number;
+    gamesLost: number;
+    gamesTied:number;
+    legality: string; // "legality" true or false if tournament legal
+    colorA: string; // primary color in hexcode
+    colorB: string; // secondary color in hexcode
+    icon: string; // string link to icon
+  }  
   

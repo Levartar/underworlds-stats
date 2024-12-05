@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Chart } from 'chart.js';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { ArcElement, Chart, DoughnutController, Legend, Tooltip } from 'chart.js';
 
 import { darkenColor } from '../../helpers/color.helpers';
 import { chartOptions } from '../../chart-options';
@@ -12,18 +12,26 @@ import { chartOptions } from '../../chart-options';
   templateUrl: './doughnut-chart.component.html',
   styleUrl: './doughnut-chart.component.css'
 })
-export class DoughnutChartComponent implements OnInit {
-  @Input() labels: string[] = [];
-  @Input() data: number[] = [];
-  @Input() colors: string[] = [];
+export class DoughnutChartComponent implements AfterViewInit {
+  @Input() chartId: string = '';
+  @Input() data!: { names: string[], values: number[], colors: string[] };
+  
+  labels: string[] = [];
+  values: number[] = [];
+  colors: string[] = [];
 
   public chart: Chart | null = null;
 
-  constructor() {}
+  constructor() {
+    Chart.register(DoughnutController, ArcElement, Tooltip, Legend);
+  }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
+    this.labels = this.data.names;
+    this.values = this.data.values;
+    this.colors = this.data.colors;
     this.renderChart();
-    console.log(this.labels,this.data,this.colors)
+    console.log("doughnutComponent", this.labels, this.values, this.colors)
   }
 
   renderChart(): void {
@@ -31,7 +39,7 @@ export class DoughnutChartComponent implements OnInit {
       this.chart.destroy();
     }
 
-    const canvas = document.getElementById('doughnut-chart') as HTMLCanvasElement;
+    const canvas = document.getElementById(this.chartId) as HTMLCanvasElement;
 
     if (canvas) {
       this.chart = new Chart(canvas, {
@@ -41,9 +49,9 @@ export class DoughnutChartComponent implements OnInit {
           datasets: [
             {
               label: "Games",
-              data: this.data,
+              data: this.values,
               backgroundColor: this.colors,
-              hoverBackgroundColor: this.colors.map(color=>darkenColor(color,48)),
+              hoverBackgroundColor: this.colors.map(color => darkenColor(color, 48)),
               borderWidth: 1
             }
           ]

@@ -1,35 +1,47 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { SheetData, SheetWarband } from '../models/spreadsheet.model';
+import { SheetData, SheetWarband, WarbandData } from '../models/spreadsheet.model';
 
 
 @Injectable({
   providedIn: 'root',
 })
 export class DataStoreService {
-  private gameDataSubject = new BehaviorSubject<SheetData[] | null>(null);
-  private warbandDataSubject = new BehaviorSubject<SheetWarband[] | null>(null);
+  private gameSheetSubject = new BehaviorSubject<SheetData[] | null>(null);
+  private warbandSheetSubject = new BehaviorSubject<SheetWarband[] | null>(null);
+  private warbandDataSubject = new BehaviorSubject<WarbandData[]>([]);
 
   // Observables for components to subscribe to
-  gameData$: Observable<SheetData[] | null> = this.gameDataSubject.asObservable();
-  warbandData$: Observable<SheetWarband[] | null> = this.warbandDataSubject.asObservable();
+  gameSheet$: Observable<SheetData[] | null> = this.gameSheetSubject.asObservable();
+  warbandSheet$: Observable<SheetWarband[] | null> = this.warbandSheetSubject.asObservable();
+  warbandData$: Observable<WarbandData[]> = this.warbandDataSubject.asObservable();
+
 
   // Methods to set data in the store
-  setGameData(data: SheetData[]): void {
-    this.gameDataSubject.next(data);
+  setGameSheet(data: SheetData[]): void {
+    this.gameSheetSubject.next(data);
   }
 
-  setWarbandData(data: SheetWarband[]): void {
+  setWarbandSheet(data: SheetWarband[]): void {
+    this.warbandSheetSubject.next(data);
+  }
+
+  setWarbandData(data: WarbandData[]) {
     this.warbandDataSubject.next(data);
   }
 
   // Methods to get the current value (optional)
-  getGameData(): SheetData[] | null {
-    return this.gameDataSubject.getValue();
+  getGameSheet(): Observable<SheetData[] | null> {
+    return this.gameSheet$;
   }
 
-  getWarbandData(): SheetWarband[] | null {
-    return this.warbandDataSubject.getValue();
+  getWarbandSheet(): Observable<SheetWarband[] | null> {
+    return this.warbandSheet$;
+  }
+
+  // Observable for warband data
+  getWarbandData$(): Observable<WarbandData[]> {
+    return this.warbandData$;
   }
 }

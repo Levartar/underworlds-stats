@@ -3,20 +3,18 @@
     <p>Total Recorded Games: {{ totalGames }}</p>
     
     <p>Played Games by Warband</p>
-    <div style="width: 50%; margin: auto;">
     <app-doughnut-chart
-        *ngIf="isDataReady"
-        [labels]="warbandNameChartLabels"
-        [data]="gamesByWarbandChartData"
-        [colors]="warbandChartColors">
+        *ngIf="gamesByWarbandChartData"
+        [chartId]="'playedByWarbandChart'"
+        [data]="gamesByWarbandChartData">
     </app-doughnut-chart>
-      <!-- <canvas id="gamesByWarbandChart"></canvas> -->
-    </div>
 
     <p>Metascore by Warband</p>
-    <div style="width: 50%; margin: auto;">
-      <canvas id="metascoreByWarband"></canvas>
-    </div>
+    <app-doughnut-chart
+        *ngIf="metascoreByWarbandChartData"
+        [chartId]="'MetascoreByWarband'"
+        [data]="metascoreByWarbandChartData">
+    </app-doughnut-chart> 
 
     <p>Metascore by Deck Combi</p>
     <div style="width: 50%; margin: auto;">

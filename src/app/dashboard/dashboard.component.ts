@@ -6,16 +6,16 @@ import { NgIf } from '@angular/common';
 
 import { GoogleSheetService } from '../services/google-sheet.service';
 import { chartOptions } from '../chart-options';
-import { SheetData, SheetWarband } from '../models/spreadsheet.model';
+import { SheetData, SheetWarband, WarbandData } from '../models/spreadsheet.model';
 import { DataStoreService } from '../store/sheet-data.store'
 import { darkenColor } from '../helpers/color.helpers';
 import { DoughnutChartComponent } from '../components/doughnut-chart/doughnut-chart.component';
-
+import { WarbandDataCalculationsService } from '../services/warband-data-calculations.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [DoughnutChartComponent,NgIf],
+  imports: [DoughnutChartComponent, NgIf],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -23,111 +23,83 @@ export class DashboardComponent implements OnInit {
   totalGames: number = 0;
   warbandData: SheetWarband[] = [];
   gameData: SheetData[] = [];
-  gamesByWarband: { [key: string]: {count:number;color:string}} = {};
-  sortedWarbands: {name:string; count: number; color: string}[] = [];
-
+  gamesByWarband: { [key: string]: { count: number; color: string } } = {};
 
   // Chart data
   warbandNameChartLabels: string[] = [];
-  gamesByWarbandChartData: number[] = [];
+  gamesByWarbandChartData: {names:string[],values:number[],colors:string[]}|null = null;
+  metascoreByWarbandChartData: {names:string[],values:number[],colors:string[]}|null = null;
+  metascoreByDeckCombi: {names:string[],values:number[],colors:string[]}|null = null;
   warbandChartColors: string[] = [];
   chart: Chart | null = null;
   isDataReady: boolean = false;
 
+
   constructor(
     private googleSheetService: GoogleSheetService,
+    private warbandDataCalculationsService: WarbandDataCalculationsService,
     private dataStoreService: DataStoreService
   ) { }
 
   ngOnInit(): void {
-    // Check if data is already in the store
-    if (!this.dataStoreService.getGameData() || !this.dataStoreService.getWarbandData()) {
-      // Fetch data if not already in store
-      forkJoin({
-        gameData: this.googleSheetService.fetchSheetData(),
-        warbandData: this.googleSheetService.fetchSheetWarband()
-      }).subscribe(({ gameData, warbandData }) => {
-        // Parse and store data
-        const parsedGameData = this.googleSheetService.parseCsvData(gameData);
-        const parsedWarbandData = this.googleSheetService.parseWarbandCsvData(warbandData);
+    // Fetch data if not already in store
+    forkJoin({
+      gameData: this.googleSheetService.fetchSheetData(),
+      warbandData: this.googleSheetService.fetchSheetWarband()
+    }).subscribe(({ gameData, warbandData }) => {
+      // Parse and store data
+      const parsedGameData = this.googleSheetService.parseCsvData(gameData);
+      const parsedWarbandData = this.googleSheetService.parseWarbandCsvData(warbandData);
 
-        this.dataStoreService.setGameData(
-          parsedGameData.map((gameEntry) => {
-            // Find the warband data for Player 1
-            const warbandData = parsedWarbandData.find((wb) => wb.name === gameEntry.p1Warband);
-        
-            return {
-              ...gameEntry, // Spread existing game entry data
-              color: warbandData?.colorB || '#000000', // Default to black if not found
-              icon: warbandData?.icon || '', // Default to an empty string if no icon
-              legality: warbandData?.legality=='True' || false, // Default to false if legality not found
-            };
-          })
-        );
-        this.dataStoreService.setWarbandData(parsedWarbandData);
-      });
-    }
+      this.dataStoreService.setGameSheet(
+        parsedGameData.map((gameEntry) => {
+          // Find the warband data for Player 1
+          const warbandData = parsedWarbandData.find((wb) => wb.name === gameEntry.p1Warband);
+
+          return {
+            ...gameEntry, // Spread existing game entry data
+            color: warbandData?.colorB || '#000000', // Default to black if not found
+            icon: warbandData?.icon || '', // Default to an empty string if no icon
+            legality: warbandData?.legality == 'True' || false, // Default to false if legality not found
+          };
+        })
+      );
+      this.dataStoreService.setWarbandSheet(parsedWarbandData);
+      this.warbandDataCalculationsService.calculateWarbandData();
+      console.log()
+    });
+
     // Subscribe to data from the store
-    this.dataStoreService.gameData$.subscribe((data) => {
-      if (data) {
-        this.processData(data);
-        this.sortWarbandsBySize();
-        this.renderChart();
+    this.dataStoreService.warbandData$.subscribe((data) => {
+      if (data.length>0) {
+        this.processWarbandsForChart(data);
+        console.log(data)
       }
     });
   }
 
-  processData(data: SheetData[]): void {
-    this.totalGames = data.length;
-
-    data.forEach(row => {
-      const warband = row.p1Warband;
-      const color = row.color;
-      if (!this.gamesByWarband[warband]) {
-        this.gamesByWarband[warband] = { count: 0, color: color || '#000000' }; // Default to black if color is missing
-      }
-      this.gamesByWarband[warband].count++;
-    });
-  }
-
-  sortWarbandsBySize(): void {
+  processWarbandsForChart(data: WarbandData[]): void {
     //Get Array from key object Map and sort it
-    this.sortedWarbands = Object.entries(
-      this.gamesByWarband).map(([name,stats]) => ({name,count: stats.count,
-        color: stats.color})).sort((a,b) => 
-          b.count - a.count);
+    this.totalGames = data.reduce((acc, curr)=>acc+curr.gamesPlayed,0)/2
+    console.log('totalgames',this.totalGames)
+    const sortByGamesWarbands = data.sort((a, b) =>
+      b.gamesPlayed - a.gamesPlayed);
+    const sortByMetaWarbands = data.sort((a, b) =>
+      b.metaScore - a.metaScore);
 
     // Prepare chart data
-    this.warbandNameChartLabels = this.sortedWarbands.map(wb=>wb.name);
-    this.gamesByWarbandChartData = this.sortedWarbands.map(wb => wb.count);
-    this.warbandChartColors = this.sortedWarbands.map(wb => wb.color);
+    this.gamesByWarbandChartData = {
+      names: sortByGamesWarbands.map(wb=> wb.name),
+      values: sortByGamesWarbands.map(wb=> wb.gamesPlayed),
+      colors: sortByGamesWarbands.map(wb=> wb.colorB)
+    }
+
+    this.metascoreByWarbandChartData = {
+      names: sortByMetaWarbands.map(wb=> wb.name),
+      values: sortByMetaWarbands.map(wb=> wb.metaScore),
+      colors: sortByMetaWarbands.map(wb=> wb.colorB)
+    }
     this.isDataReady = true;
-  }
-
-  renderChart(): void {
-    if (this.chart) {
-      this.chart.destroy();
-    }
-
-    const canvas = document.getElementById('gamesByWarbandChart') as HTMLCanvasElement;
-
-    if (canvas) {
-      this.chart = new Chart(canvas, {
-        type: 'doughnut',
-        data: {
-          labels: this.warbandNameChartLabels,
-          datasets: [
-            {
-              label: "Games",
-              data: this.gamesByWarbandChartData,
-              backgroundColor: this.warbandChartColors,
-              hoverBackgroundColor: this.warbandChartColors.map(color=>darkenColor(color,48)),
-              borderWidth: 1
-            }
-          ]
-        },
-        options: chartOptions
-      });
-    }
+    console.log("metascoreChartData",this.metascoreByWarbandChartData)
   }
 }
