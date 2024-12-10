@@ -1,16 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Chart } from 'chart.js/auto';
-import { forkJoin } from 'rxjs';
-import { ChartOptions } from 'chart.js'
 import { NgIf } from '@angular/common';
 
-import { GoogleSheetService } from '../services/google-sheet.service';
-import { chartOptions } from '../chart-options';
-import { SheetData, SheetWarband, WarbandData } from '../models/spreadsheet.model';
+import { DeckCombiData, DeckData, SheetData, SheetWarband, WarbandData } from '../models/spreadsheet.model';
 import { DataStoreService } from '../store/sheet-data.store'
-import { darkenColor } from '../helpers/color.helpers';
 import { DoughnutChartComponent } from '../components/doughnut-chart/doughnut-chart.component';
-import { WarbandDataCalculationsService } from '../services/warband-data-calculations.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -32,50 +26,38 @@ export class DashboardComponent implements OnInit {
   metascoreByDeckCombi: {names:string[],values:number[],colors:string[]}|null = null;
   warbandChartColors: string[] = [];
   chart: Chart | null = null;
-  isDataReady: boolean = false;
-
 
   constructor(
-    private googleSheetService: GoogleSheetService,
-    private warbandDataCalculationsService: WarbandDataCalculationsService,
     private dataStoreService: DataStoreService
   ) { }
 
   ngOnInit(): void {
-    // Fetch data if not already in store
-    forkJoin({
-      gameData: this.googleSheetService.fetchSheetData(),
-      warbandData: this.googleSheetService.fetchSheetWarband()
-    }).subscribe(({ gameData, warbandData }) => {
-      // Parse and store data
-      const parsedGameData = this.googleSheetService.parseCsvData(gameData);
-      const parsedWarbandData = this.googleSheetService.parseWarbandCsvData(warbandData);
-
-      this.dataStoreService.setGameSheet(
-        parsedGameData.map((gameEntry) => {
-          // Find the warband data for Player 1
-          const warbandData = parsedWarbandData.find((wb) => wb.name === gameEntry.p1Warband);
-
-          return {
-            ...gameEntry, // Spread existing game entry data
-            color: warbandData?.colorB || '#000000', // Default to black if not found
-            icon: warbandData?.icon || '', // Default to an empty string if no icon
-            legality: warbandData?.legality == 'True' || false, // Default to false if legality not found
-          };
-        })
-      );
-      this.dataStoreService.setWarbandSheet(parsedWarbandData);
-      this.warbandDataCalculationsService.calculateWarbandData();
-      console.log()
-    });
-
     // Subscribe to data from the store
     this.dataStoreService.warbandData$.subscribe((data) => {
       if (data.length>0) {
         this.processWarbandsForChart(data);
-        console.log(data)
       }
     });
+
+    this.dataStoreService.deckCombiData$.subscribe((data) => {
+      if (data.length>0) {
+        this.processDecksForChart(data);
+      }
+    });
+  }
+
+
+  processDecksForChart(data: DeckCombiData[]) {
+    this.totalGames = data.reduce((acc, curr)=>acc+curr.gamesPlayed,0)/2
+    const sortByMetaDecks = data.sort((a, b) =>
+      b.metaScore - a.metaScore);
+
+    this.metascoreByDeckCombi = {
+      names: sortByMetaDecks.map(deck=> `${deck.name1} + ${deck.name2}`),
+      values: sortByMetaDecks.map(deck=> Math.floor(deck.metaScore)),
+      colors: sortByMetaDecks.map(deck=> deck.colorA)
+    }
+    console.log("metascoreByDeckCombi",this.metascoreByWarbandChartData)
   }
 
   processWarbandsForChart(data: WarbandData[]): void {
@@ -96,10 +78,9 @@ export class DashboardComponent implements OnInit {
 
     this.metascoreByWarbandChartData = {
       names: sortByMetaWarbands.map(wb=> wb.name),
-      values: sortByMetaWarbands.map(wb=> wb.metaScore),
+      values: sortByMetaWarbands.map(wb=> Math.floor(wb.metaScore)),
       colors: sortByMetaWarbands.map(wb=> wb.colorB)
     }
-    this.isDataReady = true;
     console.log("metascoreChartData",this.metascoreByWarbandChartData)
   }
 }

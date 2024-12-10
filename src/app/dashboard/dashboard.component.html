@@ -17,7 +17,9 @@
     </app-doughnut-chart> 
 
     <p>Metascore by Deck Combi</p>
-    <div style="width: 50%; margin: auto;">
-      <canvas id="metascoreByDeckCombi"></canvas>
-    </div>
+    <app-doughnut-chart
+        *ngIf="metascoreByDeckCombi"
+        [chartId]="'metascoreByDeckCombi'"
+        [data]="metascoreByDeckCombi">
+    </app-doughnut-chart> 
   </div>

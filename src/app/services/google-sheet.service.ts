@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { SheetData, SheetWarband } from '../models/spreadsheet.model';
+import { SheetData, SheetDeck, SheetWarband } from '../models/spreadsheet.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +16,9 @@ export class GoogleSheetService {
   private sheetDataUrl = 
   'https://docs.google.com/spreadsheets/d/1HIX_SvAZ6hOa0k65y_tVaNBxTHnZk-7IVPPgGYtcHdI/export?format=csv&id=1HIX_SvAZ6hOa0k65y_tVaNBxTHnZk-7IVPPgGYtcHdI&gid=338969474';
 
+  private sheetDecksUrl = 
+  'https://docs.google.com/spreadsheets/d/1HIX_SvAZ6hOa0k65y_tVaNBxTHnZk-7IVPPgGYtcHdI/export?format=csv&id=1HIX_SvAZ6hOa0k65y_tVaNBxTHnZk-7IVPPgGYtcHdI&gid=1460942583';
+
   constructor(private http: HttpClient) { }
 
   fetchSheetData(): Observable<string> {
@@ -24,6 +27,10 @@ export class GoogleSheetService {
 
   fetchSheetWarband(): Observable<string> {
     return this.http.get(this.sheetWarbandUrl, { responseType: 'text' });
+  }
+
+  fetchSheetDecks(): Observable<string> {
+    return this.http.get(this.sheetDecksUrl, { responseType: 'text' });
   }
 
   parseCsvData(csv: string): SheetData[] {
@@ -69,6 +76,25 @@ export class GoogleSheetService {
         colorB: values[headers.indexOf('Color B')]?.trim(),
         icon: values[headers.indexOf('Icon')]?.trim(),
       } as SheetWarband;
+    });
+    return filteredRows.filter(row => row.name && row.name.trim() !== '')
+  }
+
+  parseDecksCsvData(csv: string): SheetDeck[] {
+    const rows = csv.split('\n');
+    const headers = rows[0].split(',');
+
+    //Filter Data for empty entries
+  
+    const filteredRows = rows.slice(1).map(row => {
+      const values = row.split(',');
+      return {
+        name: values[headers.indexOf('Deck')]?.trim(),
+        legality: values[headers.indexOf('Legality')]?.trim(),
+        colorA: values[headers.indexOf('Color A')]?.trim(),
+        colorB: values[headers.indexOf('Color B')]?.trim(),
+        icon: values[headers.indexOf('Icon')]?.trim(),
+      } as SheetDeck;
     });
     return filteredRows.filter(row => row.name && row.name.trim() !== '')
   }

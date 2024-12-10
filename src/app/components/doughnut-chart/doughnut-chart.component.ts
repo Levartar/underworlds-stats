@@ -48,7 +48,6 @@ export class DoughnutChartComponent implements AfterViewInit {
           labels: this.labels,
           datasets: [
             {
-              label: "Games",
               data: this.values,
               backgroundColor: this.colors,
               hoverBackgroundColor: this.colors.map(color => darkenColor(color, 48)),
