@@ -1,0 +1,44 @@
+<div *ngIf="warbandData&&warbandName">
+    <h1>{{ warbandName }}</h1>
+  
+    <!-- Circle Charts -->
+    <div class="circle-charts">
+      <app-mini-doughnut-chart
+        [chartId]="warbandName+'PlayRateChart'"
+        [data]="{
+            names: [warbandName, 'Others'],
+            values: [gamesPlayedVsOthers, totalGames - gamesPlayedVsOthers],
+            colors: [warbandData.colorA, '#cccccc']}"
+      ></app-mini-doughnut-chart>
+      <app-mini-doughnut-chart
+        [chartId]="warbandName+'MetascoreChart'"
+        [data]="{
+        names: [warbandName, 'Others'], 
+        values:[metascore, 1000 - metascore],
+        colors: [warbandData.colorA, '#cccccc']}"
+      ></app-mini-doughnut-chart>
+      <app-mini-doughnut-chart
+        [chartId]="warbandName+'WinrateChart'"
+        [data]="{
+            names: ['Winrate', 'Lossrate'],
+            values: [winrate, 100 - winrate],
+            colors: [warbandData.colorA, warbandData.colorB]}"
+      ></app-mini-doughnut-chart>
+    </div>
+  
+    <!-- Bar Charts -->
+    <div class="bar-charts">
+      <!-- <app-bar-chart
+        [labels]="winrateVsWarbands.map(w => w.name)"
+        [data]="winrateVsWarbands.map(w => w.winrate)"
+        [colors]="winrateVsWarbands.map(() => warbandData.colorA)"
+      ></app-bar-chart>
+  
+      <app-bar-chart
+        [labels]="winrateWithDecks.map(d => d.deck)"
+        [data]="winrateWithDecks.map(d => d.winrate)"
+        [colors]="winrateWithDecks.map(() => warbandData.colorB)"
+      ></app-bar-chart> -->
+    </div>
+  </div>
+  

@@ -52,11 +52,11 @@ export class DataStoreService {
 
 
   // Methods to get the current value
-  getGameSheet(): Observable<SheetData[] | null> {
+  getGameSheet$(): Observable<SheetData[] | null> {
     return this.gameSheet$;
   }
 
-  getWarbandSheet(): Observable<SheetWarband[] | null> {
+  getWarbandSheet$(): Observable<SheetWarband[] | null> {
     return this.warbandSheet$;
   }
 
@@ -65,7 +65,7 @@ export class DataStoreService {
     return this.warbandData$;
   }
 
-  getDeckSheet(): Observable<SheetDeck[] | null> {
+  getDeckSheet$(): Observable<SheetDeck[] | null> {
     return this.deckSheet$;
   }
 

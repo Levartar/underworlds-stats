@@ -12,8 +12,8 @@ export class WarbandDataCalculationsService {
 
   calculateWarbandData(): void {
     combineLatest([
-      this.dataStoreService.getGameSheet(), // Observable for game data
-      this.dataStoreService.getWarbandSheet(), // Observable for warband data
+      this.dataStoreService.getGameSheet$(), // Observable for game data
+      this.dataStoreService.getWarbandSheet$(), // Observable for warband data
     ])
       .pipe(
         filter(([gameSheet, warbandSheet]) => gameSheet !== null && warbandSheet !== null),
@@ -61,8 +61,8 @@ export class WarbandDataCalculationsService {
 
   calculateDeckCombiData(): void {
     combineLatest([
-      this.dataStoreService.getGameSheet(), // Observable for game data
-      this.dataStoreService.getDeckSheet(), // Observable for deck data
+      this.dataStoreService.getGameSheet$(), // Observable for game data
+      this.dataStoreService.getDeckSheet$(), // Observable for deck data
     ]).pipe(
       filter(([gameSheet, deckSheet]) => gameSheet !== null && deckSheet !== null),
       map(([gameSheet, deckSheet]) => {
@@ -131,8 +131,8 @@ export class WarbandDataCalculationsService {
 
   calculateDeckData(): void {
     combineLatest([
-      this.dataStoreService.getGameSheet(), // Observable for game data
-      this.dataStoreService.getDeckSheet(), // Observable for deck data
+      this.dataStoreService.getGameSheet$(), // Observable for game data
+      this.dataStoreService.getDeckSheet$(), // Observable for deck data
     ]).pipe(
       filter(([gameSheet, deckSheet]) => gameSheet !== null && deckSheet !== null),
       map(([gameSheet, deckSheet]) => {
