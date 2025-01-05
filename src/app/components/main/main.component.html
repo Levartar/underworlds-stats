@@ -1,5 +1,17 @@
 <p>main works!</p>
-<app-dashboard></app-dashboard>
+<mat-tab-group>
+  <mat-tab label="Dashboard">
+    <app-dashboard></app-dashboard>
+  </mat-tab>
+  <mat-tab label="Warbands">
+    <div>Test Warbands</div>
+    <!-- <app-warbands></app-warbands> -->
+  </mat-tab>
+  <mat-tab label="Decks">
+    <div>Test Decks</div>
+    <!-- <app-decks></app-decks> -->
+  </mat-tab> 
+</mat-tab-group>
 
 <div *ngIf="data">
     <h2>Warhammer Stats</h2>

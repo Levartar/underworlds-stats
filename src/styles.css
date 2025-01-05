@@ -1,4 +1,31 @@
 /* You can add global styles to this file, and also import other style files */
+/* src/styles.css */
+
+/* Apply the colors globally */
+body {
+    background-color: var(--background-color);
+    /*color: var(--foreground-color);*/
+}
+
+/* Custom chart colors (optional, for example, in charts) */
+.chart-positive-color {
+    background-color: var(--positive-chart-color);
+}
+
+.chart-negative-color {
+    background-color: var(--negative-chart-color);
+}
+
+/* Customize Material Design or your own components */
+.mat-button {
+    background-color: var(--primary-color);
+    color: var(--foreground-color);
+}
+
+.mat-card {
+    background-color: var(--secondary-color);
+}
+
 
 html,
 body {
@@ -23,12 +50,15 @@ body {
     border-radius: 8px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
+
 .cdk-overlay-backdrop {
-    background: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    background: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent black */
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    cursor: pointer; /* Indicate it's clickable */
-  }
+    cursor: pointer;
+    /* Indicate it's clickable */
+}

@@ -3,6 +3,8 @@
   
     <!-- Circle Charts -->
     <div class="circle-charts">
+    <div>
+      <h5>Playrate</h5>
       <app-mini-doughnut-chart
         [chartId]="warbandName+'PlayRateChart'"
         [data]="{
@@ -10,13 +12,20 @@
             values: [gamesPlayedVsOthers, totalGames - gamesPlayedVsOthers],
             colors: [warbandData.colorA, '#cccccc']}"
       ></app-mini-doughnut-chart>
+    </div>
+
+    <div>
+      <h5>Metascore</h5>
       <app-mini-doughnut-chart
-        [chartId]="warbandName+'MetascoreChart'"
-        [data]="{
-        names: [warbandName, 'Others'], 
-        values:[metascore, 1000 - metascore],
-        colors: [warbandData.colorA, '#cccccc']}"
-      ></app-mini-doughnut-chart>
+          [chartId]="warbandName+'MetascoreChart'"
+          [data]="{
+          names: [warbandName, 'Others'], 
+          values:[metascore, 1000 - metascore],
+          colors: [warbandData.colorA, '#cccccc']}"
+        ></app-mini-doughnut-chart>
+    </div>
+    <div>
+      <h5>Winrate</h5>
       <app-mini-doughnut-chart
         [chartId]="warbandName+'WinrateChart'"
         [data]="{
@@ -25,20 +34,32 @@
             colors: [warbandData.colorA, warbandData.colorB]}"
       ></app-mini-doughnut-chart>
     </div>
+    </div>
   
     <!-- Bar Charts -->
+    <div>Winrate vs Warbands</div>
     <div class="bar-charts">
-      <!-- <app-bar-chart
-        [labels]="winrateVsWarbands.map(w => w.name)"
-        [data]="winrateVsWarbands.map(w => w.winrate)"
-        [colors]="winrateVsWarbands.map(() => warbandData.colorA)"
-      ></app-bar-chart>
-  
       <app-bar-chart
-        [labels]="winrateWithDecks.map(d => d.deck)"
-        [data]="winrateWithDecks.map(d => d.winrate)"
-        [colors]="winrateWithDecks.map(() => warbandData.colorB)"
-      ></app-bar-chart> -->
+      [chartId]="warbandName+'winratevsWarbands'"
+      [data]="{ 
+      names: winrateVsWarbands.names,
+      values: winrateVsWarbands.winrates,
+      color:'#FF0000',
+      }"
+      
+      ></app-bar-chart>
+      <!-- names:winrateVsWarbands.map(w => w.name),
+      values:winrateVsWarbands.map(w => w.winrate),
+      colors:winrateVsWarbands.map(() => warbandData.colorA), -->
+      <div>Winrate with Deck Combination</div>
+      <app-bar-chart
+      [chartId]="warbandName+'winratewithDecks'"
+      [data]="{
+        names: winrateWithDecks.names,
+        values: winrateWithDecks.winrates,
+        color: '#FF0000',
+      }"
+      ></app-bar-chart>
     </div>
   </div>
   

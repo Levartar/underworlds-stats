@@ -3,11 +3,13 @@ import { DataStoreService } from '../../store/sheet-data.store';
 import { WarbandData, DeckCombiData, SheetData } from '../../models/spreadsheet.model';
 import { NgIf } from '@angular/common';
 import { MiniDoughnutChartComponent } from '../mini-doughnut-chart/mini-doughnut-chart.component';
+import { BarChartComponent } from "../bar-chart/bar-chart.component";
+import { ThemePalette } from '@angular/material/core';
 
 @Component({
   selector: 'app-warband-data',
   standalone: true,
-  imports: [MiniDoughnutChartComponent,NgIf],
+  imports: [MiniDoughnutChartComponent, NgIf, BarChartComponent],
   templateUrl: './warband-data.component.html',
   styleUrl: './warband-data.component.css'
 })
@@ -15,12 +17,13 @@ export class WarbandDataComponent implements OnInit {
   @Input() warbandName!: string;
   warbandData: WarbandData | undefined;
   deckCombos: DeckCombiData[] = [];
-  winrateVsWarbands: { name: string; winrate: number }[] = [];
-  winrateWithDecks: { deck: string; winrate: number }[] = [];
+  winrateVsWarbands: { names: string[]; winrates: number[];} = {names:[],winrates: []};
+  winrateWithDecks: { names: string[]; winrates: number[];} = {names:[],winrates: []};
   gamesPlayedVsOthers: number = 0;
   totalGames: number = 0;
   metascore: number = 0;
   winrate: number = 0;
+
 
   constructor(private dataStoreService: DataStoreService) {}
 
@@ -30,13 +33,14 @@ export class WarbandDataComponent implements OnInit {
 
   loadData(): void {
     this.dataStoreService.getWarbandData$().subscribe((data) => {
+      this.totalGames = data.reduce((acc,curr)=>acc+curr.gamesPlayed,0)
       this.warbandData = data.find((w) => w.name === this.warbandName);
       this.gamesPlayedVsOthers =
         this.warbandData?.gamesPlayed || 0;
-      this.metascore = this.warbandData?.metaScore || 0;
+      this.metascore = Math.floor(this.warbandData?.metaScore || 0);
       this.winrate =
-        this.warbandData?.gamesWon! /
-        (this.warbandData?.gamesPlayed || 1) || 0;
+        (this.warbandData?.gamesWon! /
+        (this.warbandData?.gamesPlayed || 1) || 0)*100;
     });
 
     this.dataStoreService.getDeckCombiData$().subscribe((data) => {
@@ -55,52 +59,49 @@ export class WarbandDataComponent implements OnInit {
 
   calculateWinrateVsWarbands(data: SheetData[]): void {
     const warbandGames = data.filter(
-      (g) => g.p1Warband === this.warbandName || g.p2Warband === this.warbandName
+      (g) => g.p1Warband === this.warbandName
     );
     const opponentWinrates: { [key: string]: { wins: number; total: number } } =
       {};
     warbandGames.forEach((game) => {
-      const opponent =
-        game.p1Warband === this.warbandName ? game.p2Warband : game.p1Warband;
+      const opponent =game.p2Warband;
       if (!opponentWinrates[opponent]) {
-        opponentWinrates[opponent] = { wins: 0, total: 0 };
+        opponentWinrates[opponent] = { wins: 0, total: 0,};
       }
-      opponentWinrates[opponent].total += 1;
-      if (
-        (game.p1Warband === this.warbandName && game.wins === 1) ||
-        (game.p2Warband === this.warbandName && game.losses === 1)
-      ) {
-        opponentWinrates[opponent].wins += 1;
-      }
+      opponentWinrates[opponent].total += game.wins+game.losses+game.ties;
+      opponentWinrates[opponent].wins += game.wins;
+
     });
-    this.winrateVsWarbands = Object.entries(opponentWinrates).map(
-      ([name, data]) => ({
-        name,
-        winrate: (data.wins / data.total) * 100,
-      })
+    this.winrateVsWarbands = Object.entries(opponentWinrates).reduce(
+      (acc: { names: string[]; winrates: number[] }, [name, data]) => {
+        acc.names.push(name);
+        acc.winrates.push((data.wins / data.total) * 100);
+        return acc;
+      },
+      { names: [], winrates: [] }
     );
   }
 
   calculateWinrateWithDecks(data: SheetData[]): void {
+    const warbandGames = data.filter(
+      (g) => g.p1Warband === this.warbandName
+    );
     const deckWinrates: { [key: string]: { wins: number; total: number } } = {};
-    data.forEach((game) => {
+    warbandGames.forEach((game) => {
       const deck = `${game.p1Deck1}-${game.p1Deck2}`;
       if (!deckWinrates[deck]) {
         deckWinrates[deck] = { wins: 0, total: 0 };
       }
-      deckWinrates[deck].total += 1;
-      if (
-        (game.p1Warband === this.warbandName && game.wins === 1) ||
-        (game.p2Warband === this.warbandName && game.losses === 1)
-      ) {
-        deckWinrates[deck].wins += 1;
-      }
+      deckWinrates[deck].total += game.wins+game.losses+game.ties;
+      deckWinrates[deck].wins += game.wins;
     });
-    this.winrateWithDecks = Object.entries(deckWinrates).map(
-      ([deck, data]) => ({
-        deck,
-        winrate: (data.wins / data.total) * 100,
-      })
+    this.winrateWithDecks = Object.entries(deckWinrates).reduce(
+      (acc: { names: string[]; winrates: number[] }, [name, data]) => {
+        acc.names.push(name);
+        acc.winrates.push((data.wins / data.total) * 100);
+        return acc;
+      },
+      { names: [], winrates: [] }
     );
   }
 }

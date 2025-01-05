@@ -9,6 +9,7 @@
     width: 80%;
     height: 80%;
     margin: auto;
+    overflow-y: auto; /* makes this scrollable */
     z-index: 1000;
 }
 

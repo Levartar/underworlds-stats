@@ -55,7 +55,16 @@ export class MiniDoughnutChartComponent implements AfterViewInit {
             }
           ]
         },
-        options: chartOptions
+        options:{
+          plugins: {
+            legend: {
+              display: false // Disable the legend
+            },
+            datalabels: {
+              display: true, // Always show data labels
+            }
+          },
+        }
       });
     }
   }

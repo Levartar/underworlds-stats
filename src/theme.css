@@ -1,0 +1,14 @@
+/* You can add global styles to this file, and also import other style files */
+/* src/styles.css */
+
+:root {
+    --primary-color: #da702c;
+    --primary-variant: #bd5215;
+    --secondary-color: #4486be;
+    --secondary-variant: #1f5ea6;
+    --background-color: #282726;
+    --foreground-color: #cecdc3;
+    --error-color: #af302a;
+    --positive-chart-color: #889a39;
+    --negative-chart-color: #d04d41;
+}

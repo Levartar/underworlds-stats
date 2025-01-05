@@ -64,9 +64,9 @@ export class DashboardComponent implements OnInit {
     //Get Array from key object Map and sort it
     this.totalGames = data.reduce((acc, curr)=>acc+curr.gamesPlayed,0)/2
     console.log('totalgames',this.totalGames)
-    const sortByGamesWarbands = data.sort((a, b) =>
-      b.gamesPlayed - a.gamesPlayed);
-    const sortByMetaWarbands = data.sort((a, b) =>
+    const sortByGamesWarbands = data.slice().sort((a, b) =>
+      b.gamesPlayed - a.gamesPlayed); //.slice() creates a shallow
+    const sortByMetaWarbands = data.slice().sort((a, b) =>
       b.metaScore - a.metaScore);
 
     // Prepare chart data
@@ -75,6 +75,7 @@ export class DashboardComponent implements OnInit {
       values: sortByGamesWarbands.map(wb=> wb.gamesPlayed),
       colors: sortByGamesWarbands.map(wb=> wb.colorB)
     }
+    console.log("gamesByWarbandChartData",this.gamesByWarbandChartData)
 
     this.metascoreByWarbandChartData = {
       names: sortByMetaWarbands.map(wb=> wb.name),

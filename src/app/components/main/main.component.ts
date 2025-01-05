@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { forkJoin } from 'rxjs';
+import { MatTabsModule } from '@angular/material/tabs';
 
 import { WarbandDataCalculationsService } from '../../services/warband-data-calculations.service';
 import { DataStoreService } from '../../store/sheet-data.store';
@@ -11,7 +12,7 @@ import { DashboardComponent } from '../../dashboard/dashboard.component';
 @Component({
   selector: 'app-main',
   standalone: true,
-  imports: [CommonModule,DashboardComponent],
+  imports: [CommonModule, DashboardComponent, MatTabsModule],
   templateUrl: './main.component.html',
   styleUrl: './main.component.css'
 })
