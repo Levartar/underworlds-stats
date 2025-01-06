@@ -2,9 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { forkJoin } from 'rxjs';
 import { MatTabsModule } from '@angular/material/tabs';
-import {MatIconModule} from '@angular/material/icon';
-import {MatMenuModule} from '@angular/material/menu';
-import {MatButtonModule} from '@angular/material/button';
 
 import { WarbandDataCalculationsService } from '../../services/warband-data-calculations.service';
 import { DataStoreService } from '../../store/sheet-data.store';
@@ -15,10 +12,9 @@ import { DashboardComponent } from '../../dashboard/dashboard.component';
 @Component({
   selector: 'app-main',
   standalone: true,
-  imports: [CommonModule, DashboardComponent, MatTabsModule, 
-    MatButtonModule, MatMenuModule, MatIconModule],
+  imports: [CommonModule, DashboardComponent, MatTabsModule],
   templateUrl: './main.component.html',
-  styleUrl: './main.component.scss'
+  styleUrl: './main.component.css'
 })
 
 export class MainComponent implements OnInit {

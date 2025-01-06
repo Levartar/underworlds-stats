@@ -12,7 +12,7 @@ import { WarbandDataDialogComponent } from '../warband-data-dialog/warband-data-
   standalone: true,
   imports: [],
   templateUrl: './doughnut-chart.component.html',
-  styleUrl: './doughnut-chart.component.css'
+  styleUrl: './doughnut-chart.component.scss'
 })
 export class DoughnutChartComponent implements AfterViewInit {
   @Input() chartId: string = '';

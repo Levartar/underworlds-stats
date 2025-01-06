@@ -1,0 +1,29 @@
+
+.layout {
+  width: 100%;
+
+  display: grid;
+  grid:
+    "header" auto
+    "main" 1fr
+    "footer" auto
+    / 1fr;
+  gap: 8px;
+}
+
+
+.header {
+  grid-area: header;
+  background-color: aqua;
+}
+
+.main {
+  grid-area: main;
+  background-color: beige;
+}
+
+.footer {
+  grid-area: footer;
+  background-color: blue;
+}
+

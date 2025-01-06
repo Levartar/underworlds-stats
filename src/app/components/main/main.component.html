@@ -1,4 +1,31 @@
-<p>main works!</p>
+<section class="layout">
+  <div class="header">
+    <div class="headline">Winrate</div>
+    <div><button mat-stroked-button>?</button></div>
+    <div><button mat-stroked-button>Options</button></div>
+    <div>
+      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item>
+        <mat-icon>dialpad</mat-icon>
+        <span>Redial</span>
+      </button>
+      <button mat-menu-item disabled>
+        <mat-icon>voicemail</mat-icon>
+        <span>Check voice mail</span>
+      </button>
+      <button mat-menu-item>
+        <mat-icon>notifications_off</mat-icon>
+        <span>Disable alerts</span>
+      </button>
+    </mat-menu>
+    </div>
+  </div>
+  <div class="main">2</div>
+</section>
+
 <mat-tab-group>
   <mat-tab label="Dashboard">
     <app-dashboard></app-dashboard>
@@ -13,9 +40,11 @@
   </mat-tab> 
 </mat-tab-group>
 
+<!-- 
+Listing All Data if fetched correctly
 <div *ngIf="data">
     <h2>Warhammer Stats</h2>
     <div *ngFor="let item of data">
       {{ item | json }}
     </div>
-  </div>
+  </div> -->

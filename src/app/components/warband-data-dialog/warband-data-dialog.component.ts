@@ -11,7 +11,7 @@ import { WarbandDataComponent } from '../warband-data/warband-data.component';
       [warbandName]="data.warbandName">
       </app-warband-data>
   `,
-  styleUrl: './warband-data-dialog.component.css',
+  styleUrl: './warband-data-dialog.component.scss',
 })
 export class WarbandDataDialogComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public data: { warbandName: string }) {

@@ -11,7 +11,7 @@ import { ThemePalette } from '@angular/material/core';
   standalone: true,
   imports: [MiniDoughnutChartComponent, NgIf, BarChartComponent],
   templateUrl: './warband-data.component.html',
-  styleUrl: './warband-data.component.css'
+  styleUrl: './warband-data.component.scss'
 })
 export class WarbandDataComponent implements OnInit {
   @Input() warbandName!: string;

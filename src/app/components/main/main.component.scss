@@ -1,0 +1,48 @@
+.layout {
+  width: 100%;
+  background-color: var(--background-color);
+  color: var(--font-color);
+
+  display: grid;
+  grid:
+    "header" auto "main" 1fr;
+  gap: 8px;
+}
+
+.header {
+  grid-area: header;
+  width: 100%;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.main {
+  grid-area: main;
+}
+
+.headline {
+  font: 700 25px/32px 'IBM Plex Mono', serif;
+}
+
+
+.main-tabs {
+  display: flex;
+  justify-content: space-around;
+  background-color: #f5f5f5;
+  padding: 16px;
+  border-bottom: 2px solid #ccc;
+}
+
+.main-tabs a {
+  text-decoration: none;
+  padding: 8px 16px;
+  color: #333;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+.main-tabs a.active-tab {
+  background-color: #6200ea;
+  color: white;
+}

@@ -11,7 +11,7 @@ import { DoughnutChartComponent } from '../components/doughnut-chart/doughnut-ch
   standalone: true,
   imports: [DoughnutChartComponent, NgIf],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css'
+  styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit {
   totalGames: number = 0;

@@ -10,7 +10,7 @@ import { darkenColor } from '../../helpers/color.helpers';
   standalone: true,
   imports: [],
   templateUrl: './bar-chart.component.html',
-  styleUrl: './bar-chart.component.css'
+  styleUrl: './bar-chart.component.scss'
 })
 export class BarChartComponent {
 @Input() chartId: string = '';

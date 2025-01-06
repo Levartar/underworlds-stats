@@ -10,7 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
   standalone: true,
   imports: [],
   templateUrl: './mini-doughnut-chart.component.html',
-  styleUrl: './mini-doughnut-chart.component.css'
+  styleUrl: './mini-doughnut-chart.component.scss'
 })
 export class MiniDoughnutChartComponent implements AfterViewInit {
   @Input() chartId: string = '';
