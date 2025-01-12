@@ -1,27 +1,24 @@
-
-
-
 <div class="layout">
-  <app-header class="header"></app-header>
+  <app-header class="head-tabline"></app-header>
 
   <mat-drawer-container class="main">
     <mat-drawer #drawer class="sidenav" mode="over" position="end">
       <mat-nav-list>
-        <!-- <mat-list-item routerLink="dashboard">
+        <mat-list-item routerLink="/main/dashboard">
           <div>Dashboard</div>
         </mat-list-item>
-        <mat-list-item routerLink="decks">
+        <mat-list-item routerLink="/main/decks">
           <div>Test Decks</div>
         </mat-list-item>
-        <mat-list-item routerLink="winrate">
+        <mat-list-item routerLink="/main/winrate">
           <div>Test Winrate</div>
         </mat-list-item>
-        <mat-list-item routerLink="meta">
+        <mat-list-item routerLink="/main/meta">
           <div>Test Meta</div>
         </mat-list-item>
-        <mat-list-item routerLink="warbands">
+        <mat-list-item routerLink="/main/warbands">
           <div>Test Warbands</div>
-        </mat-list-item> -->
+        </mat-list-item>
       </mat-nav-list>
   
       <!-- <button mat-menu-item>
@@ -36,7 +33,7 @@
   
     </mat-drawer>
   
-    <section class="layout">
+    <section class="main-layout">
       <div class="header">
         <div class="headline-container">
           <div class="headline">Dashboard</div>
@@ -60,7 +57,7 @@
       </div>
   
       <div class="main">2</div>
-      <!-- <router-outlet></router-outlet> -->
+      <router-outlet></router-outlet>
     </section>
   
   </mat-drawer-container>

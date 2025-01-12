@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { Chart } from 'chart.js/auto';
 import { NgIf } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
-import { DeckCombiData, DeckData, SheetData, SheetWarband, WarbandData } from '../models/spreadsheet.model';
-import { DataStoreService } from '../store/sheet-data.store'
-import { DoughnutChartComponent } from '../components/doughnut-chart/doughnut-chart.component';
+import { DeckCombiData, DeckData, SheetData, SheetWarband, WarbandData } from '../../models/spreadsheet.model';
+import { DataStoreService } from '../../store/sheet-data.store'
+import { DoughnutChartComponent } from '../doughnut-chart/doughnut-chart.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [DoughnutChartComponent, NgIf],
+  imports: [DoughnutChartComponent, NgIf, RouterModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })

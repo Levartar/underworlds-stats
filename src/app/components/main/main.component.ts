@@ -12,7 +12,7 @@ import { RouterModule } from '@angular/router';
 import { WarbandDataCalculationsService } from '../../services/warband-data-calculations.service';
 import { DataStoreService } from '../../store/sheet-data.store';
 import { GoogleSheetService } from '../../services/google-sheet.service';
-import { DashboardComponent } from '../../dashboard/dashboard.component';
+import { DashboardComponent } from '../dashboard/dashboard.component';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 
@@ -20,10 +20,17 @@ import { FooterComponent } from '../footer/footer.component';
 @Component({
   selector: 'app-main',
   standalone: true,
-  imports: [CommonModule, DashboardComponent, MatTabsModule,
-    MatButtonModule, MatMenuModule, MatIconModule,
-    MatSidenavModule, RouterModule, MatListModule,
-    HeaderComponent, FooterComponent
+  imports: [
+    CommonModule,
+    MatTabsModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatIconModule,
+    MatSidenavModule,
+    RouterModule,
+    MatListModule,
+    HeaderComponent,
+    FooterComponent
   ],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss'
@@ -37,7 +44,7 @@ export class MainComponent implements OnInit {
     private warbandDataCalculationsService: WarbandDataCalculationsService,
     private googleSheetService: GoogleSheetService,
     private dataStoreService: DataStoreService
-  ) { }
+  ) {   console.log('MainComponent loaded');}
 
   ngOnInit() {
     // Fetch data

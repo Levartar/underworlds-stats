@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import {MatDividerModule} from '@angular/material/divider';
+import { MatDividerModule } from '@angular/material/divider';
 import { CommonModule } from '@angular/common';
 
 import { MainComponent } from './components/main/main.component';
@@ -16,9 +16,9 @@ import { FooterComponent } from './components/footer/footer.component';
     CommonModule,
     RouterModule,
     RouterOutlet,
-    MainComponent,
-    HeaderComponent,
-    FooterComponent, 
+    //MainComponent,
+    //HeaderComponent,
+    //FooterComponent, 
     MatButtonModule,
     MatIconModule,
     MatDividerModule,
