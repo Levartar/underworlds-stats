@@ -1,6 +1,7 @@
 <div class="layout">
   <app-header class="head-tabline"></app-header>
 
+  <!--Sidenav Sliding Navigation menu-->
   <mat-drawer-container class="main">
     <mat-drawer #drawer class="sidenav" mode="over" position="end">
       <mat-nav-list>
@@ -20,19 +21,9 @@
           <div>Test Warbands</div>
         </mat-list-item>
       </mat-nav-list>
-  
-      <!-- <button mat-menu-item>
-        <span>Winrate</span>
-      </button>
-      <button mat-menu-item>
-        <span>Meta</span>
-      </button>
-      <button mat-menu-item>
-        <span>Warbands</span>
-      </button> -->
-  
     </mat-drawer>
   
+    <!--Headline With name and options-->
     <section class="main-layout">
       <div class="header">
         <div class="headline-container">
@@ -55,8 +46,6 @@
           </button>
         </div>
       </div>
-  
-      <div class="main">2</div>
       <router-outlet></router-outlet>
     </section>
   
