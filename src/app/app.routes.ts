@@ -1,19 +1,33 @@
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { NgModule } from '@angular/core';
+import { MainComponent } from './components/main/main.component';
 
 export const routes: Routes = [
-  { path: '', component: DashboardComponent },
-  { path: 'dashboard', component: DashboardComponent },
-  //TODO Build these Components
-  //{ path: 'warbands', component: WarbandsComponent },
-  //{ path: 'decks', component: DecksComponent },
-  { path: '**', redirectTo: '' }
+  {
+    path: 'main', component: MainComponent,
+    children: [
+      {
+        path: 'dashboard',
+        component: DashboardComponent
+      },
+      {
+        path: 'warbands',
+        component: DashboardComponent
+      },
+      {
+        path: 'winrate',
+        component: DashboardComponent
+      },
+      {
+        path: 'meta',
+        component: DashboardComponent
+      },
+      {
+        path: 'decks',
+        component: DashboardComponent
+      }
+    ]
+  },
+  { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
-
-@NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
-})
-export class AppRoutingModule { }
 

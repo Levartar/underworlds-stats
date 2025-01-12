@@ -1,44 +1,72 @@
-<section class="layout">
-  <div class="header">
-    <div class="headline">Winrate</div>
-    <div><button mat-stroked-button>?</button></div>
-    <div><button mat-stroked-button>Options</button></div>
-    <div>
-      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-      <mat-icon>menu</mat-icon>
-    </button>
-    <mat-menu #menu="matMenu">
-      <button mat-menu-item>
-        <mat-icon>dialpad</mat-icon>
-        <span>Redial</span>
-      </button>
-      <button mat-menu-item disabled>
-        <mat-icon>voicemail</mat-icon>
-        <span>Check voice mail</span>
-      </button>
-      <button mat-menu-item>
-        <mat-icon>notifications_off</mat-icon>
-        <span>Disable alerts</span>
-      </button>
-    </mat-menu>
-    </div>
-  </div>
-  <div class="main">2</div>
-</section>
 
-<mat-tab-group>
-  <mat-tab label="Dashboard">
-    <app-dashboard></app-dashboard>
-  </mat-tab>
-  <mat-tab label="Warbands">
-    <div>Test Warbands</div>
-    <!-- <app-warbands></app-warbands> -->
-  </mat-tab>
-  <mat-tab label="Decks">
-    <div>Test Decks</div>
-    <!-- <app-decks></app-decks> -->
-  </mat-tab> 
-</mat-tab-group>
+
+
+<div class="layout">
+  <app-header class="header"></app-header>
+
+  <mat-drawer-container class="main">
+    <mat-drawer #drawer class="sidenav" mode="over" position="end">
+      <mat-nav-list>
+        <!-- <mat-list-item routerLink="dashboard">
+          <div>Dashboard</div>
+        </mat-list-item>
+        <mat-list-item routerLink="decks">
+          <div>Test Decks</div>
+        </mat-list-item>
+        <mat-list-item routerLink="winrate">
+          <div>Test Winrate</div>
+        </mat-list-item>
+        <mat-list-item routerLink="meta">
+          <div>Test Meta</div>
+        </mat-list-item>
+        <mat-list-item routerLink="warbands">
+          <div>Test Warbands</div>
+        </mat-list-item> -->
+      </mat-nav-list>
+  
+      <!-- <button mat-menu-item>
+        <span>Winrate</span>
+      </button>
+      <button mat-menu-item>
+        <span>Meta</span>
+      </button>
+      <button mat-menu-item>
+        <span>Warbands</span>
+      </button> -->
+  
+    </mat-drawer>
+  
+    <section class="layout">
+      <div class="header">
+        <div class="headline-container">
+          <div class="headline">Dashboard</div>
+          <div><button mat-stroked-button>?</button></div>
+          <div><button mat-stroked-button [matMenuTriggerFor]="options" aria-label="Options menu">Options</button>
+            <mat-menu #options="matMenu">
+              <button mat-menu-item (click)="toggleTheme()">
+                <mat-icon *ngIf="!this.darkmode">dark_mode</mat-icon>
+                <span *ngIf="!this.darkmode">Dark Mode</span>
+                <mat-icon *ngIf="this.darkmode">light_mode</mat-icon>
+                <span *ngIf="this.darkmode">Light Mode</span>
+              </button>
+            </mat-menu>
+          </div>
+        </div>
+        <div class="sidebar-menu">
+          <button mat-icon-button (click)="drawer.toggle()" aria-label="Sidebar menu">
+            <mat-icon>menu</mat-icon>
+          </button>
+        </div>
+      </div>
+  
+      <div class="main">2</div>
+      <!-- <router-outlet></router-outlet> -->
+    </section>
+  
+  </mat-drawer-container>
+
+  <app-footer class="footer"></app-footer>
+</div>
 
 <!-- 
 Listing All Data if fetched correctly

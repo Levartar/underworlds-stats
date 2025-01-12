@@ -1,40 +1,74 @@
+@use '@angular/material' as mat;
 /* You can add global styles to this file, and also import other style files */
 /* src/styles.css */
+@import './theme.scss';
 
-/* Apply the colors globally */
-body {
-    background-color: var(--background-color);
-    /*color: var(--foreground-color);*/
+
+html, body { height: 100%; }
+body { 
+    margin: 0; 
+    font-family: Roboto, "Helvetica Neue", sans-serif; 
+}
+//     $font-family: "Times New Roman, Times, serif"
+$custom-typography: mat.define-typography-config(
+    $font-family: "IBM Plex Mono, serif"
+);
+$light-primary: mat.define-palette($primary-palette);
+$light-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$custom-warn: mat.define-palette(mat.$red-palette);
+
+$light-theme: mat.define-light-theme(
+    (
+        color: (
+            primary:$light-primary,
+            accent:$light-accent,
+            warn:$custom-warn,
+        ),
+
+    )
+);
+
+$dark-primary: mat.define-palette(mat.$blue-gray-palette);
+$dark-accent: mat.define-palette(mat.$amber-palette,A200,A100,A400);
+
+$dark-theme: mat.define-dark-theme(
+    (
+        color: (
+            primary:$dark-primary,
+            accent:$dark-accent,
+            warn:$custom-warn,
+            background: $dark-theme-background,
+        ),
+        typography: $custom-typography,
+    )
+);
+
+//@include mat.all-component-themes($custom-theme);
+
+body.light-theme{
+    @include mat.all-component-colors($light-theme);
 }
 
+body.dark-theme{
+    @include mat.all-component-colors($dark-theme);
+}
+
+
+
+
+/* Apply the colors globally */
 /* Custom chart colors (optional, for example, in charts) */
 .chart-positive-color {
-    background-color: var(--positive-chart-color);
+    background-color: $positive-chart-color;
 }
 
 .chart-negative-color {
-    background-color: var(--negative-chart-color);
+    background-color: $negative-chart-color;
 }
 
 /* Customize Material Design or your own components */
-.mat-button {
-    background-color: var(--primary-color);
-    color: var(--foreground-color);
-}
-
 .mat-card {
     background-color: var(--secondary-color);
-}
-
-
-html,
-body {
-    height: 100%;
-}
-
-body {
-    margin: 0;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 .custom-backdrop {

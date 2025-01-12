@@ -1,15 +1,72 @@
+@use '@angular/material' as mat;
 /* You can add global styles to this file, and also import other style files */
 /* src/styles.css */
 
-:root {
-    --primary-color: #da702c;
-    --primary-variant: #bd5215;
-    --secondary-color: #4486be;
-    --secondary-variant: #1f5ea6;
-    --background-color: #282726;
-    --foreground-color: #cecdc3;
-    --font-color: #cecdc3;
-    --error-color: #af302a;
-    --positive-chart-color: #889a39;
-    --negative-chart-color: #d04d41;
-}
+$primary-color: #da702c;
+$primary-variant: #bd5215;
+$secondary-color: #4486be;
+$secondary-variant: #1f5ea6;
+$background-color: #282726;
+$foreground-color: #cecdc3;
+$font-color: #fff;
+$error-color: #af302a;
+$positive-chart-color: #889a39;
+$negative-chart-color: #d04d41;
+
+$primary-palette: (
+  50: #fbe6de,
+  100: #f7cbbd,
+  200: #f2ad99,
+  300: #ec8f73,
+  400: #e57855,
+  500: #da702c, // Base primary color
+  600: #c66528,
+  700: #ad5923,
+  800: #944d1e,
+  900: #7a4019,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #ffffff,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff // Secondary contrast color
+  )
+);
+
+$secondary-palette: (
+  50: #e3edf6,
+  100: #c2d4eb,
+  200: #9ebae0,
+  300: #79a0d5,
+  400: #5b8acb,
+  500: #1f5ea6, // Base secondary variant color
+  600: #1b548f,
+  700: #174a79,
+  800: #123f62,
+  900: #0e344d,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #ffffff,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff // Secondary contrast color
+  )
+);
+
+$dark-theme-background: (
+  background: #121212, // Base dark background
+  hover: #1e1e1e,      // Slightly lighter hover state
+  card: #1f1f1f,       // Card backgrounds
+  dialog: #2a2a2a,     // Dialog backgrounds
+  status-bar: #000000, // Status bar (extra dark)
+);
