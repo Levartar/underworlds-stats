@@ -1,16 +1,36 @@
-<p>warband-details-card works!</p>
-
-<!-- Warband Details Card -->
 <mat-card appearance="outlined" class="warband-details-card">
-    <mat-card-header>
-      <mat-card-title>{{ selectedWarband?.name }}</mat-card-title>
-    </mat-card-header>
-    <mat-card-content *ngIf="selectedWarband">
-      <p>Meta Score: {{ selectedWarband.metaScore }}</p>
-      <p>Games Played: {{ selectedWarband.gamesPlayed }}</p>
-      <p>Best Synergy: {{ selectedWarband.bestSynergy?.deckCombiName }} (Winrate: {{ selectedWarband.bestSynergy?.winrate | number:'1.1-1' }}%)</p>
-      <p>Best Matchup: {{ selectedWarband.bestmatchup?.opponentName }} (Winrate: {{ selectedWarband.bestmatchup?.winrate | number:'1.1-1' }}%)</p>
-      <p>Worst Matchup: {{ selectedWarband.worstmatchup?.opponentName }} (Winrate: {{ selectedWarband.worstmatchup?.winrate | number:'1.1-1' }}%)</p>
+    <mat-card-title class="title">
+        {{ selectedWarband?.name }}
+        <img matListAvatar *ngIf="selectedWarband" [src]="selectedWarband.iconLink" alt="{{ selectedWarband.name }}"
+            class="warband-icon" />
+    </mat-card-title>
+    <mat-card-content class="content" *ngIf="selectedWarband">
+        <div class="main">
+            <div class="over-under-container">
+                <p class="fat">{{ selectedWarband.metaScore | number: '0.0-0' }}</p>
+                <p>Meta Score</p>
+            </div>
+            <div class="over-under-container">
+                <p class="fat">{{ selectedWarband.gamesPlayed }}</p>
+                <p>Games Played</p>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="over-under-container">
+                <p class="fat"> {{ selectedWarband.bestSynergy?.deckCombiName }} - Winrate: {{
+                    selectedWarband.bestSynergy?.winrate | number:'1.1-1' }}%</p>
+                <p>Best Synergy</p>
+            </div>
+            <div class="over-under-container">
+                <p class="fat">{{ selectedWarband.bestmatchup?.opponentName }} - Winrate: {{
+                    selectedWarband.bestmatchup?.winrate | number:'1.1-1' }}%</p>
+                <p>Best Matchup</p>
+            </div>
+            <div class="over-under-container">
+                <p class="fat"> {{ selectedWarband.worstmatchup?.opponentName }} - Winrate: {{
+                    selectedWarband.worstmatchup?.winrate | number:'1.1-1' }}%</p>
+                <p>Worst Matchup</p>
+            </div>
+        </div>
     </mat-card-content>
-  </mat-card>
-  
+</mat-card>

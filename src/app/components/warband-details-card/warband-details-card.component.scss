@@ -1,8 +1,73 @@
+@import '@fontsource/work-sans';
+
+:host {
+    position: fixed;
+    justify-content: center;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    transition: transform 0.3s ease-in-out;
+    transform: translateY(0);
+    pointer-events: none;
+}
+
 .warband-details-card {
     margin: 16px auto;
-    width: 90%;
-    max-width: 600px;
-    padding: 16px;
+    width: 95%;
+    padding: 7px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
+    border-radius: 15px;
+    max-width: 800px;
+    font-family: "IBM Plex Mono";
+
+    display: grid;
+    grid:
+        "header" auto "main" 1fr "footer" auto / 1fr;
+
+    .title {
+        grid-area: header;
+        display: flex;
+        justify-content: space-between;
+        font-family: "Work Sans";
+
+        .warband-icon {
+            height: 40px;
+        }
+    }
+
+    .content {
+        font-size: 10px;
+        padding: 0px;
+
+        .main {
+            grid-area: main;
+            display: flex;
+            justify-content: space-between;
+            padding-right: 50px;
+
+            .fat {
+                font-weight: 700;
+                font-size: 28px;
+                margin-bottom: 2px;
+            }
+        }
+
+        .footer {
+            grid-area: footer;
+            display: flex;
+            justify-content: space-between;
+            flex-direction: column;
+
+            .fat {
+                font-weight: 700;
+                font-size: 14px;
+                margin-bottom: 0px;
+            }
+        }
+
+        .over-under-container {
+            justify-content: space-between;
+        }
+    }
+}

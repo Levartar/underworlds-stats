@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, SimpleChanges } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
-import { WinrateComponent } from '../winrate/winrate.component';
 import { DataStoreService } from '../../store/sheet-data.store';
 import { WarbandData } from '../../models/spreadsheet.model';
+import { combineLatest, forkJoin, map } from 'rxjs';
 
 @Component({
   selector: 'app-warband-details-card',
@@ -30,17 +30,25 @@ export class WarbandDetailsCardComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // Retrieve the warband name from the route
-    const warbandName = this.route.snapshot.paramMap.get('name');
-
     // Subscribe to data from the store
-    this.dataStoreService.warbandData$.subscribe((data) => {
-      if (data.length > 0) {
-        this.processWarbandsForChart(data);
+    combineLatest({
+      routeParams: this.route.paramMap,
+      warbandData: this.dataStoreService.warbandData$,
+    }).subscribe(({ routeParams, warbandData }) => {
+      const warbandName = routeParams.get('name');
+      console.log("subscribtion runs",warbandName,warbandData)
+      if (warbandName && warbandData.length > 0) {
+        this.processWarbandsForChart(warbandData);
+        this.updateWarbandDetails(warbandName);
       }
     });
+  }
 
-    this.selectedWarband = this.getWarbandByName(warbandName);
+  ngOnChanges(changes: SimpleChanges): void {
+    // Handle any changes in inputs or other relevant data here
+    if (changes['selectedWarband']) {
+      // Update the selected warband data
+    }
   }
 
   processWarbandsForChart(data: WarbandData[]): void {
@@ -95,7 +103,15 @@ export class WarbandDetailsCardComponent implements OnInit {
       });
     });
     //sort by Winrate
-    this.winrateByWarbandChartData.sort((a, b) => b.winrate - a.winrate);
+    console.log('warbandDetailsCardloadedWarbands', this.winrateByWarbandChartData)
+  }
+
+  private updateWarbandDetails(warbandName: string | null): void {
+    if (warbandName) {
+      // Find the warband data based on the name
+      console.log('name is set')
+      this.selectedWarband = this.getWarbandByName(warbandName);
+    }
   }
 
   private getWarbandByName(name: string | null): any {
