@@ -1,0 +1,39 @@
+.winrate-list {
+    width: 100%;
+
+    .winrate-list-item {
+
+        .winrate-button {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            background-color: white;
+            color: black;
+            border-radius: 25px;
+            text-align: left;
+            padding: 0 0 0 8px;
+            gap: 10px;
+            min-height: 40px;
+            min-width: 100px;
+
+            /* Set a minimum width for small winrates */
+            .warband-icon {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+            }
+
+            .button-content {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 8px;
+            }
+        }
+    }
+}
+
+.warband-info {
+    flex: 1;
+    margin-right: 10px;
+}

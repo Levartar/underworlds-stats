@@ -1,20 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { forkJoin } from 'rxjs';
+import { filter, forkJoin } from 'rxjs';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav'
 import { MatListModule } from '@angular/material/list'
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
 
-import { WarbandDataCalculationsService } from '../../services/warband-data-calculations.service';
-import { DataStoreService } from '../../store/sheet-data.store';
-import { GoogleSheetService } from '../../services/google-sheet.service';
-import { DashboardComponent } from '../dashboard/dashboard.component';
-import { HeaderComponent } from '../header/header.component';
-import { FooterComponent } from '../footer/footer.component';
+import { WarbandDataCalculationsService } from '../services/warband-data-calculations.service';
+import { DataStoreService } from '../store/sheet-data.store';
+import { GoogleSheetService } from '../services/google-sheet.service';
+import { DashboardComponent } from '../components/dashboard/dashboard.component';
+import { HeaderComponent } from '../components/header/header.component';
+import { FooterComponent } from '../components/footer/footer.component';
 
 
 @Component({
@@ -38,13 +38,15 @@ import { FooterComponent } from '../footer/footer.component';
 
 export class MainComponent implements OnInit {
   data: any[] | null = null;
-  darkmode: boolean = false;
+  darkmode: boolean = true;
+  currentRouteName: string = 'Dashboard';
 
   constructor(
     private warbandDataCalculationsService: WarbandDataCalculationsService,
     private googleSheetService: GoogleSheetService,
-    private dataStoreService: DataStoreService
-  ) {   console.log('MainComponent loaded');}
+    private dataStoreService: DataStoreService,
+    private router: Router, private activatedRoute: ActivatedRoute
+  ) {}
 
   ngOnInit() {
     // Fetch data
@@ -66,10 +68,27 @@ export class MainComponent implements OnInit {
       this.warbandDataCalculationsService.calculateDeckCombiData();
     });
 
-
     this.googleSheetService.fetchSheetData().subscribe(csv => {
       this.data = this.googleSheetService.parseCsvData(csv);
     });
+    
+    this.updateRouteName();
+    this.router.events
+    .pipe(filter(event => event instanceof NavigationEnd)) // Filter only NavigationEnd events
+    .subscribe(() => {
+      this.updateRouteName();
+    });
+  }
+
+  private updateRouteName(): void {
+    // Find the last child route
+    let child = this.activatedRoute.firstChild;
+    while (child?.firstChild) {
+      child = child.firstChild;
+    }
+    console.log("route name",child?.snapshot.data)
+    // Get the route's `data.title` or use a fallback name
+    this.currentRouteName = child?.snapshot.data['title'] || 'Dashboard';
   }
 
   toggleTheme() {

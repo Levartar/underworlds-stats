@@ -1,4 +1,4 @@
-@import '../../../theme.scss';
+@import '../../theme.scss';
 
 
 .layout {
@@ -36,21 +36,26 @@
     "header" auto "main" 1fr;
   gap: 8px;
 
-  .headline-container{
-    grid-area: header;
+  .header {
     width: 100%;
     display: flex;
-    gap: 16px;
+    gap: 8px;
+    padding: 0 0 0 8px;
     align-items: center;
-  }
-}
+    justify-content: space-between;
 
-.header {
-  width: 100%;
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  justify-content: space-between;
+    .headline-container{
+      grid-area: header;
+      width: 100%;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .sidebar-menu{
+      margin-right: 8px;
+    }
+  }
 }
 
 .mat-stroked-button {
