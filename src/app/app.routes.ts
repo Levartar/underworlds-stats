@@ -2,6 +2,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { MainComponent } from './main/main.component';
 import { WinrateComponent } from './components/winrate/winrate.component';
+import { WarbandDetailsCardComponent } from './components/warband-details-card/warband-details-card.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'main', pathMatch: 'full'},
@@ -25,9 +26,14 @@ export const routes: Routes = [
         data: { title: 'Decks' },
       },
       {
-        path: 'winrate',
+        path: 'winrates',
         component: WinrateComponent,
         data: { title: 'Winrates' },
+        children: [
+          {
+            path: ':name', component: WarbandDetailsCardComponent
+          }
+        ]
       },
       {
         path: 'meta',

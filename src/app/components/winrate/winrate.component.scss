@@ -1,7 +1,16 @@
+@import '../../../theme.scss';
+
 .winrate-list {
     width: 100%;
 
     .winrate-list-item {
+
+        .dashed {
+            border: 2px dashed $background-color; /* Dashed border with desired color */
+            border-radius: 4px; /* To match Angular Material's button styling */
+            padding: 8px 16px;
+            background-color: transparent; /* Transparent background for outline effect */            transition: background-color 0.3s ease, color 0.3s ease;
+        }
 
         .winrate-button {
             display: flex;
@@ -37,3 +46,17 @@
     flex: 1;
     margin-right: 10px;
 }
+
+.warband-details-card {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 90%;
+    max-width: 600px;
+    padding: 16px;
+    z-index: 1000;
+    background-color: grey;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }

@@ -1,38 +1,21 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatList, MatListModule } from '@angular/material/list';
-import { MatButtonModule } from '@angular/material/button';
+import { Component, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
-import { DeckCombiData, SheetWarband, WarbandData } from '../../models/spreadsheet.model';
+import { WinrateComponent } from '../winrate/winrate.component';
 import { DataStoreService } from '../../store/sheet-data.store';
-
-
+import { WarbandData } from '../../models/spreadsheet.model';
 
 @Component({
-  selector: 'app-winrate',
+  selector: 'app-warband-details-card',
   standalone: true,
-  imports: [
-    RouterModule,
-    MatListModule,
-    CommonModule,
-    MatButtonModule,
-    MatCardModule],
-  templateUrl: './winrate.component.html',
-  styleUrl: './winrate.component.scss'
+  imports: [MatCardModule, CommonModule],
+  templateUrl: './warband-details-card.component.html',
+  styleUrl: './warband-details-card.component.scss'
 })
-export class WinrateComponent {
-  totalGames: number = 0;
-  warbandData: SheetWarband[] = [];
+export class WarbandDetailsCardComponent implements OnInit {
   selectedWarband: any;
-
-  // Chart data
-  warbandNameChartLabels: string[] = [];
-  gamesByWarbandChartData: { names: string[], values: number[], colors: string[] } | null = null;
-  metascoreByWarbandChartData: { names: string[], values: number[], colors: string[] } | null = null;
-  metascoreByDeckCombi: { names: string[], values: number[], colors: string[] } | null = null;
-  warbandChartColors: string[] = [];
   winrateByWarbandChartData: {
     name: string, winrate: number,
     iconLink: string, metaScore: number, gamesPlayed: number, legality: boolean,
@@ -42,11 +25,14 @@ export class WinrateComponent {
   }[] = [];
 
   constructor(
-    private router: Router,
+    private route: ActivatedRoute,
     private dataStoreService: DataStoreService
   ) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
+    // Retrieve the warband name from the route
+    const warbandName = this.route.snapshot.paramMap.get('name');
+
     // Subscribe to data from the store
     this.dataStoreService.warbandData$.subscribe((data) => {
       if (data.length > 0) {
@@ -54,32 +40,10 @@ export class WinrateComponent {
       }
     });
 
-    this.dataStoreService.deckCombiData$.subscribe((data) => {
-      if (data.length > 0) {
-        this.processDecksForChart(data);
-      }
-    });
-  }
-
-  processDecksForChart(data: DeckCombiData[]) {
-    this.totalGames = data.reduce((acc, curr) => acc + curr.gamesPlayed, 0) / 2
-    const sortByMetaDecks = data.sort((a, b) =>
-      b.metaScore - a.metaScore);
-
-    this.metascoreByDeckCombi = {
-      names: sortByMetaDecks.map(deck => `${deck.name1} + ${deck.name2}`),
-      values: sortByMetaDecks.map(deck => Math.floor(deck.metaScore)),
-      colors: sortByMetaDecks.map(deck => deck.colorA)
-    }
-    console.log("metascoreByDeckCombi", this.metascoreByWarbandChartData)
+    this.selectedWarband = this.getWarbandByName(warbandName);
   }
 
   processWarbandsForChart(data: WarbandData[]): void {
-    //Get Array from key object Map and sort it
-    this.totalGames = data.reduce((acc, curr) => acc + curr.gamesPlayed, 0) / 2
-
-    // Prepare chart data
-
     data.slice().forEach((wb) => {
       // Calculate the best synergy
       const bestSynergy = Object.entries(wb.deckSynergies)
@@ -132,12 +96,9 @@ export class WinrateComponent {
     });
     //sort by Winrate
     this.winrateByWarbandChartData.sort((a, b) => b.winrate - a.winrate);
-
-    console.log('winrates', this.winrateByWarbandChartData)
   }
 
-  navigateToWarbandDetails(warband: any): void {
-    console.log(`/main/winrates/${warband.name}`)
-    this.router.navigate([`/main/winrates/${warband.name}`]);
+  private getWarbandByName(name: string | null): any {
+    return this.winrateByWarbandChartData.find((warband) => warband.name === name);
   }
 }

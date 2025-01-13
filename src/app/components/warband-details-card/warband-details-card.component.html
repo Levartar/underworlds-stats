@@ -1,0 +1,16 @@
+<p>warband-details-card works!</p>
+
+<!-- Warband Details Card -->
+<mat-card appearance="outlined" class="warband-details-card">
+    <mat-card-header>
+      <mat-card-title>{{ selectedWarband?.name }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content *ngIf="selectedWarband">
+      <p>Meta Score: {{ selectedWarband.metaScore }}</p>
+      <p>Games Played: {{ selectedWarband.gamesPlayed }}</p>
+      <p>Best Synergy: {{ selectedWarband.bestSynergy?.deckCombiName }} (Winrate: {{ selectedWarband.bestSynergy?.winrate | number:'1.1-1' }}%)</p>
+      <p>Best Matchup: {{ selectedWarband.bestmatchup?.opponentName }} (Winrate: {{ selectedWarband.bestmatchup?.winrate | number:'1.1-1' }}%)</p>
+      <p>Worst Matchup: {{ selectedWarband.worstmatchup?.opponentName }} (Winrate: {{ selectedWarband.worstmatchup?.winrate | number:'1.1-1' }}%)</p>
+    </mat-card-content>
+  </mat-card>
+  

@@ -1,18 +1,19 @@
 <mat-list class="winrate-list" *ngIf="winrateByWarbandChartData">
     <mat-list-item *ngFor="let wbWinrate of winrateByWarbandChartData" class="winrate-list-item">
         <!-- Dynamic Button -->
-        <button mat-raised-button class="winrate-button" [ngStyle]="{ width: wbWinrate.value + '%'}">
+        <button mat-raised-button class="winrate-button" 
+        [ngStyle]="{ width: wbWinrate.winrate + '%'}"
+        [ngClass]="wbWinrate.legality?'':'dashed'"
+        (click)="navigateToWarbandDetails(wbWinrate)">
             <!-- Icon -->
             <div class="button-content">
                 <img matListAvatar [src]="wbWinrate.iconLink" alt="{{ wbWinrate.name }}" class="warband-icon" />
 
-                {{ wbWinrate.value | number:'1.1-1'}}%
+                {{ wbWinrate.winrate | number:'1.1-1'}}%
             </div>
         </button>
-        <!-- Name and Winrate 
-        <div class="warband-info">
-            <h4 matLine>{{ wbWinrate.name }}</h4>
-            <p matLine>Winrate: {{ wbWinrate.value| number:'1.1-1' }}%</p>
-        </div>-->
     </mat-list-item>
 </mat-list>
+
+<!-- Router outlet for the details card -->
+<router-outlet></router-outlet>
