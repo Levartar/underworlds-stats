@@ -5,24 +5,26 @@
   <mat-drawer-container class="main">
     <mat-drawer #drawer class="sidenav" mode="over" position="end">
       <mat-nav-list>
-        <mat-list-item routerLink="/main/dashboard">
+        <mat-list-item routerLink="dashboard" (click)="drawer.toggle()">
           <div>Dashboard</div>
         </mat-list-item>
-        <mat-list-item routerLink="/main/decks">
-          <div>Test Decks</div>
+        <mat-list-item routerLink="decks" (click)="drawer.toggle()">
+          <div>Decks</div>
         </mat-list-item>
-        <mat-list-item routerLink="winrates">
-          <div>Test Winrate</div>
+        <mat-list-item routerLink="winrates" (click)="drawer.toggle()">
+          <div>Winrates</div>
         </mat-list-item>
-        <mat-list-item routerLink="/main/meta">
-          <div>Test Meta</div>
+        <mat-list-item routerLink="meta" (click)="drawer.toggle()">
+          <div>Meta</div>
         </mat-list-item>
-        <mat-list-item routerLink="/main/warbands">
-          <div>Test Warbands</div>
+        <mat-list-item routerLink="warbands" (click)="drawer.toggle()">
+          <div>Warbands</div>
         </mat-list-item>
       </mat-nav-list>
     </mat-drawer>
-  
+
+    <!--Headline With name and options-->
+
     <!--Headline With name and options-->
     <section class="main-layout">
       <div class="header">
@@ -48,7 +50,7 @@
       </div>
       <router-outlet></router-outlet>
     </section>
-  
+
   </mat-drawer-container>
 
   <app-footer class="footer"></app-footer>

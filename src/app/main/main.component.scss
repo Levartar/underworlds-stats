@@ -10,7 +10,6 @@
     "main" 1fr
     "footer" auto
     / 1fr;
-  gap: 8px;
 }
 
 .head-tabline {
@@ -23,6 +22,7 @@
 }
 
 .footer {
+  z-index: 1000;
   grid-area: footer;
   background-color: blue;
 }

@@ -20,6 +20,7 @@
     border-radius: 15px;
     max-width: 800px;
     font-family: "IBM Plex Mono";
+    pointer-events: all;
 
     display: grid;
     grid:
@@ -30,9 +31,16 @@
         display: flex;
         justify-content: space-between;
         font-family: "Work Sans";
+        gap: 10px;
 
         .warband-icon {
             height: 40px;
+        }
+
+        .close-button{
+            border-radius: 20px;
+            height: 40px;
+            width: 40px;
         }
     }
 
@@ -69,5 +77,9 @@
         .over-under-container {
             justify-content: space-between;
         }
+    }
+
+    .divider {
+        flex-grow: 1;
     }
 }

@@ -1,0 +1,39 @@
+@import '../../../theme.scss';
+
+.layout {
+    width: 100%;
+
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+  
+
+    .warband-button-container {
+        display: inline-block;
+        margin: 5px;
+      }
+
+      .not-legal {
+        border: 2px dashed $background-color; /* Dashed border with desired color */
+        border-radius: 4px; /* To match Angular Material's button styling */
+        padding: 8px 16px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+      
+      .warband-button {
+        border-radius: 50%;
+        width: 90px;
+        height: 90px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .warband-icon {
+        width: 80%;
+        height: 80%;
+        border-radius: 50%;
+      }
+  }

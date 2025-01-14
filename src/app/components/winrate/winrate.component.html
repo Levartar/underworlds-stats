@@ -3,12 +3,13 @@
         <!-- Dynamic Button -->
         <button mat-raised-button class="winrate-button" 
         [ngStyle]="{ width: wbWinrate.winrate + '%'}"
-        [ngClass]="wbWinrate.legality?'':'dashed'"
+        [ngClass]="wbWinrate.legality?'':'not-legal'"
         (click)="navigateToWarbandDetails(wbWinrate)">
             <!-- Icon -->
             <div class="button-content">
-                <img matListAvatar [src]="wbWinrate.iconLink" alt="{{ wbWinrate.name }}" class="warband-icon" />
-
+                <img matListAvatar [src]="wbWinrate.iconLink" 
+                alt="{{ wbWinrate.name }}" 
+                class="warband-icon" />
                 {{ wbWinrate.winrate | number:'1.1-1'}}%
             </div>
         </button>

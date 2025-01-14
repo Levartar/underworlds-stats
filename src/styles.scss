@@ -47,12 +47,15 @@ $dark-theme: mat.define-dark-theme(
 
 body.light-theme{
     @include mat.all-component-colors($light-theme);
+    --primary-color: #{mat.get-color-from-palette($light-primary)};
+    --accent-color: #{mat.get-color-from-palette($light-accent)};
 }
 
 body.dark-theme{
     @include mat.all-component-colors($dark-theme);
+    --primary-color: #{mat.get-color-from-palette($dark-primary)};
+    --accent-color: #{mat.get-color-from-palette($dark-accent)};
 }
-
 
 
 

@@ -3,6 +3,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { MainComponent } from './main/main.component';
 import { WinrateComponent } from './components/winrate/winrate.component';
 import { WarbandDetailsCardComponent } from './components/warband-details-card/warband-details-card.component';
+import { WarbandsComponent } from './components/warbands/warbands.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'main', pathMatch: 'full'},
@@ -43,9 +44,13 @@ export const routes: Routes = [
       },
       {
         path: 'warbands',
-        redirectTo: 'dashboard',
-        //component: WarbandsComponent,
+        component: WarbandsComponent,
         data: { title: 'Warbands' },
+        children: [
+          {
+            path: ':name', component: WarbandDetailsCardComponent
+          }
+        ]
       },
     ]
   },

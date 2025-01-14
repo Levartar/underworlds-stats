@@ -1,8 +1,13 @@
 <mat-card appearance="outlined" class="warband-details-card">
     <mat-card-title class="title">
         {{ selectedWarband?.name }}
+        <div class="divider"></div>
         <img matListAvatar *ngIf="selectedWarband" [src]="selectedWarband.iconLink" alt="{{ selectedWarband.name }}"
             class="warband-icon" />
+        <button mat-mini-fab class="close-button" 
+        (click)="closeCard()">
+            <mat-icon>close</mat-icon>
+        </button>
     </mat-card-title>
     <mat-card-content class="content" *ngIf="selectedWarband">
         <div class="main">
@@ -13,6 +18,8 @@
             <div class="over-under-container">
                 <p class="fat">{{ selectedWarband.gamesPlayed }}</p>
                 <p>Games Played</p>
+            </div>
+            <div class="over-under-container">
             </div>
         </div>
         <div class="footer">

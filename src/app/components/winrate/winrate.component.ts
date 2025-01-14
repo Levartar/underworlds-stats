@@ -50,25 +50,6 @@ export class WinrateComponent {
         this.processWarbandsForChart(data);
       }
     });
-
-    this.dataStoreService.deckCombiData$.subscribe((data) => {
-      if (data.length > 0) {
-        this.processDecksForChart(data);
-      }
-    });
-  }
-
-  processDecksForChart(data: DeckCombiData[]) {
-    this.totalGames = data.reduce((acc, curr) => acc + curr.gamesPlayed, 0) / 2
-    const sortByMetaDecks = data.sort((a, b) =>
-      b.metaScore - a.metaScore);
-
-    this.metascoreByDeckCombi = {
-      names: sortByMetaDecks.map(deck => `${deck.name1} + ${deck.name2}`),
-      values: sortByMetaDecks.map(deck => Math.floor(deck.metaScore)),
-      colors: sortByMetaDecks.map(deck => deck.colorA)
-    }
-    console.log("metascoreByDeckCombi", this.metascoreByWarbandChartData)
   }
 
   processWarbandsForChart(data: WarbandData[]): void {

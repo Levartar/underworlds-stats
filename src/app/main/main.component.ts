@@ -81,15 +81,11 @@ export class MainComponent implements OnInit {
   }
 
   private updateRouteName(): void {
-    // Find the last child route
-    let child = this.activatedRoute.firstChild;
-    while (child?.firstChild) {
-      child = child.firstChild;
-    }
-    console.log("route name",child?.snapshot.data)
+  // Access the first child route of the activated route
+  const firstChild = this.activatedRoute.firstChild;
+
     // Get the route's `data.title` or use a fallback name
-    this.currentRouteName = child?.snapshot.data['title'] || 'Dashboard';
-  }
+    this.currentRouteName = firstChild?.snapshot.data['title'] || 'Dashboard';  }
 
   toggleTheme() {
     if (this.darkmode) {

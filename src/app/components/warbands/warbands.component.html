@@ -1,0 +1,17 @@
+<section class="layout">
+  <div *ngFor="let warband of warbandData" 
+  class="warband-button-container">
+    <button mat-raised-button class="warband-button" 
+    [ngClass]="warband.legality?'':'not-legal'"
+    (click)="navigateToWarbandDetails(warband)">
+      <img [src]="warband.iconLink" alt="{{ warband.name }}" class="warband-icon" />
+    </button>
+  </div>
+</section>
+
+<!-- Spacer to accommodate the fixed height card -->
+<div style="height: 320px;"></div>
+
+<!-- Router outlet for the details card -->
+<router-outlet></router-outlet>
+

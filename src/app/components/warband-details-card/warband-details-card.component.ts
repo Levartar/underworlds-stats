@@ -1,16 +1,17 @@
 import { Component, OnInit, SimpleChanges } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 import { DataStoreService } from '../../store/sheet-data.store';
 import { WarbandData } from '../../models/spreadsheet.model';
 import { combineLatest, forkJoin, map } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-warband-details-card',
   standalone: true,
-  imports: [MatCardModule, CommonModule],
+  imports: [MatCardModule, CommonModule, MatIconModule],
   templateUrl: './warband-details-card.component.html',
   styleUrl: './warband-details-card.component.scss'
 })
@@ -26,6 +27,7 @@ export class WarbandDetailsCardComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private dataStoreService: DataStoreService
   ) { }
 
@@ -116,5 +118,9 @@ export class WarbandDetailsCardComponent implements OnInit {
 
   private getWarbandByName(name: string | null): any {
     return this.winrateByWarbandChartData.find((warband) => warband.name === name);
+  }
+
+  closeCard() {
+    this.router.navigate(['..'], { relativeTo: this.route });
   }
 }
