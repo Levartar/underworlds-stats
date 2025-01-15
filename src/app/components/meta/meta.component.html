@@ -1,0 +1,50 @@
+<div class="meta-container">
+    <div class="chart-container">
+        <canvas baseChart [data]="chartData" [options]="chartOptions" [type]="'doughnut'">
+        </canvas>
+    </div>
+
+    <div class="warband-info-scrollable">
+        <div class="warband-info-container">
+            <mat-card class="warband-info" *ngFor="let warband of warbandMetaData; let i = index" [id]="'warband-' + i"
+            [ngClass]="{'selected': selectedWarbandIndex === i}">
+                <mat-card-title class="title">
+                    {{ warband?.name }}
+                    <img matListAvatar *ngIf="warband" [src]="warband.iconLink" alt="{{ warband.name }}"
+                        class="warband-icon" />
+                </mat-card-title>
+                <mat-card-content class="content" *ngIf="warband">
+                    <div class="main">
+                        <div class="over-under-container">
+                            <p class="fat">{{ warband.metaScore | number: '0.0-0' }}</p>
+                            <p>Meta Score</p>
+                        </div>
+                        <div class="over-under-container">
+                            <p class="fat">{{ warband.gamesPlayed }}</p>
+                            <p>Games Played</p>
+                        </div>
+                        <div class="over-under-container">
+                        </div>
+                    </div>
+                    <mat-divider></mat-divider>
+
+                    <div class="footer">
+                        <div class="over-under-container">
+                                <p class="fat"> {{warband.bestSynergy.winrate | number:'0.0-0' }}% - {{ warband.bestSynergy.deckCombiName }}</p>
+
+                            <p>Best Deck Synergy</p>
+                        </div>
+                        <div class="over-under-container">
+                                <p class="fat"> {{warband.bestmatchup.winrate | number:'0.0-0' }}% - {{ warband.bestmatchup.opponentName }}</p>
+                            <p>Best Matchup</p>
+                        </div>
+                        <div class="over-under-container">
+                                <p class="fat"> {{warband.worstmatchup.winrate | number:'0.0-0' }}% - {{ warband.worstmatchup.opponentName }}</p>
+                            <p>Worst Matchup</p>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>

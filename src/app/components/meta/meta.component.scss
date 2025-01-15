@@ -1,0 +1,142 @@
+@import '@fontsource/work-sans';
+
+.meta-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .chart-container {
+        width: 100%;
+        max-width: 233px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .warband-info-scrollable {
+        width: 100%;
+        max-width: 100vw;
+        overflow-x: auto;
+        padding: 10px 0;
+
+        .warband-info-container {
+            display: flex;
+            width: 100%;
+
+            margin: 16px auto;
+            width: 95%;
+            padding: 7px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            max-width: 800px;
+            font-family: "IBM Plex Mono";
+            pointer-events: all;
+
+
+            .warband-info {
+                width: 256px;
+                display: flex;
+                flex: 0 0 auto;
+                margin: 0 10px;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                text-align: center;
+
+                .title {
+                    grid-area: header;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    font-family: "Work Sans";
+                    font-size: 16px;
+                    line-height: normal;
+                    margin-bottom: 5px;
+
+                    .warband-icon {
+                        height: 30px;
+                    }
+
+                    .close-button {
+                        border-radius: 20px;
+                        height: 40px;
+                        width: 40px;
+                    }
+                }
+
+                .content {
+                    font-size: 10px;
+                    padding: 0px;
+
+                    .main {
+                        grid-area: main;
+                        display: flex;
+                        justify-content: space-between;
+                        padding-right: 50px;
+
+                        .fat {
+                            font-weight: 700;
+                            font-size: 28px;
+                            margin-bottom: 2px;
+                        }
+                    }
+
+                    .footer {
+                        grid-area: footer;
+                        align-items: flex-start;
+                        display: flex;
+                        justify-content: space-between;
+                        flex-direction: column;
+
+                        .fat {
+                            display: flex;
+                            font-weight: 700;
+                            font-size: 14px;
+                            margin-bottom: 0px;
+                            text-align: left;
+                            white-space: normal;
+                        }
+                    }
+
+                    .over-under-container {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: flex-start;
+                        justify-content: space-between;
+
+                        >p{
+                            margin-bottom: 5px;
+                        }
+                    }
+                }
+
+                .divider {
+                    flex-grow: 1;
+                }
+            }
+
+
+
+            .warband-info.selected {
+                background-color: orange;
+            }
+        }
+    }
+
+    .warband-details-card {
+        margin: 16px auto;
+        width: 95%;
+        padding: 7px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 15px;
+        max-width: 800px;
+        font-family: "IBM Plex Mono";
+        pointer-events: all;
+
+        display: grid;
+        grid:
+            "header" auto "main" 1fr "footer" auto / 1fr;
+
+
+    }
+}
