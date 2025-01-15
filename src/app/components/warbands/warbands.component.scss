@@ -1,5 +1,17 @@
 @import '../../../theme.scss';
 
+:host{
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+
+  .search-bar {
+    display: flex;
+    justify-content: center;
+    margin: 16px;
+  }
+}
+
 .layout {
     width: 100%;
 

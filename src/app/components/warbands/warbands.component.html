@@ -1,5 +1,9 @@
+<div class="search-bar">
+  <input type="text" placeholder="Search Warbands" [(ngModel)]="searchTerm" (input)="filterWarbands()" />
+</div>
+
 <section class="layout">
-  <div *ngFor="let warband of warbandData" 
+  <div *ngFor="let warband of filteredWarbandData" 
   class="warband-button-container">
     <button mat-raised-button class="warband-button" 
     [ngClass]="warband.legality?'':'not-legal'"
@@ -10,7 +14,7 @@
 </section>
 
 <!-- Spacer to accommodate the fixed height card -->
-<div style="height: 320px;"></div>
+<div style="height: 300px;"></div>
 
 <!-- Router outlet for the details card -->
 <router-outlet></router-outlet>
