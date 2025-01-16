@@ -153,7 +153,7 @@ export class MetaComponent implements OnInit {
     this.chartData.labels = this.warbandMetaData.map(warband => warband.name);
     this.chartData.datasets[0].data = this.warbandMetaData.map(warband => warband.metaScore);
     this.chartData.datasets[0].backgroundColor = this.warbandMetaData.map((warband, index) =>
-      this.selectedWarbandIndex === index ? 'orange' : 'white'
+      this.selectedWarbandIndex === index ? '#FF5000' : 'white'
     );
     if (this.chart) {
       this.chart.update();
