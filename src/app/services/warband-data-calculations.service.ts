@@ -36,7 +36,7 @@ export class WarbandDataCalculationsService {
             // Calculate deck synergies
             const deckSynergies = warbandGames.reduce((synergies, game) => {
               const decks = [game.p1Deck1, game.p1Deck2].sort(); // Ensure consistent order
-              const key = decks.join('|');
+              const key = decks.join(' + ');
   
               if (!synergies[key]) {
                 synergies[key] = { wins: 0, losses: 0, ties: 0 };

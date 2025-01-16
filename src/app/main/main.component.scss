@@ -32,19 +32,23 @@
 .main-layout {
   width: 100%;
   max-width: 100%;
+  overflow-x: hidden; /* Prevent horizontal overflow */
 
   display: grid;
   grid:
     "header" auto "main" 1fr;
   gap: 8px;
+  box-sizing: border-box;
 
   .header {
     width: 100%;
+    max-width: 100%;
     display: flex;
     gap: 8px;
     padding: 0 0 0 8px;
     align-items: center;
     justify-content: space-between;
+    box-sizing: border-box;
 
     .headline-container{
       grid-area: header;

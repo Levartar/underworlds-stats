@@ -7,7 +7,7 @@
     <div class="warband-info-scrollable">
         <div class="warband-info-container">
             <mat-card class="warband-info" *ngFor="let warband of warbandMetaData; let i = index" [id]="'warband-' + i"
-            [ngClass]="{'selected': selectedWarbandIndex === i}">
+            [ngClass]="{'selected': selectedWarbandIndex === i}" (click)="onWarbandCardClick(i)">
                 <mat-card-title class="title">
                     {{ warband?.name }}
                     <img matListAvatar *ngIf="warband" [src]="warband.iconLink" alt="{{ warband.name }}"

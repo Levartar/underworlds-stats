@@ -34,8 +34,9 @@ export class MetaComponent implements OnInit {
       {
         data: [],
         backgroundColor: [],
-        borderRadius: 10,
+        borderRadius: 5,
         borderWidth: 1,
+        offset: 20,
         borderColor: 'transparent',
       },
     ],
@@ -63,58 +64,87 @@ export class MetaComponent implements OnInit {
   }
 
   processMetaForChart(data: WarbandData[]): void {
+    const otherCutOff = 25;
+    const otherWarbands = data.filter(wb => wb.metaScore < 25);
+
+    const otherMetaScore = otherWarbands.reduce((sum, wb) => sum + wb.metaScore, 0);
+    const otherGamesPlayed = otherWarbands.reduce((sum, wb) => sum + wb.gamesPlayed, 0);
+    const otherWinrate = otherGamesPlayed > 0 ? (otherWarbands.reduce((sum, wb) => sum + wb.gamesWon, 0) / otherGamesPlayed) * 100 : 0;
+
     this.warbandMetaData = data
-      .filter(wb => wb.metaScore >= 1).slice().map((wb) => {
-      // Calculate the best synergy
-      const bestSynergy = Object.entries(wb.deckSynergies)
-        .map(([deckCombiName, stats]) => {
-          const totalGames = stats.wins + stats.losses + stats.ties;
-          const winrate = totalGames > 0 ? (stats.wins / totalGames) * 100 : 0;
-          return { deckCombiName, winrate };
-        })
-        .reduce(
-          (best, current) => (current.winrate > best.winrate ? current : best),
-          { deckCombiName: "", winrate: 0 }
-        );
+      .filter(wb => wb.metaScore >= otherCutOff).slice().map((wb) => {
+        // Calculate the best synergy
+        const bestSynergy = Object.entries(wb.deckSynergies)
+          .map(([deckCombiName, stats]) => {
+            const totalGames = stats.wins + stats.losses + stats.ties;
+            const winrate = totalGames > 0 ? (stats.wins / totalGames) * 100 : 0;
+            return { deckCombiName, winrate };
+          })
+          .reduce(
+            (best, current) => (current.winrate > best.winrate ? current : best),
+            { deckCombiName: "", winrate: 0 }
+          );
 
-      // Calculate the best matchup
-      const bestMatchup = Object.entries(wb.matchups)
-        .map(([opponentName, stats]) => {
-          const totalGames = stats.wins + stats.losses + stats.ties;
-          const winrate = totalGames > 0 ? (stats.wins / totalGames) * 100 : 0;
-          return { opponentName, winrate };
-        })
-        .reduce(
-          (best, current) => (current.winrate > best.winrate ? current : best),
-          { opponentName: "", winrate: 0 }
-        );
+        // Calculate the best matchup
+        const bestMatchup = Object.entries(wb.matchups)
+          .map(([opponentName, stats]) => {
+            const totalGames = stats.wins + stats.losses + stats.ties;
+            const winrate = totalGames > 0 ? (stats.wins / totalGames) * 100 : 0;
+            return { opponentName, winrate };
+          })
+          .reduce(
+            (best, current) => (current.winrate > best.winrate ? current : best),
+            { opponentName: "", winrate: 0 }
+          );
 
-      // Calculate the worst matchup
-      const worstMatchup = Object.entries(wb.matchups)
-        .map(([opponentName, stats]) => {
-          const totalGames = stats.wins + stats.losses + stats.ties;
-          const winrate = totalGames > 0 ? (stats.wins / totalGames) * 100 : 0;
-          return { opponentName, winrate };
-        })
-        .reduce(
-          (worst, current) => (current.winrate < worst.winrate ? current : worst),
-          { opponentName: "", winrate: 100 }
-        );
+        // Calculate the worst matchup
+        const worstMatchup = Object.entries(wb.matchups)
+          .map(([opponentName, stats]) => {
+            const totalGames = stats.wins + stats.losses + stats.ties;
+            const winrate = totalGames > 0 ? (stats.wins / totalGames) * 100 : 0;
+            return { opponentName, winrate };
+          })
+          .reduce(
+            (worst, current) => (current.winrate < worst.winrate ? current : worst),
+            { opponentName: "", winrate: 100 }
+          );
 
-      // Push to chart data // Filter warbands with meta score >= 1
-      return ({
-        name: wb.name,
-        winrate: wb.gamesPlayed > 0 ? (wb.gamesWon / wb.gamesPlayed) * 100 : 0,
-        iconLink: wb.icon,
-        metaScore: wb.metaScore,
-        gamesPlayed: wb.gamesPlayed,
-        legality: wb.legality == "TRUE",
-        bestSynergy,
-        bestmatchup: bestMatchup,
-        worstmatchup: worstMatchup,
+        // Push to chart data // Filter warbands with meta score >= 1
+        return ({
+          name: wb.name,
+          winrate: wb.gamesPlayed > 0 ? (wb.gamesWon / wb.gamesPlayed) * 100 : 0,
+          iconLink: wb.icon,
+          metaScore: wb.metaScore,
+          gamesPlayed: wb.gamesPlayed,
+          legality: wb.legality == "TRUE",
+          bestSynergy,
+          bestmatchup: bestMatchup,
+          worstmatchup: worstMatchup,
+        });
+      }).sort((a, b) => b.metaScore - a.metaScore); // Sort warbands by meta score;
+
+    if (otherMetaScore > 0) {
+      this.warbandMetaData.push({
+        name: 'Others',
+        winrate: otherWinrate,
+        iconLink: '',
+        metaScore: otherMetaScore,
+        gamesPlayed: otherGamesPlayed,
+        legality: true,
+        bestSynergy: {
+          deckCombiName: "",
+          winrate: 0
+        },
+        bestmatchup: {
+          opponentName: "",
+          winrate: 0
+        },
+        worstmatchup: {
+          opponentName: "",
+          winrate: 0
+        },
       });
-    }).sort((a, b) => b.metaScore - a.metaScore); // Sort warbands by meta score;
-
+    }
 
     this.updateChartData();
   }
@@ -138,6 +168,12 @@ export class MetaComponent implements OnInit {
       this.scrollToWarband(index);
       this.cdr.detectChanges(); // Manually trigger change detection
     }
+  }
+
+  onWarbandCardClick(index: number) {
+    this.selectedWarbandIndex = index;
+    this.updateChartData();
+    this.cdr.detectChanges(); // Manually trigger change detection
   }
 
   scrollToWarband(index: number) {
