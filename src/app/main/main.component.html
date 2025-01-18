@@ -39,6 +39,7 @@
                 <mat-icon *ngIf="this.darkmode">light_mode</mat-icon>
                 <span *ngIf="this.darkmode">Light Mode</span>
               </button>
+              <button (click)="toggleFilter()">Toggle Filter</button>
             </mat-menu>
           </div>
         </div>
@@ -48,6 +49,7 @@
           </button>
         </div>
       </div>
+      <app-filter *ngIf="showFilter"></app-filter>
       <router-outlet></router-outlet>
     </section>
 

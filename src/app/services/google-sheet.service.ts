@@ -62,27 +62,26 @@ export class GoogleSheetService {
   }
 
   parseWarbandCsvData(csv: string): SheetWarband[] {
-    const rows = csv.split('\n');
-    const headers = rows[0].split(',');
-
-    //Filter Data for empty entries
+    const rows = csv.split('\n').filter(row => row.trim() !== '');
+    const headers = rows[0].split(',').map(header => header.trim());
   
+    //Filter Data for empty entries
     const filteredRows = rows.slice(1).map(row => {
       const values = row.split(',');
       return {
         name: values[headers.indexOf('Warband')]?.trim(),
         legality: values[headers.indexOf('Legality')]?.trim(),
+        icon: values[headers.indexOf('Icon')]?.trim(),
         colorA: values[headers.indexOf('')]?.trim(),
         colorB: values[headers.indexOf('Color B')]?.trim(),
-        icon: values[headers.indexOf('Icon')]?.trim(),
       } as SheetWarband;
     });
     return filteredRows.filter(row => row.name && row.name.trim() !== '')
   }
 
   parseDecksCsvData(csv: string): SheetDeck[] {
-    const rows = csv.split('\n');
-    const headers = rows[0].split(',');
+    const rows = csv.split('\n').filter(row => row.trim() !== '');
+    const headers = rows[0].split(',').map(header => header.trim());
 
     //Filter Data for empty entries
   
@@ -91,9 +90,9 @@ export class GoogleSheetService {
       return {
         name: values[headers.indexOf('Deck')]?.trim(),
         legality: values[headers.indexOf('Legality')]?.trim(),
+        icon: values[headers.indexOf('Icon')]?.trim(),
         colorA: values[headers.indexOf('Color A')]?.trim(),
         colorB: values[headers.indexOf('Color B')]?.trim(),
-        icon: values[headers.indexOf('Icon')]?.trim(),
       } as SheetDeck;
     });
     return filteredRows.filter(row => row.name && row.name.trim() !== '')

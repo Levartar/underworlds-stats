@@ -15,6 +15,7 @@ import { GoogleSheetService } from '../services/google-sheet.service';
 import { DashboardComponent } from '../components/dashboard/dashboard.component';
 import { HeaderComponent } from '../components/header/header.component';
 import { FooterComponent } from '../components/footer/footer.component';
+import { FilterComponent } from "../components/filter/filter.component";
 
 
 @Component({
@@ -30,8 +31,9 @@ import { FooterComponent } from '../components/footer/footer.component';
     RouterModule,
     MatListModule,
     HeaderComponent,
-    FooterComponent
-  ],
+    FooterComponent,
+    FilterComponent,
+],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss'
 })
@@ -40,6 +42,7 @@ export class MainComponent implements OnInit {
   data: any[] | null = null;
   darkmode: boolean = true;
   currentRouteName: string = 'Dashboard';
+  showFilter = false;
 
   constructor(
     private warbandDataCalculationsService: WarbandDataCalculationsService,
@@ -97,5 +100,9 @@ export class MainComponent implements OnInit {
       document.body.classList.add('dark-theme');
       this.darkmode = true;
     }
+  }
+
+  toggleFilter() {
+    this.showFilter = !this.showFilter;
   }
 }

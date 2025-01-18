@@ -1,0 +1,20 @@
+<div class="filter-container">
+  <form [formGroup]="filterForm">
+    <label>
+      <input type="checkbox" formControlName="mirrorMatches" />
+      Mirror Matches
+    </label>
+    <label>
+      Time Frame:
+      <input type="text" formControlName="timeFrame" />
+    </label>
+    <label>
+      Metas:
+      <input type="text" formControlName="metas" />
+    </label>
+    <label>
+      Data Threshold:
+      <input type="number" formControlName="dataThreshold" />
+    </label>
+  </form>
+</div>

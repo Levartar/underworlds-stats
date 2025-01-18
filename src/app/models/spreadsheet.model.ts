@@ -99,3 +99,10 @@ export interface DeckCombiData {
   colorB: string; // secondary color in hexcode
   icon: string; // string link to icon
 }
+
+export interface Filters {
+  mirrorMatches: boolean | null;
+  timeFrame: { start: string, end: string } | null;
+  metas: string | null;
+  dataThreshold: number | null;
+}
