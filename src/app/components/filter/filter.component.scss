@@ -1,5 +1,7 @@
 .filter-container > form{
   display: flex;
+  width: 100%;
   gap: 8px;
   align-items: center;
+  flex-wrap: wrap;
 }
