@@ -1,20 +1,38 @@
 <div class="filter-container">
   <form [formGroup]="filterForm">
-    <label>
-      <input type="checkbox" formControlName="mirrorMatches" />
-      Mirror Matches
-    </label>
-    <label>
-      Time Frame:
-      <input type="text" formControlName="timeFrame" />
-    </label>
-    <label>
-      Metas:
-      <input type="text" formControlName="metas" />
-    </label>
-    <label>
-      Data Threshold:
-      <input type="number" formControlName="dataThreshold" />
-    </label>
+    <mat-checkbox formControlName="mirrorMatches">Allow Mirror Matches</mat-checkbox>
+    <mat-checkbox formControlName="allowIllegalWarbands">Allow Illegal Warbands</mat-checkbox>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Enter a date range</mat-label>
+      <mat-date-range-input [formGroup]="filterForm" [rangePicker]="picker" formGroupName="timeFrame">
+        <input matStartDate formControlName="start" placeholder="Start date">
+        <input matEndDate formControlName="end" placeholder="End date">
+      </mat-date-range-input>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+
+    <!-- TODO currently not implemented
+    <mat-form-field appearance="fill">
+      <mat-label>Metas</mat-label>
+      <input matInput formControlName="metas">
+    </mat-form-field> -->
+
+    <mat-form-field appearance="fill">
+      <mat-label>Tags</mat-label>
+      <mat-select formControlName="selectedTag">
+        <mat-option value=''>None</mat-option>
+        <mat-option *ngFor="let tag of tags" [value]="tag">{{ tag }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Min Data Threshold in Games</mat-label>
+      <input matInput type="number" formControlName="dataThreshold">
+      <mat-hint>CURRENTLY NOT WORKING</mat-hint>
+    </mat-form-field>
+
+    <button mat-raised-button type="button" (click)="clearFilters()">Clear Filters</button>
   </form>
 </div>

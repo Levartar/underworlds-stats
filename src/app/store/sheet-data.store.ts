@@ -8,16 +8,16 @@ import { DeckCombiData, DeckData, Filters, SheetData, SheetDeck, SheetWarband, W
   providedIn: 'root',
 })
 export class DataStoreService {
-  private gameSheetSubject = new BehaviorSubject<SheetData[] | null>(null);
+  private gameSheetSubject = new BehaviorSubject<SheetData[]>([]);
   private warbandSheetSubject = new BehaviorSubject<SheetWarband[] | null>(null);
   private warbandDataSubject = new BehaviorSubject<WarbandData[]>([]);
   private DeckSheetSubject = new BehaviorSubject<SheetDeck[] | null>(null);
   private DeckDataSubject = new BehaviorSubject<DeckData[]>([]);
   private DeckCombiDataSubject = new BehaviorSubject<DeckCombiData[]>([]);
-  private filtersSubject = new BehaviorSubject<Filters>({mirrorMatches: null,timeFrame: null,metas: null,dataThreshold: null});
+  private filtersSubject = new BehaviorSubject<Filters>({mirrorMatches: true, allowIllegalWarbands: true, timeFrame: null,metas: null, selectedTag: null,dataThreshold: null});
 
   // Observables for components to subscribe to
-  gameSheet$: Observable<SheetData[] | null> = this.gameSheetSubject.asObservable();
+  gameSheet$: Observable<SheetData[]> = this.gameSheetSubject.asObservable();
   warbandSheet$: Observable<SheetWarband[] | null> = this.warbandSheetSubject.asObservable();
   warbandData$: Observable<WarbandData[]> = this.warbandDataSubject.asObservable();
   deckSheet$: Observable<SheetDeck[] | null> = this.DeckSheetSubject.asObservable();

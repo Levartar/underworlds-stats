@@ -39,7 +39,7 @@
                 <mat-icon *ngIf="this.darkmode">light_mode</mat-icon>
                 <span *ngIf="this.darkmode">Light Mode</span>
               </button>
-              <button (click)="toggleFilter()">Toggle Filter</button>
+              <p mat-menu-item><mat-slide-toggle [checked]="showFilter" (click)="toggleFilter()">Show Filter</mat-slide-toggle></p>
             </mat-menu>
           </div>
         </div>

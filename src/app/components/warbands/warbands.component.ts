@@ -1,5 +1,5 @@
 import { CommonModule, NgFor } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -30,7 +30,7 @@ export class WarbandsComponent {
 
   constructor(
     private router: Router,
-    private dataStoreService: DataStoreService
+    private dataStoreService: DataStoreService,
   ) { }
 
   ngOnInit(): void {
@@ -38,26 +38,24 @@ export class WarbandsComponent {
     this.dataStoreService.warbandData$.subscribe((data) => {
       if (data.length > 0) {
         this.processWarbandsForChart(data);
+        this.searchWarbands();
       }
     });
-
-    this.filterWarbands();
   }
 
   processWarbandsForChart(data: WarbandData[]): void {
-    data.slice().forEach((wb) => {
-      this.warbandData.push({
+    this.warbandData = data.slice().map((wb) => ({
         name: wb.name,
         winrate: wb.gamesPlayed > 0 ? (wb.gamesWon / wb.gamesPlayed) * 100 : 0,
         iconLink: wb.icon,
         metaScore: wb.metaScore,
         gamesPlayed: wb.gamesPlayed,
         legality: wb.legality == "TRUE",
-      });
-    });
+      }));
+      console.log("warbandData",this.warbandData)
   }
 
-  filterWarbands() {
+  searchWarbands() {
     if (this.searchTerm.trim() === '') {
       this.filteredWarbandData = this.warbandData;
     } else {

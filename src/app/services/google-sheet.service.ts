@@ -56,6 +56,7 @@ export class GoogleSheetService {
         gW: Number(values[headers.indexOf('G-W')]?.trim()),
         gL: Number(values[headers.indexOf('G-L')]?.trim()),
         gT: Number(values[headers.indexOf('G-T')]?.trim()),
+        mirror: values[headers.indexOf('Mirror')]?.trim() === 'TRUE',
       } as SheetData;
     });
     return filteredRows.filter(row => row.date && row.date.trim() !== '')

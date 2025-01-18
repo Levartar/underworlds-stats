@@ -58,16 +58,15 @@ export class WinrateComponent {
 
     // Prepare chart data
 
-    data.slice().forEach((wb) => {
-      this.winrateByWarbandChartData.push({
-        name: wb.name,
-        winrate: wb.gamesPlayed > 0 ? (wb.gamesWon / wb.gamesPlayed) * 100 : 0,
-        iconLink: wb.icon,
-        metaScore: wb.metaScore,
-        gamesPlayed: wb.gamesPlayed,
-        legality: wb.legality == "TRUE",
-      });
-    });
+    this.winrateByWarbandChartData = data.slice().map((wb) => ({
+      name: wb.name,
+      winrate: wb.gamesPlayed > 0 ? (wb.gamesWon / wb.gamesPlayed) * 100 : 0,
+      iconLink: wb.icon,
+      metaScore: wb.metaScore,
+      gamesPlayed: wb.gamesPlayed,
+      legality: wb.legality == "TRUE",
+    }));
+    console.log("warbandData", this.warbandData)
     //sort by Winrate
     this.winrateByWarbandChartData.sort((a, b) => b.winrate - a.winrate);
 

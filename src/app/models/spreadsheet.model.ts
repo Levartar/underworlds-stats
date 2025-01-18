@@ -18,6 +18,7 @@ export interface SheetData {
   color: string | null; //color
   icon: string | null; //Icon
   legality: boolean | null //legality
+  mirror: boolean //mirror
 }
 
 // src/app/models/parsed-row.model.ts
@@ -102,7 +103,9 @@ export interface DeckCombiData {
 
 export interface Filters {
   mirrorMatches: boolean | null;
-  timeFrame: { start: string, end: string } | null;
+  allowIllegalWarbands: boolean | null
+  timeFrame: { start: Date, end: Date } | null;
   metas: string | null;
+  selectedTag: string | null;
   dataThreshold: number | null;
 }

@@ -7,6 +7,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav'
 import { MatListModule } from '@angular/material/list'
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
 
 import { WarbandDataCalculationsService } from '../services/warband-data-calculations.service';
@@ -28,6 +29,7 @@ import { FilterComponent } from "../components/filter/filter.component";
     MatMenuModule,
     MatIconModule,
     MatSidenavModule,
+    MatSlideToggleModule,
     RouterModule,
     MatListModule,
     HeaderComponent,
@@ -42,7 +44,7 @@ export class MainComponent implements OnInit {
   data: any[] | null = null;
   darkmode: boolean = true;
   currentRouteName: string = 'Dashboard';
-  showFilter = false;
+  showFilter = true;
 
   constructor(
     private warbandDataCalculationsService: WarbandDataCalculationsService,

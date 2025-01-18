@@ -54,7 +54,7 @@ export class WarbandDetailsCardComponent implements OnInit {
   }
 
   processWarbandsForChart(data: WarbandData[]): void {
-    data.slice().forEach((wb) => {
+    this.winrateByWarbandChartData= data.slice().map((wb) => {
       // Calculate the best synergy
       const bestSynergy = Object.entries(wb.deckSynergies)
         .map(([deckCombiName, stats]) => {
@@ -92,7 +92,7 @@ export class WarbandDetailsCardComponent implements OnInit {
         );
 
       // Push to chart data
-      this.winrateByWarbandChartData.push({
+      return{
         name: wb.name,
         winrate: wb.gamesPlayed > 0 ? (wb.gamesWon / wb.gamesPlayed) * 100 : 0,
         iconLink: wb.icon,
@@ -102,7 +102,7 @@ export class WarbandDetailsCardComponent implements OnInit {
         bestSynergy,
         bestmatchup: bestMatchup,
         worstmatchup: worstMatchup,
-      });
+      };
     });
     //sort by Winrate
     console.log('warbandDetailsCardloadedWarbands', this.winrateByWarbandChartData)

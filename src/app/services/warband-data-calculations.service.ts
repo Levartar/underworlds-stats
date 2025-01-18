@@ -14,56 +14,90 @@ export class WarbandDataCalculationsService {
     combineLatest([
       this.dataStoreService.getGameSheet$(), // Observable for game data
       this.dataStoreService.getWarbandSheet$(), // Observable for warband data
+      this.dataStoreService.getFilters$(), // Observable for filters
     ])
       .pipe(
         filter(([gameSheet, warbandSheet]) => gameSheet !== null && warbandSheet !== null),
-        map(([gameSheet, warbandSheet]) => {
-          const totalGames = gameSheet?.reduce(
+        map(([gameSheet, warbandSheet, filters]) => {
+          // Apply filters to the gameSheet
+          let filteredGameSheet = gameSheet;
+
+          if (!filters.mirrorMatches) {
+            filteredGameSheet = filteredGameSheet!.filter(game => !game.mirror);
+          }
+
+          const legalWarbands: string[] = warbandSheet!.map(warband => warband.legality==='TRUE'?warband.name:'');
+          console.log("legalWarbands", legalWarbands);
+          if (!filters.allowIllegalWarbands) {
+            filteredGameSheet = filteredGameSheet!.filter(
+              game =>legalWarbands.find(lwb=> lwb === game.p1Warband) && 
+              legalWarbands.find(lwb=> lwb === game.p2Warband));
+          }
+
+          if (filters.timeFrame?.start && filters.timeFrame.end) {
+            const startDate = new Date(filters.timeFrame.start);
+            const endDate = new Date(filters.timeFrame.end);
+            filteredGameSheet = filteredGameSheet!.filter(game => {
+              const gameDate = new Date(game.date);
+              return gameDate >= startDate && gameDate <= endDate;
+            });
+          }
+
+          if (filters.selectedTag && filters.selectedTag.length > 0) {
+            filteredGameSheet = filteredGameSheet!.filter(
+              game => game.tag === filters.selectedTag);
+          }
+          //end of Filters
+
+          const totalGames = filteredGameSheet?.reduce(
             (sum, game) => sum + game.wins + game.losses + game.ties,
             0
           );
-  
-          // Map warband data to include calculated fields
-          return warbandSheet!.map((warband) => {
-            const warbandGames = gameSheet!.filter((game) => game.p1Warband === warband.name);
-  
+
+          const legalWarbandsSheet = warbandSheet!.filter(warband => filters.allowIllegalWarbands || warband.legality === 'TRUE');
+
+
+          // Map gameSheet data to for every warband
+          return legalWarbandsSheet!.map((warband) => {
+            const warbandGames = filteredGameSheet!.filter((game) => game.p1Warband === warband.name);
+
             // Calculate base stats
             const gamesWon = warbandGames.reduce((sum, game) => sum + game.wins, 0);
             const gamesLost = warbandGames.reduce((sum, game) => sum + game.losses, 0);
             const gamesTied = warbandGames.reduce((sum, game) => sum + game.ties, 0);
             const gamesPlayed = gamesWon + gamesLost + gamesTied;
-  
+
             // Calculate deck synergies
             const deckSynergies = warbandGames.reduce((synergies, game) => {
               const decks = [game.p1Deck1, game.p1Deck2].sort(); // Ensure consistent order
               const key = decks.join(' + ');
-  
+
               if (!synergies[key]) {
                 synergies[key] = { wins: 0, losses: 0, ties: 0 };
               }
-  
+
               synergies[key].wins += game.wins;
               synergies[key].losses += game.losses;
               synergies[key].ties += game.ties;
-  
+
               return synergies;
             }, {} as { [key: string]: { wins: number; losses: number; ties: number } });
-  
+
             // Calculate matchups
             const matchups = warbandGames.reduce((opponents, game) => {
               const opponentName = game.p2Warband;
-  
+
               if (!opponents[opponentName]) {
                 opponents[opponentName] = { wins: 0, losses: 0, ties: 0 };
               }
-  
+
               opponents[opponentName].wins += game.wins;
               opponents[opponentName].losses += game.losses;
               opponents[opponentName].ties += game.ties;
-  
+
               return opponents;
             }, {} as { [key: string]: { wins: number; losses: number; ties: number } });
-  
+
             // Return the calculated warband data
             return {
               ...warband,
@@ -92,7 +126,7 @@ export class WarbandDataCalculationsService {
     ]).pipe(
       filter(([gameSheet, deckSheet]) => gameSheet !== null && deckSheet !== null),
       map(([gameSheet, deckSheet]) => {
-        console.log("decksheet",deckSheet)
+        console.log("decksheet", deckSheet)
 
         const deckCombiMap: { [key: string]: DeckCombiData } = {};
 
@@ -142,7 +176,7 @@ export class WarbandDataCalculationsService {
         // Calculate metaScore for each combination
         const totalGames = gameSheet!.reduce((sum, entry) => sum + entry.wins + entry.losses + entry.ties, 0);
         Object.values(deckCombiMap).forEach(deckCombi => {
-          deckCombi.metaScore = totalGames > 0 ? (deckCombi.gamesWon / (totalGames!/2)) * 1000 : 0;
+          deckCombi.metaScore = totalGames > 0 ? (deckCombi.gamesWon / (totalGames! / 2)) * 1000 : 0;
         });
 
         // Convert map to array and store the data
@@ -162,7 +196,7 @@ export class WarbandDataCalculationsService {
     ]).pipe(
       filter(([gameSheet, deckSheet]) => gameSheet !== null && deckSheet !== null),
       map(([gameSheet, deckSheet]) => {
-        console.log("decksheet",deckSheet)
+        console.log("decksheet", deckSheet)
 
         const totalGames = gameSheet?.reduce(
           (sum, game) => sum + game.wins + game.losses + game.ties,
@@ -196,7 +230,7 @@ export class WarbandDataCalculationsService {
         });
       })
     ).subscribe((calculatedDeckData: DeckData[]) => {
-      console.log("calculatedDeckData",calculatedDeckData)
+      console.log("calculatedDeckData", calculatedDeckData)
       this.dataStoreService.setDeckData$(calculatedDeckData)
     })
   }
