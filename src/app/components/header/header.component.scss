@@ -1,7 +1,15 @@
+@import '../../../theme.scss';
+
 .layout {
     width: 100%;
-  
+
     display: flex;
     gap: 16px;
+
+    font: 700 25px/32px 'IBM Plex Mono', serif;
+
+    .heading{
+        font: 700 25px/32px 'IBM Plex Mono', serif;
+    }
   }
   

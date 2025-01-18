@@ -14,17 +14,18 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'dashboard',
+        redirectTo: 'winrates',
         pathMatch: 'full'
       },
       {
         path: 'dashboard',
-        component: DashboardComponent,
+        redirectTo: 'winrates',
+        //component: DashboardComponent,
         data: { title: 'Dashboard' },
       },
       {
         path: 'decks',
-        redirectTo: 'dashboard',
+        redirectTo: 'winrates',
         //component: DecksComponent,
         data: { title: 'Decks' },
       },
