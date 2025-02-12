@@ -26,6 +26,7 @@ export class WinrateComponent {
   totalGames: number = 0;
   warbandData: SheetWarband[] = [];
   selectedWarband: any;
+  darkMode: boolean = document.body.classList.contains('dark-theme');
 
   // Chart data
   warbandNameChartLabels: string[] = [];
@@ -49,6 +50,10 @@ export class WinrateComponent {
       if (data.length > 0) {
         this.processWarbandsForChart(data);
       }
+    });
+
+    window.addEventListener('themeChange', (event) => {
+      this.darkMode = document.body.classList.contains('dark-theme');
     });
   }
 

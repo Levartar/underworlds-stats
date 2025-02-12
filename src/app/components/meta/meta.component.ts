@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ChartConfiguration, ChartData, ChartEvent, ChartType } from 'chart.js';
-import { BaseChartDirective } from 'ng2-charts';
+import { BaseChartDirective, ThemeService } from 'ng2-charts';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
@@ -47,12 +47,16 @@ export class MetaComponent implements OnInit {
       legend: {
         display: false,
       },
+      datalabels: {
+        color: '#fff',
+      },
     },
     onClick: this.onChartClick.bind(this),
   };
 
   constructor(private dataStoreService: DataStoreService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private themeService: ThemeService,
   ) { }
 
   ngOnInit() {    // Subscribe to data from the store
@@ -60,6 +64,11 @@ export class MetaComponent implements OnInit {
       if (data.length > 0) {
         this.processMetaForChart(data);
       }
+    });
+
+    this.updateChartColors();
+    window.addEventListener('themeChange', (event) => {
+      this.updateChartColors();
     });
   }
 
@@ -153,7 +162,8 @@ export class MetaComponent implements OnInit {
     this.chartData.labels = this.warbandMetaData.map(warband => warband.name);
     this.chartData.datasets[0].data = this.warbandMetaData.map(warband => warband.metaScore);
     this.chartData.datasets[0].backgroundColor = this.warbandMetaData.map((warband, index) =>
-      this.selectedWarbandIndex === index ? '#FF5000' : 'white'
+      this.selectedWarbandIndex === index ? '#FF5000' : 
+      document.body.classList.contains('dark-theme')?'#fff' : '#333'
     );
     if (this.chart) {
       this.chart.update();
@@ -185,6 +195,26 @@ export class MetaComponent implements OnInit {
       const offset = elementRect.left - containerRect.left + container.scrollLeft;
       container.scrollTo({ left: offset, behavior: 'smooth' });
     }
+  }
+
+  updateChartColors(): void {
+    const isDarkTheme = document.body.classList.contains('dark-theme');
+    const backgroundColor = isDarkTheme ? '#fff' : '#333';
+    const borderColor = isDarkTheme ? '#000' : '#fff';
+
+    // Update chart data background colors
+    if (this.chartData && this.chartData.datasets) {
+      this.chartData.datasets.forEach((dataset: any) => {
+        dataset.backgroundColor = dataset.backgroundColor.map((color: string) => {
+          return color === '#FF5000' ? color : backgroundColor;
+        });
+      });
+    }
+
+    this.themeService.setColorschemesOptions({
+      backgroundColor: [backgroundColor],
+      borderColor: [borderColor],
+    });
   }
 
 }

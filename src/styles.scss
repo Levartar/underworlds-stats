@@ -58,44 +58,44 @@ body.dark-theme{
 }
 
 
+// -----------------Deprecated----------------
+// /* Apply the colors globally */
+// /* Custom chart colors (optional, for example, in charts) */
+// .chart-positive-color {
+//     background-color: $positive-chart-color;
+// }
 
-/* Apply the colors globally */
-/* Custom chart colors (optional, for example, in charts) */
-.chart-positive-color {
-    background-color: $positive-chart-color;
-}
+// .chart-negative-color {
+//     background-color: $negative-chart-color;
+// }
 
-.chart-negative-color {
-    background-color: $negative-chart-color;
-}
+// /* Customize Material Design or your own components */
+// .mat-card {
+//     background-color: var(--secondary-color);
+// }
 
-/* Customize Material Design or your own components */
-.mat-card {
-    background-color: var(--secondary-color);
-}
+// .custom-backdrop {
+//     background: rgba(0, 0, 0, 0.5);
+//     /* Semi-transparent black */
+// }
 
-.custom-backdrop {
-    background: rgba(0, 0, 0, 0.5);
-    /* Semi-transparent black */
-}
+// .custom-dialog-container {
+//     position: relative;
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     border-radius: 8px;
+//     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+// }
 
-.custom-dialog-container {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 8px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-}
-
-.cdk-overlay-backdrop {
-    background: rgba(0, 0, 0, 0.5);
-    /* Semi-transparent black */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-    /* Indicate it's clickable */
-}
+// .cdk-overlay-backdrop {
+//     background: rgba(0, 0, 0, 0.5);
+//     /* Semi-transparent black */
+//     position: fixed;
+//     top: 0;
+//     left: 0;
+//     width: 100%;
+//     height: 100%;
+//     cursor: pointer;
+//     /* Indicate it's clickable */
+// }

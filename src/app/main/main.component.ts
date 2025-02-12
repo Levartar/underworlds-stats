@@ -50,7 +50,7 @@ export class MainComponent implements OnInit {
     private warbandDataCalculationsService: WarbandDataCalculationsService,
     private googleSheetService: GoogleSheetService,
     private dataStoreService: DataStoreService,
-    private router: Router, private activatedRoute: ActivatedRoute
+    private router: Router, private activatedRoute: ActivatedRoute,
   ) {}
 
   ngOnInit() {
@@ -102,6 +102,9 @@ export class MainComponent implements OnInit {
       document.body.classList.add('dark-theme');
       this.darkmode = true;
     }
+    // Dispatch the custom event `themeChange`
+    const event = new CustomEvent('themeChange', { detail: { darkmode: this.darkmode } });
+    window.dispatchEvent(event);
   }
 
   toggleFilter() {

@@ -6,19 +6,36 @@
     .winrate-list-item {
 
         .not-legal {
-            border: 2px dashed $background-color; /* Dashed border with desired color */
-            border-radius: 4px; /* To match Angular Material's button styling */
+            border: 2px dashed $background-color;
+            /* Dashed border with desired color */
+            border-radius: 4px;
+            /* To match Angular Material's button styling */
             padding: 8px 16px;
-            background-color: transparent; /* Transparent background for outline effect */            
+            background-color: transparent;
+            /* Transparent background for outline effect */
             transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .light.not-legal {
+            border: 2px dashed white;
+            /* Dashed border with desired color */
+        }
+
+        .light {
+            background-color: #333;
+            color: white;
+        }
+
+        .dark {
+            background-color: white;
+            color: black;
         }
 
         .winrate-button {
             display: flex;
             align-items: center;
             justify-content: flex-start;
-            background-color: white;
-            color: black;
+
             border-radius: 25px;
             text-align: left;
             padding: 0 0 0 8px;
@@ -60,4 +77,4 @@
     z-index: 1000;
     background-color: grey;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
+}

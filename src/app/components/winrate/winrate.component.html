@@ -3,7 +3,7 @@
         <!-- Dynamic Button -->
         <button mat-raised-button class="winrate-button" 
         [ngStyle]="{ width: wbWinrate.winrate + '%'}"
-        [ngClass]="wbWinrate.legality?'':'not-legal'"
+        [ngClass]="{'not-legal': !wbWinrate.legality, 'dark': darkMode, 'light': !darkMode}"
         (click)="navigateToWarbandDetails(wbWinrate)">
             <!-- Icon -->
             <div class="button-content">
