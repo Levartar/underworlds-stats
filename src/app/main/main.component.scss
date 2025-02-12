@@ -2,31 +2,15 @@
 
 
 .layout {
-  width: 100vw;
-  height: 100%;
-
-  display: flex;
-  flex-direction: column;
-
-  grid:
-    "header" auto
-    "main" 1fr
-    "footer" auto
-    / 1fr;
 }
 
 .head-tabline {
-  grid-area: header;
 }
 
 .main {
-  grid-area: main;
 }
 
 .footer {
-  z-index: 1000;
-  grid-area: footer;
-  height: 0%;
 }
 
 

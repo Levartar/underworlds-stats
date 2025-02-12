@@ -13,34 +13,25 @@
         justify-content: center;
     }
 
-    .warband-info-scrollable {
-        width: 100%;
-        max-width: 100vw;
-        overflow-x: auto;
-        padding: 10px 0;
-
-        .warband-info-container {
+        .warband-info-container-scrollable {
             display: flex;
-            width: 100%;
-
-            margin: 16px auto;
-            width: 95%;
-            padding: 7px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 15px;
-            //max-width: 800px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            width: 100vw;
+            padding: 10px;
             font-family: "IBM Plex Mono";
             pointer-events: all;
+            box-sizing: border-box;
+
+            -webkit-overflow-scrolling: touch;
 
             .warband-info {
-                width: 256px;
-                display: flex;
                 flex: 0 0 auto;
+                width: 256px;
                 margin: 0 10px;
                 padding: 10px;
                 border: 1px solid #ccc;
                 border-radius: 5px;
-                text-align: center;
 
                 .title {
                     grid-area: header;
@@ -120,7 +111,7 @@
                 background-color: #FF5000;
             }
         }
-    }
+
 
     .warband-details-card {
         margin: 16px auto;

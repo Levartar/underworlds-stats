@@ -127,7 +127,7 @@ export class MetaComponent implements OnInit {
       this.warbandMetaData.push({
         name: 'Others',
         winrate: otherWinrate,
-        iconLink: '',
+        iconLink: 'https://www.underworldsdb.com/img/universal-icon.png',
         metaScore: otherMetaScore,
         gamesPlayed: otherGamesPlayed,
         legality: true,
@@ -178,8 +178,12 @@ export class MetaComponent implements OnInit {
 
   scrollToWarband(index: number) {
     const element = document.getElementById(`warband-${index}`);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+    const container = document.querySelector('.warband-info-container-scrollable');
+    if (element && container) {
+      const containerRect = container.getBoundingClientRect();
+      const elementRect = element.getBoundingClientRect();
+      const offset = elementRect.left - containerRect.left + container.scrollLeft;
+      container.scrollTo({ left: offset, behavior: 'smooth' });
     }
   }
 
