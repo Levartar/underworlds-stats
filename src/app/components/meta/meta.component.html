@@ -29,18 +29,20 @@
 
                     <div class="footer">
                         <div class="over-under-container">
-                                <p class="fat" matTooltip="{{warband.bestSynergy.gamesWithDeckCombi}} Games"> 
+                                <p *ngIf="warband.bestSynergy?.deckCombiName; else notEnoughData"
+                                class="fat" matTooltip="{{warband.bestSynergy.gamesWithDeckCombi}} Games"> 
                                     {{warband.bestSynergy.winrate | number:'0.0-0' }}% - {{ warband.bestSynergy.deckCombiName }}</p>
-
                             <p>Best Deck Synergy</p>
                         </div>
                         <div class="over-under-container">
-                                <p class="fat" matTooltip="{{warband.bestMatchup.bestGames}} Games"> 
+                                <p *ngIf="warband.bestMatchup?.opponentName; else notEnoughData"
+                                class="fat" matTooltip="{{warband.bestMatchup.bestGames}} Games"> 
                                     {{warband.bestMatchup.winrate | number:'0.0-0' }}% - {{ warband.bestMatchup.opponentName }}</p>
                             <p>Best Matchup</p>
                         </div>
                         <div class="over-under-container">
-                                <p class="fat" matTooltip="{{warband.worstMatchup.worstGames}} Games"> 
+                                <p *ngIf="warband.bestMatchup?.opponentName; else notEnoughData"
+                                class="fat" matTooltip="{{warband.worstMatchup.worstGames}} Games"> 
                                     {{warband.worstMatchup.winrate | number:'0.0-0' }}% - {{ warband.worstMatchup.opponentName }}</p>
                             <p>Worst Matchup</p>
                         </div>
@@ -49,3 +51,8 @@
             </mat-card>
         </div>
 </div>
+
+<ng-template #notEnoughData>
+    <mat-icon>warning</mat-icon>
+    <p>Not Enough Data</p>
+</ng-template>

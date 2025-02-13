@@ -47,7 +47,7 @@ export class FilterComponent {
       }),
       metas: '',
       selectedTag: '',
-      dataThreshold: 0
+      dataThreshold: 5
     });
 
     this.dataStoreService.gameSheet$.subscribe((data) => {
@@ -82,7 +82,7 @@ export class FilterComponent {
       },
       metas: '',
       selectedTag: '',
-      dataThreshold: 0
+      dataThreshold: 5
     });
   }
 }

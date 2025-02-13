@@ -17,7 +17,8 @@ interface winrateByWarbandChartData {
 export class CardDataCalculationsService {
   constructor() { }
 
-  static processWarbandsforChartData(data:WarbandData[]):winrateByWarbandChartData[]
+  static processWarbandsforChartData(data:WarbandData[], 
+    minGamesThreshhold:number=5):winrateByWarbandChartData[]
   {
     return data.slice().map((wb) => {
       // Calculate the best synergy
@@ -28,7 +29,8 @@ export class CardDataCalculationsService {
             return { deckCombiName, winrate, gamesWithDeckCombi };
           })
           .reduce(
-            (best, current) => (current.winrate > best.winrate ? current : best),
+            (best, current) => (current.winrate > best.winrate && 
+              current.gamesWithDeckCombi>=minGamesThreshhold ? current : best),
             { deckCombiName: "", winrate: 0, gamesWithDeckCombi:0 }
           );
 
@@ -40,7 +42,8 @@ export class CardDataCalculationsService {
             return { opponentName, winrate, bestGames };
           })
           .reduce(
-            (best, current) => (current.winrate > best.winrate ? current : best),
+            (best, current) => (current.winrate > best.winrate && 
+              current.bestGames>=minGamesThreshhold ? current : best),
             { opponentName: "", winrate: 0, bestGames: 0 }
           );
 
@@ -52,7 +55,8 @@ export class CardDataCalculationsService {
             return { opponentName, winrate, worstGames };
           })
           .reduce(
-            (worst, current) => (current.winrate < worst.winrate ? current : worst),
+            (worst, current) => (current.winrate < worst.winrate &&
+              current.worstGames>=minGamesThreshhold ? current : worst),
             { opponentName: "", winrate: 100, worstGames:0 }
           );
 

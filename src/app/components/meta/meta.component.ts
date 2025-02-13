@@ -5,20 +5,23 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
 
 import { DataStoreService } from '../../store/sheet-data.store';
 import { WarbandData } from '../../models/spreadsheet.model';
 import { CardDataCalculationsService } from '../../services/card-data-calculations.service';
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-meta',
   standalone: true,
   imports: [
-    BaseChartDirective, 
-    CommonModule, 
-    MatCardModule, 
-    MatDividerModule, 
-    MatTooltipModule],
+    BaseChartDirective,
+    CommonModule,
+    MatCardModule,
+    MatDividerModule,
+    MatTooltipModule,
+    MatIconModule],
   templateUrl: './meta.component.html',
   styleUrl: './meta.component.scss'
 })
@@ -28,9 +31,9 @@ export class MetaComponent implements OnInit {
   warbandMetaData: {
     name: string, winrate: number,
     iconLink: string, metaScore: number, gamesPlayed: number, legality: boolean,
-    bestSynergy: { deckCombiName: string, winrate: number, gamesWithDeckCombi:number },
-    bestMatchup: { opponentName: string, winrate: number, bestGames:number },
-    worstMatchup: { opponentName: string, winrate: number, worstGames:number },
+    bestSynergy: { deckCombiName: string, winrate: number, gamesWithDeckCombi: number },
+    bestMatchup: { opponentName: string, winrate: number, bestGames: number },
+    worstMatchup: { opponentName: string, winrate: number, worstGames: number },
   }[] = []
 
   selectedWarbandIndex: number | null = null;
@@ -60,16 +63,23 @@ export class MetaComponent implements OnInit {
     },
     onClick: this.onChartClick.bind(this),
   };
+  minGamesThreshhold: number = 5;
 
   constructor(private dataStoreService: DataStoreService,
     private cdr: ChangeDetectorRef,
     private themeService: ThemeService,
   ) { }
 
-  ngOnInit() {    // Subscribe to data from the store
-    this.dataStoreService.warbandData$.subscribe((data) => {
-      if (data.length > 0) {
-        this.processMetaForChart(data);
+  ngOnInit() {
+    combineLatest({
+      warbandData: this.dataStoreService.warbandData$,
+      filters: this.dataStoreService.filters$,
+    }).subscribe(({ warbandData, filters }) => {
+      if (warbandData.length > 0) {
+        this.processMetaForChart(warbandData);
+        if (filters.dataThreshold) {
+          this.minGamesThreshhold = filters.dataThreshold
+        }
       }
     });
 
@@ -88,7 +98,7 @@ export class MetaComponent implements OnInit {
     const otherWinrate = otherGamesPlayed > 0 ? (otherWarbands.reduce((sum, wb) => sum + wb.gamesWon, 0) / otherGamesPlayed) * 100 : 0;
 
     this.warbandMetaData = CardDataCalculationsService.processWarbandsforChartData(
-      data.filter(wb => wb.metaScore >= otherCutOff).slice())
+      data.filter(wb => wb.metaScore >= otherCutOff).slice(), this.minGamesThreshhold)
       .sort((a, b) => b.metaScore - a.metaScore); // Sort warbands by meta score;
 
     if (otherMetaScore > 0) {
@@ -124,8 +134,8 @@ export class MetaComponent implements OnInit {
     this.chartData.labels = this.warbandMetaData.map(warband => warband.name);
     this.chartData.datasets[0].data = this.warbandMetaData.map(warband => warband.metaScore);
     this.chartData.datasets[0].backgroundColor = this.warbandMetaData.map((warband, index) =>
-      this.selectedWarbandIndex === index ? '#FF5000' : 
-      document.body.classList.contains('dark-theme')?'#fff' : '#333'
+      this.selectedWarbandIndex === index ? '#FF5000' :
+        document.body.classList.contains('dark-theme') ? '#fff' : '#333'
     );
     if (this.chart) {
       this.chart.update();
