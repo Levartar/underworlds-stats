@@ -2,16 +2,18 @@ import { Component, OnInit, SimpleChanges } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
+import { combineLatest, forkJoin, map } from 'rxjs';
 
 import { DataStoreService } from '../../store/sheet-data.store';
 import { WarbandData } from '../../models/spreadsheet.model';
-import { combineLatest, forkJoin, map } from 'rxjs';
-import { MatIconModule } from '@angular/material/icon';
+import { CardDataCalculationsService } from '../../services/card-data-calculations.service';
 
 @Component({
   selector: 'app-warband-details-card',
   standalone: true,
-  imports: [MatCardModule, CommonModule, MatIconModule],
+  imports: [MatCardModule, CommonModule, MatIconModule, MatTooltipModule],
   templateUrl: './warband-details-card.component.html',
   styleUrl: './warband-details-card.component.scss'
 })
@@ -20,15 +22,15 @@ export class WarbandDetailsCardComponent implements OnInit {
   winrateByWarbandChartData: {
     name: string, winrate: number,
     iconLink: string, metaScore: number, gamesPlayed: number, legality: boolean,
-    bestSynergy: { deckCombiName: string, winrate: number },
-    bestmatchup: { opponentName: string, winrate: number },
-    worstmatchup: { opponentName: string, winrate: number },
+    bestSynergy: { deckCombiName: string, winrate: number, gamesWithDeckCombi:number },
+    bestMatchup: { opponentName: string, winrate: number, bestGames:number },
+    worstMatchup: { opponentName: string, winrate: number, worstGames:number },
   }[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private dataStoreService: DataStoreService
+    private dataStoreService: DataStoreService,
   ) { }
 
   ngOnInit() {
@@ -54,57 +56,7 @@ export class WarbandDetailsCardComponent implements OnInit {
   }
 
   processWarbandsForChart(data: WarbandData[]): void {
-    this.winrateByWarbandChartData= data.slice().map((wb) => {
-      // Calculate the best synergy
-      const bestSynergy = Object.entries(wb.deckSynergies)
-        .map(([deckCombiName, stats]) => {
-          const totalGames = stats.wins + stats.losses + stats.ties;
-          const winrate = totalGames > 0 ? (stats.wins / totalGames) * 100 : 0;
-          return { deckCombiName, winrate };
-        })
-        .reduce(
-          (best, current) => (current.winrate > best.winrate ? current : best),
-          { deckCombiName: "", winrate: 0 }
-        );
-
-      // Calculate the best matchup
-      const bestMatchup = Object.entries(wb.matchups)
-        .map(([opponentName, stats]) => {
-          const totalGames = stats.wins + stats.losses + stats.ties;
-          const winrate = totalGames > 0 ? (stats.wins / totalGames) * 100 : 0;
-          return { opponentName, winrate };
-        })
-        .reduce(
-          (best, current) => (current.winrate > best.winrate ? current : best),
-          { opponentName: "", winrate: 0 }
-        );
-
-      // Calculate the worst matchup
-      const worstMatchup = Object.entries(wb.matchups)
-        .map(([opponentName, stats]) => {
-          const totalGames = stats.wins + stats.losses + stats.ties;
-          const winrate = totalGames > 0 ? (stats.wins / totalGames) * 100 : 0;
-          return { opponentName, winrate };
-        })
-        .reduce(
-          (worst, current) => (current.winrate < worst.winrate ? current : worst),
-          { opponentName: "", winrate: 100 }
-        );
-
-      // Push to chart data
-      return{
-        name: wb.name,
-        winrate: wb.gamesPlayed > 0 ? (wb.gamesWon / wb.gamesPlayed) * 100 : 0,
-        iconLink: wb.icon,
-        metaScore: wb.metaScore,
-        gamesPlayed: wb.gamesPlayed,
-        legality: wb.legality == "TRUE",
-        bestSynergy,
-        bestmatchup: bestMatchup,
-        worstmatchup: worstMatchup,
-      };
-    });
-    //sort by Winrate
+    this.winrateByWarbandChartData= CardDataCalculationsService.processWarbandsforChartData(data)
     console.log('warbandDetailsCardloadedWarbands', this.winrateByWarbandChartData)
   }
 

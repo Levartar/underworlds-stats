@@ -24,18 +24,21 @@
         </div>
         <div class="footer">
             <div class="over-under-container">
-                <p class="fat"> {{ selectedWarband.bestSynergy?.deckCombiName }} - Winrate: {{
+                <p class="fat" matTooltip="{{selectedWarband.bestSynergy.gamesWithDeckCombi}} Games"> 
+                    {{ selectedWarband.bestSynergy?.deckCombiName }} - Winrate: {{
                     selectedWarband.bestSynergy?.winrate | number:'1.1-1' }}%</p>
                 <p>Best Deck Synergy</p>
             </div>
             <div class="over-under-container">
-                <p class="fat">{{ selectedWarband.bestmatchup?.opponentName }} - Winrate: {{
-                    selectedWarband.bestmatchup?.winrate | number:'1.1-1' }}%</p>
+                <p class="fat" matTooltip="{{selectedWarband.bestMatchup.bestGames}} Games">
+                    {{ selectedWarband.bestMatchup?.opponentName }} - Winrate: {{
+                    selectedWarband.bestMatchup?.winrate | number:'1.1-1' }}%</p>
                 <p>Best Matchup</p>
             </div>
             <div class="over-under-container">
-                <p class="fat"> {{ selectedWarband.worstmatchup?.opponentName }} - Winrate: {{
-                    selectedWarband.worstmatchup?.winrate | number:'1.1-1' }}%</p>
+                <p class="fat" matTooltip="{{selectedWarband.worstMatchup.worstGames}} Games"> 
+                    {{ selectedWarband.worstMatchup?.opponentName }} - Winrate: {{
+                    selectedWarband.worstMatchup?.winrate | number:'1.1-1' }}%</p>
                 <p>Worst Matchup</p>
             </div>
         </div>

@@ -4,6 +4,7 @@ import { MatList, MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { Router, RouterModule } from '@angular/router';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { DeckCombiData, SheetWarband, WarbandData } from '../../models/spreadsheet.model';
 import { DataStoreService } from '../../store/sheet-data.store';
@@ -18,7 +19,8 @@ import { DataStoreService } from '../../store/sheet-data.store';
     MatListModule,
     CommonModule,
     MatButtonModule,
-    MatCardModule],
+    MatCardModule,
+    MatTooltipModule],
   templateUrl: './winrate.component.html',
   styleUrl: './winrate.component.scss'
 })

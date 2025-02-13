@@ -4,14 +4,21 @@ import { BaseChartDirective, ThemeService } from 'ng2-charts';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { DataStoreService } from '../../store/sheet-data.store';
 import { WarbandData } from '../../models/spreadsheet.model';
+import { CardDataCalculationsService } from '../../services/card-data-calculations.service';
 
 @Component({
   selector: 'app-meta',
   standalone: true,
-  imports: [BaseChartDirective, CommonModule, MatCardModule, MatDividerModule],
+  imports: [
+    BaseChartDirective, 
+    CommonModule, 
+    MatCardModule, 
+    MatDividerModule, 
+    MatTooltipModule],
   templateUrl: './meta.component.html',
   styleUrl: './meta.component.scss'
 })
@@ -21,9 +28,9 @@ export class MetaComponent implements OnInit {
   warbandMetaData: {
     name: string, winrate: number,
     iconLink: string, metaScore: number, gamesPlayed: number, legality: boolean,
-    bestSynergy: { deckCombiName: string, winrate: number },
-    bestmatchup: { opponentName: string, winrate: number },
-    worstmatchup: { opponentName: string, winrate: number },
+    bestSynergy: { deckCombiName: string, winrate: number, gamesWithDeckCombi:number },
+    bestMatchup: { opponentName: string, winrate: number, bestGames:number },
+    worstMatchup: { opponentName: string, winrate: number, worstGames:number },
   }[] = []
 
   selectedWarbandIndex: number | null = null;
@@ -73,64 +80,16 @@ export class MetaComponent implements OnInit {
   }
 
   processMetaForChart(data: WarbandData[]): void {
-    const otherCutOff = 25;
+    const otherCutOff = 25; //Every Metascore smaller is added to 'Others'
     const otherWarbands = data.filter(wb => wb.metaScore < 25);
 
     const otherMetaScore = otherWarbands.reduce((sum, wb) => sum + wb.metaScore, 0);
     const otherGamesPlayed = otherWarbands.reduce((sum, wb) => sum + wb.gamesPlayed, 0);
     const otherWinrate = otherGamesPlayed > 0 ? (otherWarbands.reduce((sum, wb) => sum + wb.gamesWon, 0) / otherGamesPlayed) * 100 : 0;
 
-    this.warbandMetaData = data
-      .filter(wb => wb.metaScore >= otherCutOff).slice().map((wb) => {
-        // Calculate the best synergy
-        const bestSynergy = Object.entries(wb.deckSynergies)
-          .map(([deckCombiName, stats]) => {
-            const totalGames = stats.wins + stats.losses + stats.ties;
-            const winrate = totalGames > 0 ? (stats.wins / totalGames) * 100 : 0;
-            return { deckCombiName, winrate };
-          })
-          .reduce(
-            (best, current) => (current.winrate > best.winrate ? current : best),
-            { deckCombiName: "", winrate: 0 }
-          );
-
-        // Calculate the best matchup
-        const bestMatchup = Object.entries(wb.matchups)
-          .map(([opponentName, stats]) => {
-            const totalGames = stats.wins + stats.losses + stats.ties;
-            const winrate = totalGames > 0 ? (stats.wins / totalGames) * 100 : 0;
-            return { opponentName, winrate };
-          })
-          .reduce(
-            (best, current) => (current.winrate > best.winrate ? current : best),
-            { opponentName: "", winrate: 0 }
-          );
-
-        // Calculate the worst matchup
-        const worstMatchup = Object.entries(wb.matchups)
-          .map(([opponentName, stats]) => {
-            const totalGames = stats.wins + stats.losses + stats.ties;
-            const winrate = totalGames > 0 ? (stats.wins / totalGames) * 100 : 0;
-            return { opponentName, winrate };
-          })
-          .reduce(
-            (worst, current) => (current.winrate < worst.winrate ? current : worst),
-            { opponentName: "", winrate: 100 }
-          );
-
-        // Push to chart data // Filter warbands with meta score >= 1
-        return ({
-          name: wb.name,
-          winrate: wb.gamesPlayed > 0 ? (wb.gamesWon / wb.gamesPlayed) * 100 : 0,
-          iconLink: wb.icon,
-          metaScore: wb.metaScore,
-          gamesPlayed: wb.gamesPlayed,
-          legality: wb.legality == "TRUE",
-          bestSynergy,
-          bestmatchup: bestMatchup,
-          worstmatchup: worstMatchup,
-        });
-      }).sort((a, b) => b.metaScore - a.metaScore); // Sort warbands by meta score;
+    this.warbandMetaData = CardDataCalculationsService.processWarbandsforChartData(
+      data.filter(wb => wb.metaScore >= otherCutOff).slice())
+      .sort((a, b) => b.metaScore - a.metaScore); // Sort warbands by meta score;
 
     if (otherMetaScore > 0) {
       this.warbandMetaData.push({
@@ -142,15 +101,18 @@ export class MetaComponent implements OnInit {
         legality: true,
         bestSynergy: {
           deckCombiName: "",
-          winrate: 0
+          winrate: 0,
+          gamesWithDeckCombi: 0,
         },
-        bestmatchup: {
+        bestMatchup: {
           opponentName: "",
-          winrate: 0
+          winrate: 0,
+          bestGames: 0,
         },
-        worstmatchup: {
+        worstMatchup: {
           opponentName: "",
-          winrate: 0
+          winrate: 0,
+          worstGames: 0,
         },
       });
     }

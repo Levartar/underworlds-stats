@@ -4,7 +4,8 @@
         <button mat-raised-button class="winrate-button" 
         [ngStyle]="{ width: wbWinrate.winrate + '%'}"
         [ngClass]="{'not-legal': !wbWinrate.legality, 'dark': darkMode, 'light': !darkMode}"
-        (click)="navigateToWarbandDetails(wbWinrate)">
+        (click)="navigateToWarbandDetails(wbWinrate)"
+        matTooltip="{{wbWinrate.gamesPlayed}} Games">
             <!-- Icon -->
             <div class="button-content">
                 <img matListAvatar [src]="wbWinrate.iconLink" 
