@@ -5,9 +5,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { Router, RouterModule } from '@angular/router';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
 
 import { DeckCombiData, SheetWarband, WarbandData } from '../../models/spreadsheet.model';
 import { DataStoreService } from '../../store/sheet-data.store';
+import { combineLatest } from 'rxjs';
 
 
 
@@ -20,7 +22,8 @@ import { DataStoreService } from '../../store/sheet-data.store';
     CommonModule,
     MatButtonModule,
     MatCardModule,
-    MatTooltipModule],
+    MatTooltipModule,
+    MatIconModule],
   templateUrl: './winrate.component.html',
   styleUrl: './winrate.component.scss'
 })
@@ -29,6 +32,7 @@ export class WinrateComponent {
   warbandData: SheetWarband[] = [];
   selectedWarband: any;
   darkMode: boolean = document.body.classList.contains('dark-theme');
+  minGamesThreshhold: number = 25;
 
   // Chart data
   warbandNameChartLabels: string[] = [];
@@ -48,9 +52,15 @@ export class WinrateComponent {
 
   ngOnInit(): void {
     // Subscribe to data from the store
-    this.dataStoreService.warbandData$.subscribe((data) => {
-      if (data.length > 0) {
-        this.processWarbandsForChart(data);
+    combineLatest({
+      warbandData: this.dataStoreService.warbandData$,
+      filters: this.dataStoreService.filters$,
+    }).subscribe(({ warbandData, filters }) => {
+      if (warbandData.length > 0) {
+        this.processWarbandsForChart(warbandData);
+        if (filters.dataThreshold) {
+          this.minGamesThreshhold = filters.dataThreshold
+        }
       }
     });
 
@@ -74,8 +84,18 @@ export class WinrateComponent {
       legality: wb.legality == "TRUE",
     }));
     console.log("warbandData", this.warbandData)
-    //sort by Winrate
-    this.winrateByWarbandChartData.sort((a, b) => b.winrate - a.winrate);
+    //sort by Winrate in a very bad way :(
+    this.winrateByWarbandChartData.sort((a, b) => {
+      if (a.gamesPlayed >= this.minGamesThreshhold && b.gamesPlayed >= this.minGamesThreshhold) {
+        return b.winrate - a.winrate;
+      } else if (a.gamesPlayed >= this.minGamesThreshhold) {
+        return -1;
+      } else if (b.gamesPlayed >= this.minGamesThreshhold) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
 
     console.log('winrates', this.winrateByWarbandChartData)
   }

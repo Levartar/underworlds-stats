@@ -12,6 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
 
 import { DataStoreService } from '../../store/sheet-data.store';
 import { SheetData, WarbandData } from '../../models/spreadsheet.model';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @Component({
@@ -29,6 +30,7 @@ import { SheetData, WarbandData } from '../../models/spreadsheet.model';
     MatSelectModule,
     NgFor,
     MatButtonModule,
+    MatTooltipModule
     ],
   templateUrl: './filter.component.html',
   styleUrl: './filter.component.scss'
@@ -47,7 +49,7 @@ export class FilterComponent {
       }),
       metas: '',
       selectedTag: '',
-      dataThreshold: 5
+      dataThreshold: 25
     });
 
     this.dataStoreService.gameSheet$.subscribe((data) => {
@@ -82,7 +84,7 @@ export class FilterComponent {
       },
       metas: '',
       selectedTag: '',
-      dataThreshold: 5
+      dataThreshold: 25
     });
   }
 }

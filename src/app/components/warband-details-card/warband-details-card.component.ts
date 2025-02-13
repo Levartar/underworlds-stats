@@ -19,7 +19,7 @@ import { CardDataCalculationsService } from '../../services/card-data-calculatio
 })
 export class WarbandDetailsCardComponent implements OnInit {
   selectedWarband: any;
-  minGamesThreshhold: number=5;
+  minGamesThreshhold: number=25;
   winrateByWarbandChartData: {
     name: string, winrate: number,
     iconLink: string, metaScore: number, gamesPlayed: number, legality: boolean,

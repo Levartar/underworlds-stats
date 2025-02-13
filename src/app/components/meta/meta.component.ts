@@ -63,7 +63,7 @@ export class MetaComponent implements OnInit {
     },
     onClick: this.onChartClick.bind(this),
   };
-  minGamesThreshhold: number = 5;
+  minGamesThreshhold: number = 25;
 
   constructor(private dataStoreService: DataStoreService,
     private cdr: ChangeDetectorRef,

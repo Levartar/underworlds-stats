@@ -1,17 +1,15 @@
 <mat-list class="winrate-list" *ngIf="winrateByWarbandChartData">
     <mat-list-item *ngFor="let wbWinrate of winrateByWarbandChartData" class="winrate-list-item">
         <!-- Dynamic Button -->
-        <button mat-raised-button class="winrate-button" 
-        [ngStyle]="{ width: wbWinrate.winrate + '%'}"
-        [ngClass]="{'not-legal': !wbWinrate.legality, 'dark': darkMode, 'light': !darkMode}"
-        (click)="navigateToWarbandDetails(wbWinrate)"
-        matTooltip="{{wbWinrate.gamesPlayed}} Games">
+        <button mat-raised-button class="winrate-button"
+            [ngStyle]="wbWinrate.gamesPlayed >= this.minGamesThreshhold ? { width: wbWinrate.winrate + '%'} : {}"
+            [ngClass]="{'not-legal': !wbWinrate.legality, 'dark': darkMode, 'light': !darkMode}"
+            (click)="navigateToWarbandDetails(wbWinrate)" matTooltip="{{wbWinrate.gamesPlayed}} Games">
             <!-- Icon -->
             <div class="button-content">
-                <img matListAvatar [src]="wbWinrate.iconLink" 
-                alt="{{ wbWinrate.name }}" 
-                class="warband-icon" />
-                {{ wbWinrate.winrate | number:'1.1-1'}}%
+                <img matListAvatar [src]="wbWinrate.iconLink" alt="{{ wbWinrate.name }}" class="warband-icon" />
+                <div *ngIf="wbWinrate.gamesPlayed>=this.minGamesThreshhold; else notEnoughData">
+                    {{ wbWinrate.winrate | number:'1.1-1'}}%</div>
             </div>
         </button>
     </mat-list-item>
@@ -19,3 +17,8 @@
 
 <!-- Router outlet for the details card -->
 <router-outlet></router-outlet>
+
+<!--/*alternative if Not Enough Data Threshhold cuts*/-->
+<ng-template #notEnoughData>
+    <mat-icon>warning</mat-icon> Not Enough Data
+</ng-template>
