@@ -4,7 +4,7 @@
   <!--Sidenav Sliding Navigation menu-->
   <mat-drawer-container class="main">
     <mat-drawer #drawer class="sidenav" mode="over" position="end">
-      <mat-nav-list>
+      <mat-nav-list class="sidenav-list">
         <!-- TODO Add these components
         <mat-list-item routerLink="dashboard" (click)="drawer.toggle()">
           <div>Dashboard</div>
@@ -31,7 +31,11 @@
       <div class="header">
         <div class="headline-container">
           <div class="headline">{{currentRouteName}}</div>
-          <div><button mat-stroked-button>?</button></div>
+          <div><button mat-stroked-button matTooltip="The Underworlds Statistics Project is a community-driven effort to collect global statistics on the game Warhammer Underworlds using the Nemesis format. Game data is submitted by players, organizers, and volunteers. It is maintained by Borni (AKA raumzeit77 / R77). Submit your game data now!">
+          ?</button></div>
+          <div><button mat-stroked-button (click)="toggleFilter()" matTooltip="Show Filters">
+            <mat-icon style="margin-left: 8px;">filter_alt</mat-icon>
+          </button></div>
           <div><button mat-stroked-button [matMenuTriggerFor]="options" aria-label="Options menu">Options</button>
             <mat-menu #options="matMenu">
               <button mat-menu-item (click)="toggleTheme()">
@@ -40,7 +44,7 @@
                 <mat-icon *ngIf="this.darkmode">light_mode</mat-icon>
                 <span *ngIf="this.darkmode">Light Mode</span>
               </button>
-              <p mat-menu-item><mat-slide-toggle [checked]="showFilter" (click)="toggleFilter()">Show Filter</mat-slide-toggle></p>
+              <p mat-menu-item><mat-slide-toggle [checked]="showFilter" (click)="toggleFilter()">Show Filters</mat-slide-toggle></p>
             </mat-menu>
           </div>
         </div>

@@ -4,13 +4,23 @@
     padding-left: 8px;
 
     display: flex;
+    align-items: center;
     gap: 16px;
 
     font: 700 25px/32px 'IBM Plex Mono', serif;
+    box-shadow: 0 4px 8px rgb(0, 0, 0); /* Add shadow at the bottom */
+    //border-bottom: 4px solid;
+    //border-color: black;
 
     .heading{
         font: 700 25px/32px 'IBM Plex Mono', serif;
         margin-bottom: 4px;
+    }
+
+    .logo{
+        width: 32px;
+        margin-top: 2px;
+        filter: invert(1);
     }
   }
   

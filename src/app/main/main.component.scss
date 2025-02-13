@@ -62,3 +62,11 @@
 .headline {
   font: 700 25px/32px 'IBM Plex Mono', serif;
 }
+
+.sidenav{
+  padding: 0px 8px 0px 8px;
+
+  .sidenav-list > mat-list-item{
+    margin: 4px;
+  }
+}

@@ -9,6 +9,7 @@ import { MatSidenavModule } from '@angular/material/sidenav'
 import { MatListModule } from '@angular/material/list'
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 import { WarbandDataCalculationsService } from '../services/warband-data-calculations.service';
 import { DataStoreService } from '../store/sheet-data.store';
@@ -35,6 +36,7 @@ import { FilterComponent } from "../components/filter/filter.component";
     HeaderComponent,
     FooterComponent,
     FilterComponent,
+    MatTooltipModule,
 ],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss'
