@@ -32,8 +32,6 @@
     max-width: 100%;
     display: flex;
     gap: 8px;
-    padding: 0 0 0 8px;
-    align-items: center;
     justify-content: space-between;
     box-sizing: border-box;
 
@@ -41,8 +39,11 @@
       grid-area: header;
       width: 100%;
       display: flex;
+      flex-wrap: wrap;
       gap: 16px;
       align-items: center;
+      margin: 6px;
+      padding-left: 2px;
     }
 
     //.sidebar-menu{

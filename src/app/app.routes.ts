@@ -6,6 +6,8 @@ import { WinrateComponent } from './components/winrate/winrate.component';
 import { WarbandDetailsCardComponent } from './components/warband-details-card/warband-details-card.component';
 import { WarbandsComponent } from './components/warbands/warbands.component';
 import { MetaComponent } from './components/meta/meta.component';
+import { DecksComponent } from './components/decks/decks.component';
+import { DecksDetailsCardComponent } from './components/decks-details-card/decks-details-card.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'main', pathMatch: 'full'},
@@ -25,9 +27,13 @@ export const routes: Routes = [
       },
       {
         path: 'decks',
-        redirectTo: 'winrates',
-        //component: DecksComponent,
+        component: DecksComponent,
         data: { title: 'Decks' },
+        children: [
+          {
+            path: ':name', component: DecksDetailsCardComponent
+          }
+        ]
       },
       {
         path: 'winrates',

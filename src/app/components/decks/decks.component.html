@@ -1,0 +1,21 @@
+<div class="search-bar">
+    <input type="text" placeholder="Search Decks" [(ngModel)]="searchTerm" (input)="searchDecks()" />
+  </div>
+  
+  <section class="layout">
+    <div *ngFor="let deck of this.filteredDecksData" 
+    class="warband-button-container">
+      <button mat-raised-button class="warband-button" 
+      [ngClass]="deck.legality?'':'not-legal'"
+      (click)="navigateToDeckDetails(deck)">
+        <img [src]="deck.icon" alt="{{ deck.name }}" class="warband-icon" />
+      </button>
+    </div>
+  </section>
+  
+  <!-- Spacer to accommodate the fixed height card -->
+  <div style="height: 300px;"></div>
+  
+  <!-- Router outlet for the details card -->
+  <router-outlet></router-outlet>
+  

@@ -26,12 +26,12 @@ export class WarbandDataCalculationsService {
             filteredGameSheet = filteredGameSheet!.filter(game => !game.mirror);
           }
 
-          const legalWarbands: string[] = warbandSheet!.map(warband => warband.legality==='TRUE'?warband.name:'');
+          const legalWarbands: string[] = warbandSheet!.map(warband => warband.legality === 'TRUE' ? warband.name : '');
           console.log("legalWarbands", legalWarbands);
           if (!filters.allowIllegalWarbands) {
             filteredGameSheet = filteredGameSheet!.filter(
-              game =>legalWarbands.find(lwb=> lwb === game.p1Warband) && 
-              legalWarbands.find(lwb=> lwb === game.p2Warband));
+              game => legalWarbands.find(lwb => lwb === game.p1Warband) &&
+                legalWarbands.find(lwb => lwb === game.p2Warband));
           }
 
           if (filters.timeFrame?.start && filters.timeFrame.end) {
@@ -142,7 +142,7 @@ export class WarbandDataCalculationsService {
           const key = getDeckCombiKey(p1Deck1, p1Deck2);
 
           if (!deckCombiMap[key]) {
-            // Initialize the DeckCombiData for this combination
+            // Initialize the DeckCombiData for this combination with 0 values
             const deck1Data =
               deckSheet!.find(deck => deck.name === p1Deck1) ||
               ({} as SheetDeck);
@@ -161,7 +161,11 @@ export class WarbandDataCalculationsService {
               legality: deck1Data.legality === 'TRUE' && deck2Data.legality === 'TRUE' ? 'true' : 'false',
               colorA: deck1Data.colorA || '#000000',
               colorB: deck1Data.colorB || '#000000',
-              icon: deck1Data.icon || ''
+              icon: deck1Data.icon || '',
+              warbandSynergies: gameSheet!.reduce((acc, data) => {
+              acc[data.p1Warband] = { wins: 0, losses: 0, ties: 0 };
+              return acc;
+              }, {} as { [key: string]: { wins: number; losses: number; ties: number } })
             };
           }
 
@@ -171,6 +175,9 @@ export class WarbandDataCalculationsService {
           deckCombiData.gamesWon += wins;
           deckCombiData.gamesLost += losses;
           deckCombiData.gamesTied += ties;
+          deckCombiData.warbandSynergies[entry.p1Warband].wins += wins;
+          deckCombiData.warbandSynergies[entry.p1Warband].losses += losses;
+          deckCombiData.warbandSynergies[entry.p1Warband].ties += ties; 
         });
 
         // Calculate metaScore for each combination
@@ -218,6 +225,30 @@ export class WarbandDataCalculationsService {
             .reduce((sum, game) => sum + game.ties, 0);
 
           const gamesPlayed = gamesWon + gamesLost + gamesTied;
+          // Calculate warband synergies and deck combinations
+          const warbandSynergies =gameSheet!.reduce((acc, game) => {
+            if (game.p1Deck1 === deck.name || game.p1Deck2 === deck.name) {
+              if (!acc[game.p1Warband]) {
+                acc[game.p1Warband] = { wins: 0, losses: 0, ties: 0 };
+              }
+              acc[game.p1Warband].wins += game.wins;
+              acc[game.p1Warband].losses += game.losses;
+              acc[game.p1Warband].ties += game.ties;
+            }
+            return acc;
+          }, {} as { [key: string]: { wins: number; losses: number; ties: number } });
+
+          const combinations = gameSheet!.reduce((acc, game) => {
+            if (game.p1Deck1 === deck.name) {
+              if (!acc[game.p1Deck2]) {
+                acc[game.p1Deck2] = { wins: 0, losses: 0, ties: 0 };
+              }
+              acc[game.p1Deck2].wins += game.wins;
+              acc[game.p1Deck2].losses += game.losses;
+              acc[game.p1Deck2].ties += game.ties;
+            }
+            return acc;
+          }, {} as { [key: string]: { wins: number; losses: number; ties: number } }) 
 
           return {
             ...deck,
@@ -225,7 +256,9 @@ export class WarbandDataCalculationsService {
             gamesWon,
             gamesLost,
             gamesTied,
-            metaScore: gamesPlayed > 0 ? (gamesWon / (totalGames! / 2)) * 1000 : 0,
+            metaScore: gamesPlayed > 0 ? (gamesWon / totalGames!) * 1000 : 0,
+            warbandSynergies,
+            combinations
           };
         });
       })

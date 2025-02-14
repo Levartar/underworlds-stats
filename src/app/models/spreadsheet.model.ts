@@ -84,6 +84,22 @@ export interface DeckData {
   colorA: string; // primary color in hexcode
   colorB: string; // secondary color in hexcode
   icon: string; // string link to icon
+  warbandSynergies: {
+    [key: string]: { 
+      //deck1: string;
+      //deck2: string;
+      wins: number; 
+      losses: number; 
+      ties: number };
+  };
+  combinations: {
+    [combiDeckName: string]: { 
+      wins: number; 
+      losses: number; 
+      ties: number;
+      //opponentDeckCombiKey: string; 
+    };
+  };
 }
 
 export interface DeckCombiData {
@@ -99,6 +115,14 @@ export interface DeckCombiData {
   colorA: string; // primary color in hexcode
   colorB: string; // secondary color in hexcode
   icon: string; // string link to icon
+  warbandSynergies: {
+    [key: string]: { 
+      //deck1: string;
+      //deck2: string;
+      wins: number; 
+      losses: number; 
+      ties: number };
+  };
 }
 
 export interface Filters {

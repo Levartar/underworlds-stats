@@ -19,7 +19,7 @@ import { CardDataCalculationsService } from '../../services/card-data-calculatio
 })
 export class WarbandDetailsCardComponent implements OnInit {
   selectedWarband: any;
-  minGamesThreshhold: number=25;
+  minGamesThreshhold: number = 15;
   winrateByWarbandChartData: {
     name: string, winrate: number,
     iconLink: string, metaScore: number, gamesPlayed: number, legality: boolean,
@@ -44,11 +44,11 @@ export class WarbandDetailsCardComponent implements OnInit {
       const warbandName = routeParams.get('name');
       console.log("subscribtion runs",warbandName,warbandData)
       if (warbandName && warbandData.length > 0) {
-        this.processWarbandsForChart(warbandData);
-        this.updateWarbandDetails(warbandName);
         if (filters.dataThreshold){
           this.minGamesThreshhold = filters.dataThreshold
         }
+        this.processWarbandsForChart(warbandData);
+        this.updateWarbandDetails(warbandName);
       }
     });
   }

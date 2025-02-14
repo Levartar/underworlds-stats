@@ -57,10 +57,10 @@ export class WinrateComponent {
       filters: this.dataStoreService.filters$,
     }).subscribe(({ warbandData, filters }) => {
       if (warbandData.length > 0) {
-        this.processWarbandsForChart(warbandData);
         if (filters.dataThreshold) {
           this.minGamesThreshhold = filters.dataThreshold
         }
+        this.processWarbandsForChart(warbandData);
       }
     });
 
