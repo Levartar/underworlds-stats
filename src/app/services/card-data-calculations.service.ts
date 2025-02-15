@@ -18,7 +18,7 @@ export class CardDataCalculationsService {
   constructor() { }
 
   static processWarbandsforChartData(data:WarbandData[], 
-    minGamesThreshhold:number=5):winrateByWarbandChartData[]
+    minGamesThreshhold:number=15):winrateByWarbandChartData[]
   {
     return data.slice().map((wb) => {
       // Calculate the best synergy
