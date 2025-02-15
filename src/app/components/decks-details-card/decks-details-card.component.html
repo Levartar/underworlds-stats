@@ -15,6 +15,11 @@
                 <p class="fat">{{ selectedWarband.metaScore | number: '0.0-0' }}</p>
                 <p>Meta Score</p>
             </div>
+            <div class="over-under-container"
+            *ngIf="selectedWarband.gamesPlayed>=this.minGamesThreshhold">
+                <p class="fat">{{ selectedWarband.winrate | number: '1.1-1' }}%</p>
+                <p>Winrate</p>
+            </div>
             <div class="over-under-container">
                 <p class="fat">{{ selectedWarband.gamesPlayed }}</p>
                 <p>Games Played</p>
