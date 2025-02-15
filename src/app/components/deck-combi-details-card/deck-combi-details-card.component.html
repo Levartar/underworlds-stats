@@ -1,0 +1,59 @@
+<mat-card appearance="outlined" class="warband-details-card">
+    <mat-card-title class="title">
+        {{ selectedWarband?.name }}
+        <div class="divider"></div>
+        <img matListAvatar *ngIf="selectedWarband" [src]="selectedWarband.iconLink1" alt="{{ selectedWarband.name }}"
+            class="warband-icon" />
+        <img matListAvatar *ngIf="selectedWarband" [src]="selectedWarband.iconLink2" alt="{{ selectedWarband.name }}"
+            class="warband-icon" />
+        <button mat-mini-fab class="close-button" (click)="closeCard()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-card-title>
+    <mat-card-content class="content" *ngIf="selectedWarband">
+        <div class="main">
+            <div class="over-under-container">
+                <p class="fat">{{ selectedWarband.metaScore | number: '0.0-0' }}</p>
+                <p>Meta Score</p>
+            </div>
+            <div class="over-under-container" *ngIf="selectedWarband.gamesPlayed>=this.minGamesThreshhold">
+                <p class="fat">{{ selectedWarband.winrate | number: '1.1-1' }}%</p>
+                <p>Winrate</p>
+            </div>
+            <div class="over-under-container">
+                <p class="fat">{{ selectedWarband.gamesPlayed }}</p>
+                <p>Games Played</p>
+            </div>
+            <div class="over-under-container">
+            </div>
+        </div>
+        <div class="footer">
+            <div class="over-under-container">
+                <p *ngIf="selectedWarband.bestSynergy?.name!=''; else notEnoughData" class="fat"
+                    matTooltip="{{selectedWarband.bestSynergy.games}} Games">
+                    {{ selectedWarband.bestSynergy?.name }} - Winrate: {{
+                    selectedWarband.bestSynergy?.winrate | number:'1.1-1' }}%</p>
+                <p>Best Warband Synergy</p>
+            </div>
+            <div class="over-under-container">
+                <p *ngIf="selectedWarband.bestMatchup?.name!=''; else notEnoughData" class="fat"
+                    matTooltip="{{selectedWarband.bestMatchup.games}} Games">
+                    {{ selectedWarband.bestMatchup?.name }} - Winrate: {{
+                    selectedWarband.bestMatchup?.winrate | number:'1.1-1' }}%</p>
+                <p>Best Matchup</p>
+            </div>
+            <div class="over-under-container">
+                <p *ngIf="selectedWarband.worstMatchup?.name!=''; else notEnoughData" class="fat"
+                    matTooltip="{{selectedWarband.worstMatchup.games}} Games">
+                    {{ selectedWarband.worstMatchup?.name }} - Winrate: {{
+                    selectedWarband.worstMatchup?.winrate | number:'1.1-1' }}%</p>
+                <p>Worst Matchup</p>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<ng-template #notEnoughData>
+    <mat-icon>warning</mat-icon>
+    <div>Not Enough Data</div>
+</ng-template>

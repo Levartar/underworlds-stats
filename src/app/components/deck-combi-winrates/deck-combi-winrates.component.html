@@ -1,0 +1,27 @@
+<mat-list class="winrate-list" *ngIf="winrateByDeckCombiChartData">
+    <mat-list-item *ngFor="let dcWinrate of winrateByDeckCombiChartData" class="winrate-list-item">
+        <!-- Dynamic Button -->
+        <button mat-raised-button class="winrate-button"
+            [ngStyle]="dcWinrate.gamesPlayed >= this.minGamesThreshhold ? 
+                { width: dcWinrate.winrate + '%'} : {width:'250px'}"
+            [ngClass]="{'not-legal': !dcWinrate.legality, 'dark': darkMode, 'light': !darkMode}"
+            (click)="navigateToDeckCombiDetails(dcWinrate)" 
+            matTooltip="{{dcWinrate.gamesPlayed}} Games">
+            <!-- Icon -->
+            <div class="button-content">
+                <img matListAvatar [src]="dcWinrate.iconLink1" alt="{{ dcWinrate.name1 }}" class="warband-icon" />
+                <img matListAvatar [src]="dcWinrate.iconLink2" alt="{{ dcWinrate.name2 }}" class="warband-icon" />
+                <div *ngIf="dcWinrate.gamesPlayed>=this.minGamesThreshhold; else notEnoughData">
+                    {{ dcWinrate.winrate | number:'1.1-1'}}%</div>
+            </div>
+        </button>
+    </mat-list-item>
+</mat-list>
+
+<!-- Router outlet for the details card -->
+<router-outlet></router-outlet>
+
+<!--/*alternative if Not Enough Data Threshhold cuts*/-->
+<ng-template #notEnoughData>
+    <mat-icon>warning</mat-icon> Not Enough Data
+</ng-template>

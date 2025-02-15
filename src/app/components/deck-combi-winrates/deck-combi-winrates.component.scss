@@ -41,13 +41,14 @@
             padding: 0 0 0 8px;
             gap: 10px;
             min-height: 40px;
-            min-width: 100px;
+            min-width: 160px;
 
             /* Set a minimum width for small winrates */
             .warband-icon {
                 width: 30px;
                 height: 30px;
                 border-radius: 50%;
+                overflow:hidden;
             }
 
             .button-content {

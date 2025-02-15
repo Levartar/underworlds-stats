@@ -111,17 +111,25 @@ export interface DeckCombiData {
   gamesWon: number;
   gamesLost: number;
   gamesTied: number;
-  legality: string; // "legality" true or false if tournament legal
+  legality: boolean; // "legality" true or false if tournament legal
   colorA: string; // primary color in hexcode
   colorB: string; // secondary color in hexcode
-  icon: string; // string link to icon
+  icon1: string; // string link to icon
+  icon2: string;
   warbandSynergies: {
     [key: string]: { 
-      //deck1: string;
-      //deck2: string;
       wins: number; 
       losses: number; 
       ties: number };
+  };
+  deckCombiMatchups: {
+    [opponentName: string]: {
+      name1: string;
+      name2: string;  
+      wins: number; 
+      losses: number; 
+      ties: number;
+    };
   };
 }
 

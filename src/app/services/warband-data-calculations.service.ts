@@ -158,14 +158,20 @@ export class WarbandDataCalculationsService {
               gamesWon: 0,
               gamesLost: 0,
               gamesTied: 0,
-              legality: deck1Data.legality === 'TRUE' && deck2Data.legality === 'TRUE' ? 'true' : 'false',
+              legality: deck1Data.legality === 'TRUE' && deck2Data.legality === 'TRUE' || p1Deck2==='Rivals',
               colorA: deck1Data.colorA || '#000000',
               colorB: deck1Data.colorB || '#000000',
-              icon: deck1Data.icon || '',
+              icon1: deck1Data.icon || '',
+              icon2: deck2Data.icon || '',
               warbandSynergies: gameSheet!.reduce((acc, data) => {
               acc[data.p1Warband] = { wins: 0, losses: 0, ties: 0 };
               return acc;
-              }, {} as { [key: string]: { wins: number; losses: number; ties: number } })
+              }, {} as { [key: string]: { wins: number; losses: number; ties: number } }),
+              deckCombiMatchups: gameSheet!.reduce((acc, data) => {
+                acc[getDeckCombiKey(data.p2Deck1,data.p2Deck2)] = {
+                  name1:data.p2Deck1,name2:data.p2Deck2, wins: 0, losses: 0, ties: 0 };
+                  return acc;
+              }, {} as { [key: string]: { name1: string; name2: string; wins: number; losses: number; ties: number } }),
             };
           }
 
@@ -178,6 +184,9 @@ export class WarbandDataCalculationsService {
           deckCombiData.warbandSynergies[entry.p1Warband].wins += wins;
           deckCombiData.warbandSynergies[entry.p1Warband].losses += losses;
           deckCombiData.warbandSynergies[entry.p1Warband].ties += ties; 
+          deckCombiData.deckCombiMatchups[getDeckCombiKey(entry.p2Deck1,entry.p2Deck2)].wins += wins;
+          deckCombiData.deckCombiMatchups[getDeckCombiKey(entry.p2Deck1,entry.p2Deck2)].losses += losses; 
+          deckCombiData.deckCombiMatchups[getDeckCombiKey(entry.p2Deck1,entry.p2Deck2)].ties += ties;
         });
 
         // Calculate metaScore for each combination

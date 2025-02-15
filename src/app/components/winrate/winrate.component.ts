@@ -32,7 +32,7 @@ export class WinrateComponent {
   warbandData: SheetWarband[] = [];
   selectedWarband: any;
   darkMode: boolean = document.body.classList.contains('dark-theme');
-  minGamesThreshhold: number = 25;
+  minGamesThreshhold: number = 15;
 
   // Chart data
   warbandNameChartLabels: string[] = [];

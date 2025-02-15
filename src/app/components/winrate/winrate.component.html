@@ -2,7 +2,8 @@
     <mat-list-item *ngFor="let wbWinrate of winrateByWarbandChartData" class="winrate-list-item">
         <!-- Dynamic Button -->
         <button mat-raised-button class="winrate-button"
-            [ngStyle]="wbWinrate.gamesPlayed >= this.minGamesThreshhold ? { width: wbWinrate.winrate + '%'} : {}"
+            [ngStyle]="wbWinrate.gamesPlayed >= this.minGamesThreshhold ? 
+                { width: wbWinrate.winrate + '%'} : {width:'220px'}"
             [ngClass]="{'not-legal': !wbWinrate.legality, 'dark': darkMode, 'light': !darkMode}"
             (click)="navigateToWarbandDetails(wbWinrate)" matTooltip="{{wbWinrate.gamesPlayed}} Games">
             <!-- Icon -->
