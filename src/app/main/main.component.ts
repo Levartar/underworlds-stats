@@ -61,15 +61,18 @@ export class MainComponent implements OnInit {
       gameData: this.googleSheetService.fetchSheetData(),
       warbandData: this.googleSheetService.fetchSheetWarband(),
       deckData: this.googleSheetService.fetchSheetDecks(),
-    }).subscribe(({ gameData, warbandData, deckData }) => {
+      metasData: this.googleSheetService.fetchSheetMetas(),
+    }).subscribe(({ gameData, warbandData, deckData, metasData }) => {
       // Parse and store data
       const parsedGameData = this.googleSheetService.parseCsvData(gameData);
       const parsedWarbandData = this.googleSheetService.parseWarbandCsvData(warbandData);
       const parsedDeckData = this.googleSheetService.parseDecksCsvData(deckData)
+      const parsedMetasData = this.googleSheetService.parseMetasCsvData(metasData);
 
       this.dataStoreService.setGameSheet(parsedGameData);
       this.dataStoreService.setWarbandSheet(parsedWarbandData);
       this.dataStoreService.setDeckSheet(parsedDeckData);
+      this.dataStoreService.setMetas$(parsedMetasData);
       this.warbandDataCalculationsService.calculateWarbandData();
       this.warbandDataCalculationsService.calculateDeckData();
       this.warbandDataCalculationsService.calculateDeckCombiData();

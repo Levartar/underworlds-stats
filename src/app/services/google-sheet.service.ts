@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { SheetData, SheetDeck, SheetWarband } from '../models/spreadsheet.model';
+import { SheetData, SheetDeck, SheetMeta, SheetWarband } from '../models/spreadsheet.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +19,9 @@ export class GoogleSheetService {
   private sheetDecksUrl = 
   'https://docs.google.com/spreadsheets/d/1HIX_SvAZ6hOa0k65y_tVaNBxTHnZk-7IVPPgGYtcHdI/export?format=csv&id=1HIX_SvAZ6hOa0k65y_tVaNBxTHnZk-7IVPPgGYtcHdI&gid=1460942583';
 
+  private sheetMetasUrl = 
+  'https://docs.google.com/spreadsheets/d/1HIX_SvAZ6hOa0k65y_tVaNBxTHnZk-7IVPPgGYtcHdI/export?format=csv&id=1HIX_SvAZ6hOa0k65y_tVaNBxTHnZk-7IVPPgGYtcHdI&gid=1812073096';
+
   constructor(private http: HttpClient) { }
 
   fetchSheetData(): Observable<string> {
@@ -31,6 +34,10 @@ export class GoogleSheetService {
 
   fetchSheetDecks(): Observable<string> {
     return this.http.get(this.sheetDecksUrl, { responseType: 'text' });
+  }
+
+  fetchSheetMetas(): Observable<string> {
+    return this.http.get(this.sheetMetasUrl, { responseType: 'text' });
   }
 
   parseCsvData(csv: string): SheetData[] {
@@ -95,6 +102,25 @@ export class GoogleSheetService {
         colorA: values[headers.indexOf('Color A')]?.trim(),
         colorB: values[headers.indexOf('Color B')]?.trim(),
       } as SheetDeck;
+    });
+    return filteredRows.filter(row => row.name && row.name.trim() !== '')
+  }
+
+  parseMetasCsvData(csv: string): SheetMeta[] {
+    const rows = csv.split('\n').filter(row => row.trim() !== '');
+    const headers = rows[0].split(',').map(header => header.trim());
+
+    //Filter Data for empty entries
+  
+    const filteredRows = rows.slice(1).map(row => {
+      const values = row.split(',');
+      return {
+        startDate: new Date(Date.parse(values[headers.indexOf('Start Date')]?.trim())),
+        endDate: new Date(Date.parse(values[headers.indexOf('End Date')]?.trim())),
+        name: values[headers.indexOf('Name')]?.trim(),
+        games: Number(values[headers.indexOf('Games')]?.trim()),
+        Update: values[headers.indexOf('Update')]?.trim(),
+      } as SheetMeta;
     });
     return filteredRows.filter(row => row.name && row.name.trim() !== '')
   }

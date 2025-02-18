@@ -19,7 +19,7 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'winrates',
+        redirectTo: 'warbands',
         pathMatch: 'full'
       },
       {

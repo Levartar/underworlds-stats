@@ -11,7 +11,7 @@ import { NgFor } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 
 import { DataStoreService } from '../../store/sheet-data.store';
-import { SheetData, WarbandData } from '../../models/spreadsheet.model';
+import { SheetData, SheetMeta, WarbandData } from '../../models/spreadsheet.model';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 
@@ -38,6 +38,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 export class FilterComponent {
   filterForm: FormGroup;
   tags: string[] = [];
+  metas: {name:string, startDate: Date, endDate: Date}[] = [];
 
   constructor(private fb: FormBuilder, private dataStoreService: DataStoreService) {
     this.filterForm = this.fb.group({
@@ -58,10 +59,36 @@ export class FilterComponent {
       }
     });
 
-    this.filterForm.valueChanges.subscribe(values => {
-      console.log('filtervalues',values);
-      this.dataStoreService.setFilters(values);
+    this.dataStoreService.metas$.subscribe((metas) => {
+      if (metas.length > 0) {
+        this.processMetas(metas);
+      }
     });
+
+    this.filterForm.valueChanges.subscribe(values => {
+      if (values.metas) {
+            //TODO change the datepicker values to the meta start and end date
+            //this.filterForm.patchValue({
+            //timeFrame: {
+            //  start: values.metas.startDate,
+            //  end: values.metas.endDate
+            //}
+            //}, { emitEvent: false });
+            values.timeFrame.start = values.metas.startDate;
+            values.timeFrame.end = values.metas.endDate && !isNaN(new Date(values.metas.endDate).getTime()) ? values.metas.endDate : new Date();
+            console.log('selectedMeta', values.metas);
+      }
+      this.dataStoreService.setFilters(values);
+      console.log('filtervalues', values);
+    });
+  }
+
+
+  processMetas(metas: SheetMeta[]) {
+    metas.forEach(meta => {
+      this.metas.push({name: meta.name, startDate: meta.startDate, endDate:meta.endDate});
+    });
+    console.log('metas', this.metas);
   }
 
   processSheetData(data: SheetData[]): void {

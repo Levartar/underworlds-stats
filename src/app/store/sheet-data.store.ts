@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { DeckCombiData, DeckData, Filters, SheetData, SheetDeck, SheetWarband, WarbandData } from '../models/spreadsheet.model';
+import { DeckCombiData, DeckData, Filters, SheetData, SheetDeck, SheetMeta, SheetWarband, WarbandData } from '../models/spreadsheet.model';
 
 
 @Injectable({
@@ -15,6 +15,7 @@ export class DataStoreService {
   private DeckDataSubject = new BehaviorSubject<DeckData[]>([]);
   private DeckCombiDataSubject = new BehaviorSubject<DeckCombiData[]>([]);
   private filtersSubject = new BehaviorSubject<Filters>({mirrorMatches: true, allowIllegalWarbands: true, timeFrame: null,metas: null, selectedTag: null,dataThreshold: null});
+  private metasSubject = new BehaviorSubject<SheetMeta[]>([]);
 
   // Observables for components to subscribe to
   gameSheet$: Observable<SheetData[]> = this.gameSheetSubject.asObservable();
@@ -24,6 +25,7 @@ export class DataStoreService {
   deckData$: Observable<DeckData[]> = this.DeckDataSubject.asObservable();
   deckCombiData$: Observable<DeckCombiData[]> = this.DeckCombiDataSubject.asObservable();
   filters$: Observable<Filters> = this.filtersSubject.asObservable();
+  metas$: Observable<SheetMeta[]> = this.metasSubject.asObservable();
 
 
   // Methods to set data in the store
@@ -56,6 +58,10 @@ export class DataStoreService {
     this.filtersSubject.next(filters);
   }
 
+  setMetas$(metas: SheetMeta[]): void {
+    this.metasSubject.next(metas);
+  }
+
 
   // Methods to get the current value
   getGameSheet$(): Observable<SheetData[] | null> {
@@ -86,6 +92,10 @@ export class DataStoreService {
 
   getFilters$(): Observable<Filters> {
     return this.filters$;
+  }
+
+  getMetas$(): Observable<SheetMeta[]> {
+    return this.metas$;
   }
   
 }

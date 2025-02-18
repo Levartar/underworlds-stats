@@ -137,7 +137,9 @@ export class WarbandDataCalculationsService {
         gameSheet!.forEach((entry) => {
           const { p1Deck1, p1Deck2, wins, losses, ties } = entry;
 
-          if (!p1Deck1 || !p1Deck2) return; // Skip if either deck is missing
+          // Skip if either deck is missing or unknown
+          if (!p1Deck1 || !p1Deck2 || 
+            p1Deck1==="Unknown" || p1Deck2==="Unknown") return; 
 
           const key = getDeckCombiKey(p1Deck1, p1Deck2);
 

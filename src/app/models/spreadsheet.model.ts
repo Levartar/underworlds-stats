@@ -141,3 +141,12 @@ export interface Filters {
   selectedTag: string | null;
   dataThreshold: number | null;
 }
+
+export interface SheetMeta {
+  startDate: Date;
+  endDate: Date;
+  name: string;
+  games: number;
+  //metaDescription: string;
+  Update: string;
+}
