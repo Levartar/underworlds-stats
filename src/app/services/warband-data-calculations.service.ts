@@ -123,10 +123,43 @@ export class WarbandDataCalculationsService {
     combineLatest([
       this.dataStoreService.getGameSheet$(), // Observable for game data
       this.dataStoreService.getDeckSheet$(), // Observable for deck data
+      this.dataStoreService.getFilters$(), // Observable for filters
     ]).pipe(
       filter(([gameSheet, deckSheet]) => gameSheet !== null && deckSheet !== null),
-      map(([gameSheet, deckSheet]) => {
+      map(([gameSheet, deckSheet, filters]) => {
         console.log("decksheet", deckSheet)
+        // Apply filters to the gameSheet
+        let filteredGameSheet = gameSheet;
+
+        if (!filters.mirrorMatches) {
+          filteredGameSheet = filteredGameSheet!.filter(game => !game.mirror);
+        }
+        //TODO allowIllegalDecks Ui not implemented yet
+        const legalDecks: string[] = deckSheet!.map(deck =>
+          deck.legality === 'TRUE' ? deck.name : '');
+        console.log("legalDecks", legalDecks);
+        if (!filters.allowIllegalDecks) {
+          filteredGameSheet = filteredGameSheet!.filter(
+            game => legalDecks.find(ldeck => ldeck === game.p1Deck1) &&
+              (legalDecks.find(ldeck => ldeck === game.p1Deck2) || game.p1Deck2 === 'Rivals') &&
+              legalDecks.find(ldeck => ldeck === game.p2Deck1) &&
+              (legalDecks.find(ldeck => ldeck === game.p2Deck2) || game.p2Deck2 === 'Rivals'));
+        }
+
+        if (filters.timeFrame?.start && filters.timeFrame.end) {
+          const startDate = new Date(filters.timeFrame.start);
+          const endDate = new Date(filters.timeFrame.end);
+          filteredGameSheet = filteredGameSheet!.filter(game => {
+            const gameDate = new Date(game.date);
+            return gameDate >= startDate && gameDate <= endDate;
+          });
+        }
+
+        if (filters.selectedTag && filters.selectedTag.length > 0) {
+          filteredGameSheet = filteredGameSheet!.filter(
+            game => game.tag === filters.selectedTag);
+        }
+        //end of Filters
 
         const deckCombiMap: { [key: string]: DeckCombiData } = {};
 
@@ -134,12 +167,12 @@ export class WarbandDataCalculationsService {
           return [deck1, deck2].sort().join('|'); // Sort to ensure consistent key regardless of order
         };
 
-        gameSheet!.forEach((entry) => {
+        filteredGameSheet!.forEach((entry) => {
           const { p1Deck1, p1Deck2, wins, losses, ties } = entry;
 
           // Skip if either deck is missing or unknown
-          if (!p1Deck1 || !p1Deck2 || 
-            p1Deck1==="Unknown" || p1Deck2==="Unknown") return; 
+          if (!p1Deck1 || !p1Deck2 ||
+            p1Deck1 === "Unknown" || p1Deck2 === "Unknown") return;
 
           const key = getDeckCombiKey(p1Deck1, p1Deck2);
 
@@ -160,19 +193,20 @@ export class WarbandDataCalculationsService {
               gamesWon: 0,
               gamesLost: 0,
               gamesTied: 0,
-              legality: deck1Data.legality === 'TRUE' && deck2Data.legality === 'TRUE' || p1Deck2==='Rivals',
+              legality: deck1Data.legality === 'TRUE' && deck2Data.legality === 'TRUE' || p1Deck2 === 'Rivals',
               colorA: deck1Data.colorA || '#000000',
               colorB: deck1Data.colorB || '#000000',
               icon1: deck1Data.icon || '',
               icon2: deck2Data.icon || '',
-              warbandSynergies: gameSheet!.reduce((acc, data) => {
-              acc[data.p1Warband] = { wins: 0, losses: 0, ties: 0 };
-              return acc;
+              warbandSynergies: filteredGameSheet!.reduce((acc, data) => {
+                acc[data.p1Warband] = { wins: 0, losses: 0, ties: 0 };
+                return acc;
               }, {} as { [key: string]: { wins: number; losses: number; ties: number } }),
-              deckCombiMatchups: gameSheet!.reduce((acc, data) => {
-                acc[getDeckCombiKey(data.p2Deck1,data.p2Deck2)] = {
-                  name1:data.p2Deck1,name2:data.p2Deck2, wins: 0, losses: 0, ties: 0 };
-                  return acc;
+              deckCombiMatchups: filteredGameSheet!.reduce((acc, data) => {
+                acc[getDeckCombiKey(data.p2Deck1, data.p2Deck2)] = {
+                  name1: data.p2Deck1, name2: data.p2Deck2, wins: 0, losses: 0, ties: 0
+                };
+                return acc;
               }, {} as { [key: string]: { name1: string; name2: string; wins: number; losses: number; ties: number } }),
             };
           }
@@ -185,14 +219,14 @@ export class WarbandDataCalculationsService {
           deckCombiData.gamesTied += ties;
           deckCombiData.warbandSynergies[entry.p1Warband].wins += wins;
           deckCombiData.warbandSynergies[entry.p1Warband].losses += losses;
-          deckCombiData.warbandSynergies[entry.p1Warband].ties += ties; 
-          deckCombiData.deckCombiMatchups[getDeckCombiKey(entry.p2Deck1,entry.p2Deck2)].wins += wins;
-          deckCombiData.deckCombiMatchups[getDeckCombiKey(entry.p2Deck1,entry.p2Deck2)].losses += losses; 
-          deckCombiData.deckCombiMatchups[getDeckCombiKey(entry.p2Deck1,entry.p2Deck2)].ties += ties;
+          deckCombiData.warbandSynergies[entry.p1Warband].ties += ties;
+          deckCombiData.deckCombiMatchups[getDeckCombiKey(entry.p2Deck1, entry.p2Deck2)].wins += wins;
+          deckCombiData.deckCombiMatchups[getDeckCombiKey(entry.p2Deck1, entry.p2Deck2)].losses += losses;
+          deckCombiData.deckCombiMatchups[getDeckCombiKey(entry.p2Deck1, entry.p2Deck2)].ties += ties;
         });
 
         // Calculate metaScore for each combination
-        const totalGames = gameSheet!.reduce((sum, entry) => sum + entry.wins + entry.losses + entry.ties, 0);
+        const totalGames = filteredGameSheet!.reduce((sum, entry) => sum + entry.wins + entry.losses + entry.ties, 0);
         Object.values(deckCombiMap).forEach(deckCombi => {
           deckCombi.metaScore = totalGames > 0 ? (deckCombi.gamesWon / (totalGames! / 2)) * 1000 : 0;
         });
@@ -211,33 +245,67 @@ export class WarbandDataCalculationsService {
     combineLatest([
       this.dataStoreService.getGameSheet$(), // Observable for game data
       this.dataStoreService.getDeckSheet$(), // Observable for deck data
+      this.dataStoreService.getFilters$(), // Observable for filters
     ]).pipe(
       filter(([gameSheet, deckSheet]) => gameSheet !== null && deckSheet !== null),
-      map(([gameSheet, deckSheet]) => {
+      map(([gameSheet, deckSheet, filters]) => {
         console.log("decksheet", deckSheet)
+        // Apply filters to the gameSheet
+        let filteredGameSheet = gameSheet;
 
-        const totalGames = gameSheet?.reduce(
+        if (!filters.mirrorMatches) {
+          filteredGameSheet = filteredGameSheet!.filter(game => !game.mirror);
+        }
+        //TODO allowIllegalDecks Ui not implemented yet
+        const legalDecks: string[] = deckSheet!.map(deck =>
+          deck.legality === 'TRUE' ? deck.name : '');
+        console.log("legalDecks", legalDecks);
+        if (!filters.allowIllegalDecks) {
+          filteredGameSheet = filteredGameSheet!.filter(
+            game => legalDecks.find(ldeck => ldeck === game.p1Deck1) &&
+              (legalDecks.find(ldeck => ldeck === game.p1Deck2) || game.p1Deck2 === 'Rivals') &&
+              legalDecks.find(ldeck => ldeck === game.p2Deck1) &&
+              (legalDecks.find(ldeck => ldeck === game.p2Deck2) || game.p2Deck2 === 'Rivals'));
+        }
+
+        if (filters.timeFrame?.start && filters.timeFrame.end) {
+          const startDate = new Date(filters.timeFrame.start);
+          const endDate = new Date(filters.timeFrame.end);
+          filteredGameSheet = filteredGameSheet!.filter(game => {
+            const gameDate = new Date(game.date);
+            return gameDate >= startDate && gameDate <= endDate;
+          });
+        }
+
+        if (filters.selectedTag && filters.selectedTag.length > 0) {
+          filteredGameSheet = filteredGameSheet!.filter(
+            game => game.tag === filters.selectedTag);
+        }
+        //end of Filters
+
+
+        const totalGames = filteredGameSheet?.reduce(
           (sum, game) => sum + game.wins + game.losses + game.ties,
           0
         );
 
         // Map warband data to include calculated fields
         return deckSheet!.map((deck) => {
-          const gamesWon = gameSheet!
+          const gamesWon = filteredGameSheet!
             .filter((game) => game.p1Deck1 === deck.name || game.p1Deck2 === deck.name)
             .reduce((sum, game) => sum + game.wins, 0);
 
-          const gamesLost = gameSheet!
+          const gamesLost = filteredGameSheet!
             .filter((game) => game.p1Deck1 === deck.name || game.p1Deck2 === deck.name)
             .reduce((sum, game) => sum + game.losses, 0);
 
-          const gamesTied = gameSheet!
+          const gamesTied = filteredGameSheet!
             .filter((game) => game.p1Deck1 === deck.name || game.p1Deck2 === deck.name)
             .reduce((sum, game) => sum + game.ties, 0);
 
           const gamesPlayed = gamesWon + gamesLost + gamesTied;
           // Calculate warband synergies and deck combinations
-          const warbandSynergies =gameSheet!.reduce((acc, game) => {
+          const warbandSynergies = filteredGameSheet!.reduce((acc, game) => {
             if (game.p1Deck1 === deck.name || game.p1Deck2 === deck.name) {
               if (!acc[game.p1Warband]) {
                 acc[game.p1Warband] = { wins: 0, losses: 0, ties: 0 };
@@ -249,7 +317,7 @@ export class WarbandDataCalculationsService {
             return acc;
           }, {} as { [key: string]: { wins: number; losses: number; ties: number } });
 
-          const combinations = gameSheet!.reduce((acc, game) => {
+          const combinations = filteredGameSheet!.reduce((acc, game) => {
             if (game.p1Deck1 === deck.name) {
               if (!acc[game.p1Deck2]) {
                 acc[game.p1Deck2] = { wins: 0, losses: 0, ties: 0 };
@@ -259,7 +327,7 @@ export class WarbandDataCalculationsService {
               acc[game.p1Deck2].ties += game.ties;
             }
             return acc;
-          }, {} as { [key: string]: { wins: number; losses: number; ties: number } }) 
+          }, {} as { [key: string]: { wins: number; losses: number; ties: number } })
 
           return {
             ...deck,

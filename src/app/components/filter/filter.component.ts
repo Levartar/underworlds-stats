@@ -74,10 +74,16 @@ export class FilterComponent {
             //  end: values.metas.endDate
             //}
             //}, { emitEvent: false });
-            values.timeFrame.start = values.metas.startDate;
-            values.timeFrame.end = values.metas.endDate && !isNaN(new Date(values.metas.endDate).getTime()) ? values.metas.endDate : new Date();
+            if (values.metas==='none') {
+              values.timeFrame.start = "";
+              values.timeFrame.end = "";
+            }else{
+              values.timeFrame.start = values.metas.startDate;
+              values.timeFrame.end = values.metas.endDate && !isNaN(new Date(values.metas.endDate).getTime()) ? values.metas.endDate : new Date();  
+            }
             console.log('selectedMeta', values.metas);
       }
+
       this.dataStoreService.setFilters(values);
       console.log('filtervalues', values);
     });

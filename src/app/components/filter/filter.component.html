@@ -16,7 +16,7 @@
     <mat-form-field appearance="fill">
       <mat-label>Metas</mat-label>
       <mat-select formControlName="metas">
-        <mat-option value=''>None</mat-option>
+        <mat-option value='none'>None</mat-option>
         <mat-option *ngFor="let meta of metas" [value]="meta">{{ meta.name }}</mat-option>
       </mat-select>
     </mat-form-field>
