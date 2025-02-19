@@ -9,7 +9,7 @@
             [ngClass]="{'selected': selectedWarbandIndex === i}" (click)="onWarbandCardClick(i)">
                 <mat-card-title class="title">
                     {{ warband?.name }}
-                    <img matListAvatar *ngIf="warband" [src]="warband.iconLink1" 
+                    <img matListAvatar *ngIf="warband.name !== 'Others'" [src]="warband.iconLink1" 
                         alt="{{ warband.name }}" class="warband-icon" />
                     <img matListAvatar *ngIf="warband" [src]="warband.iconLink2" 
                         alt="{{ warband.name }}" class="warband-icon" />

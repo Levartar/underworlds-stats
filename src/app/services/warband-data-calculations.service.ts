@@ -10,44 +10,58 @@ export class WarbandDataCalculationsService {
 
   constructor(private dataStoreService: DataStoreService) { }
 
+  private getFilteredGameSheet(gameSheet: SheetData[], filters: any, legalWarbands: string[], legalDecks: string[]): SheetData[] {
+    let filteredGameSheet = gameSheet;
+
+    if (!filters.mirrorMatches) {
+      filteredGameSheet = filteredGameSheet.filter(game => !game.mirror);
+    }
+
+    if (!filters.allowIllegalWarbands) {
+      filteredGameSheet = filteredGameSheet.filter(
+        game => legalWarbands.includes(game.p1Warband) &&
+          legalWarbands.includes(game.p2Warband));
+    }
+
+    if (!filters.allowIllegalDecks) {
+      filteredGameSheet = filteredGameSheet.filter(
+        game => legalDecks.includes(game.p1Deck1) &&
+          (legalDecks.includes(game.p1Deck2) || game.p1Deck2 === 'Rivals') &&
+          legalDecks.includes(game.p2Deck1) &&
+          (legalDecks.includes(game.p2Deck2) || game.p2Deck2 === 'Rivals'));
+    }
+
+    if (filters.timeFrame?.start && filters.timeFrame.end) {
+      const startDate = new Date(filters.timeFrame.start);
+      const endDate = new Date(filters.timeFrame.end);
+      filteredGameSheet = filteredGameSheet.filter(game => {
+        const gameDate = new Date(game.date);
+        return gameDate >= startDate && gameDate <= endDate;
+      });
+    }
+
+    if (filters.selectedTag && filters.selectedTag.length > 0) {
+      filteredGameSheet = filteredGameSheet.filter(
+        game => game.tag === filters.selectedTag);
+    }
+
+    return filteredGameSheet;
+  }
+
   calculateWarbandData(): void {
     combineLatest([
       this.dataStoreService.getGameSheet$(), // Observable for game data
       this.dataStoreService.getWarbandSheet$(), // Observable for warband data
+      this.dataStoreService.getDeckSheet$(), // Observable for deck data
       this.dataStoreService.getFilters$(), // Observable for filters
     ])
       .pipe(
         filter(([gameSheet, warbandSheet]) => gameSheet !== null && warbandSheet !== null),
-        map(([gameSheet, warbandSheet, filters]) => {
+        map(([gameSheet, warbandSheet, deckSheet, filters]) => {
           // Apply filters to the gameSheet
-          let filteredGameSheet = gameSheet;
-
-          if (!filters.mirrorMatches) {
-            filteredGameSheet = filteredGameSheet!.filter(game => !game.mirror);
-          }
-
           const legalWarbands: string[] = warbandSheet!.map(warband => warband.legality === 'TRUE' ? warband.name : '');
-          console.log("legalWarbands", legalWarbands);
-          if (!filters.allowIllegalWarbands) {
-            filteredGameSheet = filteredGameSheet!.filter(
-              game => legalWarbands.find(lwb => lwb === game.p1Warband) &&
-                legalWarbands.find(lwb => lwb === game.p2Warband));
-          }
-
-          if (filters.timeFrame?.start && filters.timeFrame.end) {
-            const startDate = new Date(filters.timeFrame.start);
-            const endDate = new Date(filters.timeFrame.end);
-            filteredGameSheet = filteredGameSheet!.filter(game => {
-              const gameDate = new Date(game.date);
-              return gameDate >= startDate && gameDate <= endDate;
-            });
-          }
-
-          if (filters.selectedTag && filters.selectedTag.length > 0) {
-            filteredGameSheet = filteredGameSheet!.filter(
-              game => game.tag === filters.selectedTag);
-          }
-          //end of Filters
+          const legalDecks: string[] = deckSheet!.map(deck => deck.legality === 'TRUE' ? deck.name : '');
+          const filteredGameSheet = this.getFilteredGameSheet(gameSheet!, filters, legalWarbands, legalDecks);
 
           const totalGames = filteredGameSheet?.reduce(
             (sum, game) => sum + game.wins + game.losses + game.ties,
@@ -122,44 +136,18 @@ export class WarbandDataCalculationsService {
   calculateDeckCombiData(): void {
     combineLatest([
       this.dataStoreService.getGameSheet$(), // Observable for game data
+      this.dataStoreService.getWarbandSheet$(), // Observable for warband data
       this.dataStoreService.getDeckSheet$(), // Observable for deck data
       this.dataStoreService.getFilters$(), // Observable for filters
     ]).pipe(
       filter(([gameSheet, deckSheet]) => gameSheet !== null && deckSheet !== null),
-      map(([gameSheet, deckSheet, filters]) => {
+      map(([gameSheet, warbandSheet, deckSheet, filters]) => {
         console.log("decksheet", deckSheet)
+        console.log("filters", filters)
         // Apply filters to the gameSheet
-        let filteredGameSheet = gameSheet;
-
-        if (!filters.mirrorMatches) {
-          filteredGameSheet = filteredGameSheet!.filter(game => !game.mirror);
-        }
-        //TODO allowIllegalDecks Ui not implemented yet
-        const legalDecks: string[] = deckSheet!.map(deck =>
-          deck.legality === 'TRUE' ? deck.name : '');
-        console.log("legalDecks", legalDecks);
-        if (!filters.allowIllegalDecks) {
-          filteredGameSheet = filteredGameSheet!.filter(
-            game => legalDecks.find(ldeck => ldeck === game.p1Deck1) &&
-              (legalDecks.find(ldeck => ldeck === game.p1Deck2) || game.p1Deck2 === 'Rivals') &&
-              legalDecks.find(ldeck => ldeck === game.p2Deck1) &&
-              (legalDecks.find(ldeck => ldeck === game.p2Deck2) || game.p2Deck2 === 'Rivals'));
-        }
-
-        if (filters.timeFrame?.start && filters.timeFrame.end) {
-          const startDate = new Date(filters.timeFrame.start);
-          const endDate = new Date(filters.timeFrame.end);
-          filteredGameSheet = filteredGameSheet!.filter(game => {
-            const gameDate = new Date(game.date);
-            return gameDate >= startDate && gameDate <= endDate;
-          });
-        }
-
-        if (filters.selectedTag && filters.selectedTag.length > 0) {
-          filteredGameSheet = filteredGameSheet!.filter(
-            game => game.tag === filters.selectedTag);
-        }
-        //end of Filters
+        const legalWarbands: string[] = warbandSheet!.map(warband => warband.legality === 'TRUE' ? warband.name : '');
+        const legalDecks: string[] = deckSheet!.map(deck => deck.legality === 'TRUE' ? deck.name : '');
+        const filteredGameSheet = this.getFilteredGameSheet(gameSheet!, filters, legalWarbands, legalDecks);
 
         const deckCombiMap: { [key: string]: DeckCombiData } = {};
 
@@ -170,9 +158,10 @@ export class WarbandDataCalculationsService {
         filteredGameSheet!.forEach((entry) => {
           const { p1Deck1, p1Deck2, wins, losses, ties } = entry;
 
-          // Skip if either deck is missing or unknown
+          // Skip if either deck is missing or unknown or Rivals
           if (!p1Deck1 || !p1Deck2 ||
-            p1Deck1 === "Unknown" || p1Deck2 === "Unknown") return;
+            p1Deck1 === "Unknown" || p1Deck2 === "Unknown" 
+            || p1Deck2 === "Rivals" || entry.p2Deck2==="Rivals") return;
 
           const key = getDeckCombiKey(p1Deck1, p1Deck2);
 
@@ -244,45 +233,17 @@ export class WarbandDataCalculationsService {
   calculateDeckData(): void {
     combineLatest([
       this.dataStoreService.getGameSheet$(), // Observable for game data
+      this.dataStoreService.getWarbandSheet$(), // Observable for warband data
       this.dataStoreService.getDeckSheet$(), // Observable for deck data
       this.dataStoreService.getFilters$(), // Observable for filters
     ]).pipe(
       filter(([gameSheet, deckSheet]) => gameSheet !== null && deckSheet !== null),
-      map(([gameSheet, deckSheet, filters]) => {
+      map(([gameSheet, warbandSheet, deckSheet, filters]) => {
         console.log("decksheet", deckSheet)
         // Apply filters to the gameSheet
-        let filteredGameSheet = gameSheet;
-
-        if (!filters.mirrorMatches) {
-          filteredGameSheet = filteredGameSheet!.filter(game => !game.mirror);
-        }
-        //TODO allowIllegalDecks Ui not implemented yet
-        const legalDecks: string[] = deckSheet!.map(deck =>
-          deck.legality === 'TRUE' ? deck.name : '');
-        console.log("legalDecks", legalDecks);
-        if (!filters.allowIllegalDecks) {
-          filteredGameSheet = filteredGameSheet!.filter(
-            game => legalDecks.find(ldeck => ldeck === game.p1Deck1) &&
-              (legalDecks.find(ldeck => ldeck === game.p1Deck2) || game.p1Deck2 === 'Rivals') &&
-              legalDecks.find(ldeck => ldeck === game.p2Deck1) &&
-              (legalDecks.find(ldeck => ldeck === game.p2Deck2) || game.p2Deck2 === 'Rivals'));
-        }
-
-        if (filters.timeFrame?.start && filters.timeFrame.end) {
-          const startDate = new Date(filters.timeFrame.start);
-          const endDate = new Date(filters.timeFrame.end);
-          filteredGameSheet = filteredGameSheet!.filter(game => {
-            const gameDate = new Date(game.date);
-            return gameDate >= startDate && gameDate <= endDate;
-          });
-        }
-
-        if (filters.selectedTag && filters.selectedTag.length > 0) {
-          filteredGameSheet = filteredGameSheet!.filter(
-            game => game.tag === filters.selectedTag);
-        }
-        //end of Filters
-
+        const legalWarbands: string[] = warbandSheet!.map(warband => warband.legality === 'TRUE' ? warband.name : '');
+        const legalDecks: string[] = deckSheet!.map(deck => deck.legality === 'TRUE' ? deck.name : '');
+        const filteredGameSheet = this.getFilteredGameSheet(gameSheet!, filters, legalWarbands, legalDecks);
 
         const totalGames = filteredGameSheet?.reduce(
           (sum, game) => sum + game.wins + game.losses + game.ties,

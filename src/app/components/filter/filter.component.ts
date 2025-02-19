@@ -45,6 +45,7 @@ export class FilterComponent {
     this.filterForm = this.fb.group({
       mirrorMatches: true,
       allowIllegalWarbands: true,
+      allowIllegalDecks: true,
       timeFrame: this.fb.group({
         start: '',
         end: ''
@@ -118,6 +119,7 @@ export class FilterComponent {
     this.filterForm.reset({
       mirrorMatches: true,
       allowIllegalWarbands: true,
+      allowIllegalDecks: true,
       timeFrame: {
         start: '',
         end: ''
