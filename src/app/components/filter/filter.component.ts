@@ -1,8 +1,8 @@
-import { Component, ChangeDetectionStrategy} from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import {MatSelectModule} from '@angular/material/select';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -31,14 +31,15 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     NgFor,
     MatButtonModule,
     MatTooltipModule
-    ],
+  ],
   templateUrl: './filter.component.html',
   styleUrl: './filter.component.scss'
 })
 export class FilterComponent {
   filterForm: FormGroup;
   tags: string[] = [];
-  metas: {name:string, startDate: Date, endDate: Date}[] = [];
+  metas: { name: string, startDate: Date, endDate: Date }[] = [];
+  isPatching: boolean = false;
 
   constructor(private fb: FormBuilder, private dataStoreService: DataStoreService) {
     this.filterForm = this.fb.group({
@@ -66,22 +67,28 @@ export class FilterComponent {
     });
 
     this.filterForm.valueChanges.subscribe(values => {
+      if (this.isPatching) {
+        return;
+      }
+
       if (values.metas) {
-            //TODO change the datepicker values to the meta start and end date
-            //this.filterForm.patchValue({
-            //timeFrame: {
-            //  start: values.metas.startDate,
-            //  end: values.metas.endDate
-            //}
-            //}, { emitEvent: false });
-            if (values.metas==='none') {
-              values.timeFrame.start = "";
-              values.timeFrame.end = "";
-            }else{
-              values.timeFrame.start = values.metas.startDate;
-              values.timeFrame.end = values.metas.endDate && !isNaN(new Date(values.metas.endDate).getTime()) ? values.metas.endDate : new Date();  
-            }
-            console.log('selectedMeta', values.metas);
+        if (values.metas === 'none') {
+          values.timeFrame.start = '';
+          values.timeFrame.end = '';
+        } else {
+          values.timeFrame.start = values.metas.startDate;
+          values.timeFrame.end = values.metas.endDate && !isNaN(new Date(values.metas.endDate).getTime()) ? values.metas.endDate : new Date();
+        }
+        // Change the datepicker values to the meta start and end date
+        this.isPatching = true;
+        this.filterForm.patchValue({
+          timeFrame: {
+            start: values.timeFrame.start,
+            end: values.timeFrame.end
+          }
+        }, { emitEvent: false });
+        this.isPatching = false;
+        console.log('selectedMeta', values.metas);
       }
 
       this.dataStoreService.setFilters(values);
@@ -92,7 +99,7 @@ export class FilterComponent {
 
   processMetas(metas: SheetMeta[]) {
     metas.forEach(meta => {
-      this.metas.push({name: meta.name, startDate: meta.startDate, endDate:meta.endDate});
+      this.metas.push({ name: meta.name, startDate: meta.startDate, endDate: meta.endDate });
     });
     console.log('metas', this.metas);
   }
