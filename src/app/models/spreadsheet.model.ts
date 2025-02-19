@@ -135,8 +135,7 @@ export interface DeckCombiData {
 
 export interface Filters {
   mirrorMatches: boolean | null;
-  allowIllegalWarbands: boolean | null
-  allowIllegalDecks: boolean | null
+  allowLegacyContent: boolean | null
   timeFrame: { start: Date, end: Date } | null;
   metas: string | null;
   selectedTag: string | null;

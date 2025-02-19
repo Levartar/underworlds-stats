@@ -16,14 +16,14 @@ export class WarbandDataCalculationsService {
     if (!filters.mirrorMatches) {
       filteredGameSheet = filteredGameSheet.filter(game => !game.mirror);
     }
-
-    if (!filters.allowIllegalWarbands) {
+    //Filter Illegal Warbands
+    if (!filters.allowLegacyContent) {
       filteredGameSheet = filteredGameSheet.filter(
         game => legalWarbands.includes(game.p1Warband) &&
           legalWarbands.includes(game.p2Warband));
     }
-
-    if (!filters.allowIllegalDecks) {
+    //Filter Illegal Decks
+    if (!filters.allowLegacyContent) {
       filteredGameSheet = filteredGameSheet.filter(
         game => legalDecks.includes(game.p1Deck1) &&
           (legalDecks.includes(game.p1Deck2) || game.p1Deck2 === 'Rivals') &&
@@ -68,8 +68,7 @@ export class WarbandDataCalculationsService {
             0
           );
 
-          const legalWarbandsSheet = warbandSheet!.filter(warband => filters.allowIllegalWarbands || warband.legality === 'TRUE');
-
+          const legalWarbandsSheet = warbandSheet!.filter(warband => filters.allowLegacyContent || warband.legality === 'TRUE');
 
           // Map gameSheet data to for every warband
           return legalWarbandsSheet!.map((warband) => {

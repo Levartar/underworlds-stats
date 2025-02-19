@@ -44,8 +44,7 @@ export class FilterComponent {
   constructor(private fb: FormBuilder, private dataStoreService: DataStoreService) {
     this.filterForm = this.fb.group({
       mirrorMatches: true,
-      allowIllegalWarbands: true,
-      allowIllegalDecks: true,
+      allowLegacyContent: true,
       timeFrame: this.fb.group({
         start: '',
         end: ''
@@ -118,8 +117,7 @@ export class FilterComponent {
   clearFilters(): void {
     this.filterForm.reset({
       mirrorMatches: true,
-      allowIllegalWarbands: true,
-      allowIllegalDecks: true,
+      allowLegacyContent: true,
       timeFrame: {
         start: '',
         end: ''
