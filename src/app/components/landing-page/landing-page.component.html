@@ -1,0 +1,69 @@
+<div class="landing-page-container">
+  <div class="grow1">
+    <mat-card class="top-warbands-card grow1">
+      <mat-card-title class="title">Top 3 Warbands Played This Meta</mat-card-title>
+      <mat-card-content>
+        <mat-list-item *ngFor="let warband of topWarbands" class="winrate-list-item">
+          <!-- Dynamic Button -->
+          <button mat-raised-button class="winrate-button"
+            [ngStyle]="{ width: warband.gamesWon/warband.gamesPlayed*100 + '%'}"
+            [ngClass]="{'not-legal': !warband.legality, 'dark': darkMode, 'light': !darkMode}"
+            (click)="navigateToWarbandDetails(warband)" matTooltip="{{warband.gamesPlayed}} Games">
+            <!-- Icon -->
+            <div class="button-content">
+              <img matListAvatar [src]="warband.icon" alt="{{ warband.name }}" class="warband-icon" />
+              <div>
+                {{ warband.gamesWon/warband.gamesPlayed*100 | number:'1.1-1'}}%</div>
+            </div>
+          </button>
+        </mat-list-item>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  
+
+  <div class="grow1">
+    <mat-card class="games-played-card">
+      <mat-card-title class="title">Games Played Over Time</mat-card-title>
+      <mat-card-content>
+        <canvas class="chart" baseChart [data]="gamesPlayedData" [options]="chartOptions" [type]="'line'"></canvas>
+        <form [formGroup]="filterForm">
+          <mat-form-field>
+            <mat-label>Time Frame</mat-label>
+            <mat-select formControlName="timeFrame">
+              <mat-option value="weeks">Weeks</mat-option>
+              <mat-option value="months">Months</mat-option>
+              <mat-option value="years">Years</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  
+
+  <div class="grow1">
+    <mat-card class="top-deck-combis-card grow1">
+      <mat-card-title class="title">Top 3 Deck Combinations Played This Meta</mat-card-title>
+      <mat-card-content>
+        <mat-list-item *ngFor="let deckCombi of topDeckCombis" class="winrate-list-item">
+          <!-- Dynamic Button -->
+          <button mat-raised-button class="winrate-button"
+            [ngStyle]="{ width: deckCombi.gamesWon/deckCombi.gamesPlayed*100 + '%'}"
+            [ngClass]="{'not-legal': !deckCombi.legality, 'dark': darkMode, 'light': !darkMode}"
+            (click)="navigateToDeckCombiDetails(deckCombi)" matTooltip="{{deckCombi.gamesPlayed}} Games">
+            <!-- Icon -->
+            <div class="button-content">
+              <img matListAvatar [src]="deckCombi.icon1" alt="{{ deckCombi.name1 }}" class="warband-icon" />
+              <img matListAvatar [src]="deckCombi.icon2" alt="{{ deckCombi.name2 }}" class="warband-icon" />
+              <div>
+                {{ deckCombi.gamesWon/deckCombi.gamesPlayed*100 | number:'1.1-1'}}%</div>
+            </div>
+          </button>
+        </mat-list-item>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<router-outlet></router-outlet>

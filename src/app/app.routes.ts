@@ -11,6 +11,7 @@ import { DecksDetailsCardComponent } from './components/decks-details-card/decks
 import { DeckCombiWinratesComponent } from './components/deck-combi-winrates/deck-combi-winrates.component';
 import { DeckCombiDetailsCardComponent } from './components/deck-combi-details-card/deck-combi-details-card.component';
 import { DeckMetaComponent } from './components/deck-meta/deck-meta.component';
+import { LandingPageComponent } from './components/landing-page/landing-page.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'main', pathMatch: 'full'},
@@ -19,14 +20,18 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'warbands',
-        pathMatch: 'full'
+        redirectTo: 'dashboard',
+        pathMatch: 'full',
       },
       {
         path: 'dashboard',
-        redirectTo: 'winrates',
-        //component: DashboardComponent,
+        component: LandingPageComponent,
         data: { title: 'Dashboard' },
+        children: [
+          {
+            path: ':name', component: DecksDetailsCardComponent
+          }
+        ]
       },
       {
         path: 'decks',
@@ -34,7 +39,10 @@ export const routes: Routes = [
         data: { title: 'Decks' },
         children: [
           {
-            path: ':name', component: DecksDetailsCardComponent
+            path: ':name/Deck', component: DecksDetailsCardComponent
+          },
+          {
+            path: ':name/warband', component: WarbandDetailsCardComponent
           }
         ]
       },

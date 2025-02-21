@@ -13,6 +13,6 @@ bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom(HttpClientModule), 
     provideAnimationsAsync(), 
-    provideRouter(routes), provideCharts(withDefaultRegisterables())
+    provideRouter(routes), provideCharts(withDefaultRegisterables()), provideCharts(withDefaultRegisterables())
   ],
 }).catch(err => console.error(err));
