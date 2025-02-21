@@ -31,6 +31,7 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrls: ['./landing-page.component.scss']
 })
 export class LandingPageComponent implements OnInit {
+  darkMode: boolean = document.body.classList.contains('dark-theme');
   topWarbands: WarbandData[] = [];
   topDeckCombis: DeckCombiData[] = [];
   gamesPlayedData: any;
@@ -38,14 +39,35 @@ export class LandingPageComponent implements OnInit {
     responsive: true,
     maintainAspectRatio: true,
     scales: {
-      x: {},
+      x: {
+        ticks: {
+          color: this.darkMode ? 'white' : 'black'
+        }
+      },
       y: {
-        beginAtZero: true
+        beginAtZero: true,
+        ticks: {
+          color: this.darkMode ? 'white' : 'black'
+        }
+      }
+    },
+    plugins: {
+      legend: {
+        labels: {
+          color: this.darkMode ? 'white' : 'black'
+        }
+      }
+    },
+    layout: {
+      padding: {
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0
       }
     }
   };
   filterForm: FormGroup;
-  darkMode: boolean = document.body.classList.contains('dark-theme');
 
   constructor(
     private router: Router,
@@ -67,6 +89,29 @@ export class LandingPageComponent implements OnInit {
 
     window.addEventListener('themeChange', (event) => {
       this.darkMode = document.body.classList.contains('dark-theme');
+      this.chartOptions = {
+        ...this.chartOptions,
+        scales: {
+          x: {
+            ticks: {
+              color: this.darkMode ? 'white' : 'black'
+            }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: this.darkMode ? 'white' : 'black'
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: {
+              color: this.darkMode ? 'white' : 'black'
+            }
+          }
+        }
+      };
     });
   }
 
@@ -108,20 +153,20 @@ export class LandingPageComponent implements OnInit {
       filters: this.dataStoreService.getFilters$(),
     }).subscribe({
       next: ({ warbandData, deckCombiData, filters }) => {
-      this.topWarbands = warbandData.sort((a, b) => {
-        const aRatio = a.gamesPlayed >= filters.dataThreshold! ? a.gamesWon / a.gamesPlayed : -1;
-        const bRatio = b.gamesPlayed >= filters.dataThreshold! ? b.gamesWon / b.gamesPlayed : -1;
-        return bRatio - aRatio;
-      }).slice(0, 3);
+        this.topWarbands = warbandData.sort((a, b) => {
+          const aRatio = a.gamesPlayed >= filters.dataThreshold! ? a.gamesWon / a.gamesPlayed : -1;
+          const bRatio = b.gamesPlayed >= filters.dataThreshold! ? b.gamesWon / b.gamesPlayed : -1;
+          return bRatio - aRatio;
+        }).slice(0, 3);
 
-      this.topDeckCombis = deckCombiData.sort((a, b) => {
-        const aRatio = a.gamesPlayed >= filters.dataThreshold! ? a.gamesWon / a.gamesPlayed : -1;
-        const bRatio = b.gamesPlayed >= filters.dataThreshold! ? b.gamesWon / b.gamesPlayed : -1;
-        return bRatio - aRatio;
-      }).slice(0, 3);
+        this.topDeckCombis = deckCombiData.sort((a, b) => {
+          const aRatio = a.gamesPlayed >= filters.dataThreshold! ? a.gamesWon / a.gamesPlayed : -1;
+          const bRatio = b.gamesPlayed >= filters.dataThreshold! ? b.gamesWon / b.gamesPlayed : -1;
+          return bRatio - aRatio;
+        }).slice(0, 3);
       },
       error: (err) => {
-      console.error("Error in subscribeToData", err);
+        console.error("Error in subscribeToData", err);
       },
     });
     this.updateGamesPlayedData();
@@ -155,9 +200,9 @@ export class LandingPageComponent implements OnInit {
 
       switch (timeFrame) {
         case 'weeks':
-            const startOfWeek = new Date(date);
-            startOfWeek.setDate(date.getDate() - date.getDay());
-            key = `${startOfWeek.getFullYear()}-${startOfWeek.getMonth() + 1}-${startOfWeek.getDate()}`;
+          const startOfWeek = new Date(date);
+          startOfWeek.setDate(date.getDate() - date.getDay());
+          key = `${startOfWeek.getFullYear()}-${startOfWeek.getMonth() + 1}-${startOfWeek.getDate()}`;
           break;
         case 'months':
           key = `${date.getFullYear()}-${date.getMonth() + 1}`;
@@ -194,10 +239,12 @@ export class LandingPageComponent implements OnInit {
   }
 
   navigateToWarbandDetails(warband: WarbandData) {
-    this.router.navigate([`/main/dashboard/${warband.name}/warband`]);
+    console.log("navigateToWarbandDetails", `/main/dashboard/warband/${warband.name}`);
+    this.router.navigate([`/main/dashboard/warband/${warband.name}`]);
   }
 
   navigateToDeckCombiDetails(deckCombi: DeckCombiData) {
-    this.router.navigate([`/main/deck winrates/${deckCombi.name1+' + '+deckCombi.name2}/deck`]);
+    console.log("navigateToDeckCombiDetails", `/main/dashboard/deck/${deckCombi.name1 + ' + ' + deckCombi.name2}`);
+    this.router.navigate([`/main/dashboard/deck/${deckCombi.name1 + ' + ' + deckCombi.name2}`]);
   }
 }

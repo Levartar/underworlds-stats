@@ -7,6 +7,7 @@
     gap: 16px;
     flex-wrap: wrap;
     justify-content: center;
+    padding-bottom: 100px;
 }
 
 .grow1 {
@@ -34,7 +35,8 @@
 }
 
 .winrate-list-item {
-    margin-top: 10px;
+    margin-top: 20px;
+    margin-left: 16px;
 
     .not-legal {
         border: 2px dashed $background-color;
@@ -73,6 +75,7 @@
         gap: 10px;
         min-height: 40px;
         min-width: 100px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 
         /* Set a minimum width for small winrates */
         .warband-icon {

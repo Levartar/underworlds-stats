@@ -39,15 +39,15 @@ export const routes: Routes = [
         data: { title: 'Decks' },
         children: [
           {
-            path: ':name/Deck', component: DecksDetailsCardComponent
+            path: 'deck/:name', component: DecksDetailsCardComponent
           },
           {
-            path: ':name/warband', component: WarbandDetailsCardComponent
+            path: 'warband/:name', component: WarbandDetailsCardComponent
           }
         ]
       },
       {
-        path: 'warband winrates',
+        path: 'warband-winrates',
         component: WinrateComponent,
         data: { title: 'Warband Winrates' },
         children: [
@@ -57,7 +57,7 @@ export const routes: Routes = [
         ]
       },
       {
-        path: 'deck winrates',
+        path: 'deck-winrates',
         component: DeckCombiWinratesComponent,
         data: { title: 'Deck Winrates' },
         children: [
@@ -67,12 +67,12 @@ export const routes: Routes = [
         ]
       },
       {
-        path: 'warband meta',
+        path: 'warband-meta',
         component: MetaComponent,
         data: { title: 'Warband Meta' },
       },
       {
-        path: 'deck meta',
+        path: 'deck-meta',
         component: DeckMetaComponent,
         data: { title: 'Deck Meta' },
       },

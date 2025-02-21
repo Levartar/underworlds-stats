@@ -3,7 +3,7 @@
     <mat-card class="top-warbands-card grow1">
       <mat-card-title class="title">Top 3 Warbands Played This Meta</mat-card-title>
       <mat-card-content>
-        <mat-list-item *ngFor="let warband of topWarbands" class="winrate-list-item">
+        <div *ngFor="let warband of topWarbands" class="winrate-list-item">
           <!-- Dynamic Button -->
           <button mat-raised-button class="winrate-button"
             [ngStyle]="{ width: warband.gamesWon/warband.gamesPlayed*100 + '%'}"
@@ -16,7 +16,7 @@
                 {{ warband.gamesWon/warband.gamesPlayed*100 | number:'1.1-1'}}%</div>
             </div>
           </button>
-        </mat-list-item>
+        </div>
       </mat-card-content>
     </mat-card>
   </div>
@@ -46,7 +46,7 @@
     <mat-card class="top-deck-combis-card grow1">
       <mat-card-title class="title">Top 3 Deck Combinations Played This Meta</mat-card-title>
       <mat-card-content>
-        <mat-list-item *ngFor="let deckCombi of topDeckCombis" class="winrate-list-item">
+        <div *ngFor="let deckCombi of topDeckCombis" class="winrate-list-item">
           <!-- Dynamic Button -->
           <button mat-raised-button class="winrate-button"
             [ngStyle]="{ width: deckCombi.gamesWon/deckCombi.gamesPlayed*100 + '%'}"
@@ -60,7 +60,7 @@
                 {{ deckCombi.gamesWon/deckCombi.gamesPlayed*100 | number:'1.1-1'}}%</div>
             </div>
           </button>
-        </mat-list-item>
+        </div>
       </mat-card-content>
     </mat-card>
   </div>
