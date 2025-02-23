@@ -1,4 +1,4 @@
-@import '../../theme.scss';
+@import '../../styles.scss';
 
 
 .layout {
@@ -46,8 +46,9 @@
       padding-left: 2px;
     }
 
-    //.sidebar-menu{
-    //}
+    .sidebar-menu{
+      padding-right: 4px;
+    }
   }
 }
 
@@ -80,4 +81,16 @@
     text-decoration: none;
     color:inherit
   }
+}
+
+.sidenav-list {
+  overflow: hidden;
+}
+
+::ng-deep .mat-mdc-outlined-button {
+  border-color: var(--text-color) !important; // Use the current theme's text color
+}
+
+.highlight {
+  background-color: var(--primary-color);
 }

@@ -8,7 +8,9 @@
             <mat-card class="warband-info" *ngFor="let warband of deckCombiMetaData; let i = index" [id]="'warband-' + i"
             [ngClass]="{'selected': selectedWarbandIndex === i}" (click)="onWarbandCardClick(i)">
                 <mat-card-title class="title">
-                    {{ warband?.name }}
+                    <div class="title-text">
+                        {{ warband?.name }}
+                    </div>
                     <img matListAvatar *ngIf="warband.name !== 'Others'" [src]="warband.iconLink1" 
                         alt="{{ warband.name }}" class="warband-icon" />
                     <img matListAvatar *ngIf="warband" [src]="warband.iconLink2" 
@@ -21,10 +23,12 @@
                             <p>Meta Score</p>
                         </div>
                         <div class="over-under-container">
-                            <p class="fat">{{ warband.gamesPlayed }}</p>
-                            <p>Games Played</p>
+                            <p class="fat">{{ warband.winrate | number: '0.0-0'}}%</p>
+                            <p>Winrate</p>
                         </div>
                         <div class="over-under-container">
+                            <p class="fat">{{ warband.gamesPlayed }}</p>
+                            <p>Games Played</p>
                         </div>
                     </div>
                     <mat-divider></mat-divider>

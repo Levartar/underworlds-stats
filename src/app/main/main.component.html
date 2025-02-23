@@ -26,6 +26,11 @@
         <mat-list-item routerLink="deck-meta" (click)="drawer.toggle()">
           <div>Deck Meta</div>
         </mat-list-item>
+        <mat-list-item class="highlight">
+          <div class="centered"><mat-icon>assignment</mat-icon>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSchHKcWiMWNdlPXC6AgsFnWNtogONptF6vyW4gUC6fW584ibA/viewform" target="_blank">Submission Form</a>
+          </div>
+        </mat-list-item>
         <mat-list-item>
           <div class="centered"><mat-icon>help</mat-icon>
             <a href="https://docs.google.com/document/d/1gLLJZ4VRtUNlrFA5RzTW3wr0w6NJJ-GHPqujSlppT6c/edit?tab=t.0"
@@ -51,8 +56,7 @@
       <div class="header">
         <div class="headline-container">
           <div class="headline">{{currentRouteName}}</div>
-          <div><button mat-stroked-button
-              matTooltip="The Underworlds Statistics Project is a community-driven effort to collect global statistics on the game Warhammer Underworlds using the Nemesis format. Game data is submitted by players, organizers, and volunteers. It is maintained by Borni (AKA raumzeit77 / R77). Submit your game data now!">
+            <div><button mat-stroked-button (click)="openDialog()" matTooltip="The Underworlds Statistics Project is a community-driven effort to collect global statistics on the game Warhammer Underworlds using the Nemesis format. Game data is submitted by players, organizers, and volunteers. It is maintained by Borni (AKA raumzeit77 / R77). Submit your game data now!" class="custom-button">
               ?</button></div>
           <div><button mat-stroked-button (click)="toggleFilter()" matTooltip="Show Filters">
               <mat-icon style="margin-left: 8px;">filter_alt</mat-icon>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { filter, forkJoin } from 'rxjs';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -18,6 +18,8 @@ import { DashboardComponent } from '../components/dashboard/dashboard.component'
 import { HeaderComponent } from '../components/header/header.component';
 import { FooterComponent } from '../components/footer/footer.component';
 import { FilterComponent } from "../components/filter/filter.component";
+import { MatDialog } from '@angular/material/dialog';
+import { SimpleDialogComponent } from '../components/simple-dialog/simple-dialog.component';
 
 
 @Component({
@@ -53,6 +55,7 @@ export class MainComponent implements OnInit {
     private googleSheetService: GoogleSheetService,
     private dataStoreService: DataStoreService,
     private router: Router, private activatedRoute: ActivatedRoute,
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit() {
@@ -114,5 +117,9 @@ export class MainComponent implements OnInit {
 
   toggleFilter() {
     this.showFilter = !this.showFilter;
+  }
+
+  openDialog(): void {
+    this.dialog.open(SimpleDialogComponent);
   }
 }

@@ -16,11 +16,16 @@
     //display: flex;
 }
 
+.center{
+    display: flex;
+    justify-content: center;
+}
+
 .top-warbands-card,
 .top-deck-combis-card,
 .games-played-card {
     width: 350px;
-    height: 350px;
+    height: 380px;
 }
 
 .title {
@@ -28,6 +33,7 @@
     font-weight: bold;
     text-align: center;
     margin: 16px;
+    height: 64px;
 }
 
 .mat-form-field {

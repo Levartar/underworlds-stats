@@ -1,7 +1,7 @@
 <div class="landing-page-container">
   <div class="grow1">
     <mat-card class="top-warbands-card grow1">
-      <mat-card-title class="title">Top 3 Warbands Played This Meta</mat-card-title>
+      <mat-card-title class="title">Top Warbands Played</mat-card-title>
       <mat-card-content>
         <div *ngFor="let warband of topWarbands" class="winrate-list-item">
           <!-- Dynamic Button -->
@@ -24,11 +24,11 @@
 
   <div class="grow1">
     <mat-card class="games-played-card">
-      <mat-card-title class="title">Games Played Over Time</mat-card-title>
+      <mat-card-title class="title">Submitted Games Over Time</mat-card-title>
       <mat-card-content>
         <canvas class="chart" baseChart [data]="gamesPlayedData" [options]="chartOptions" [type]="'line'"></canvas>
         <form [formGroup]="filterForm">
-          <mat-form-field>
+          <mat-form-field class="center">
             <mat-label>Time Frame</mat-label>
             <mat-select formControlName="timeFrame">
               <mat-option value="weeks">Weeks</mat-option>
@@ -37,6 +37,7 @@
             </mat-select>
           </mat-form-field>
         </form>
+        <button mat-raised-button class="center grow1" (click)="openSubmitGameLink()">Submit your game now!</button>
       </mat-card-content>
     </mat-card>
   </div>
@@ -44,7 +45,7 @@
 
   <div class="grow1">
     <mat-card class="top-deck-combis-card grow1">
-      <mat-card-title class="title">Top 3 Deck Combinations Played This Meta</mat-card-title>
+      <mat-card-title class="title">Top Deck Combinations Played</mat-card-title>
       <mat-card-content>
         <div *ngFor="let deckCombi of topDeckCombis" class="winrate-list-item">
           <!-- Dynamic Button -->

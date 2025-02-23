@@ -46,10 +46,10 @@ export class DeckMetaComponent implements OnInit {
       {
         data: [],
         backgroundColor: [],
-        borderRadius: 5,
-        borderWidth: 1,
-        offset: 20,
-        borderColor: 'transparent',
+        borderRadius: 8,
+        borderWidth: 4,
+        //offset: 20,
+        borderColor: '#333',
       },
     ],
   };
@@ -227,7 +227,7 @@ export class DeckMetaComponent implements OnInit {
   updateChartColors(): void {
     const isDarkTheme = document.body.classList.contains('dark-theme');
     const backgroundColor = isDarkTheme ? '#fff' : '#333';
-    const borderColor = isDarkTheme ? '#000' : '#fff';
+    const borderColor = isDarkTheme ? '#333' : '#fff';
 
     // Update chart data background colors
     if (this.chartData && this.chartData.datasets) {
@@ -235,6 +235,7 @@ export class DeckMetaComponent implements OnInit {
         dataset.backgroundColor = dataset.backgroundColor.map((color: string) => {
           return color === '#FF5000' ? color : backgroundColor;
         });
+        dataset.borderColor = borderColor;
       });
     }
 

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ChartOptions, ChartType } from 'chart.js';
+import { ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { DataStoreService } from '../../store/sheet-data.store';
 import { WarbandData, DeckCombiData, SheetData } from '../../models/spreadsheet.model';
@@ -157,13 +157,13 @@ export class LandingPageComponent implements OnInit {
           const aRatio = a.gamesPlayed >= filters.dataThreshold! ? a.gamesWon / a.gamesPlayed : -1;
           const bRatio = b.gamesPlayed >= filters.dataThreshold! ? b.gamesWon / b.gamesPlayed : -1;
           return bRatio - aRatio;
-        }).slice(0, 3);
+        }).slice(0, 4);
 
         this.topDeckCombis = deckCombiData.sort((a, b) => {
           const aRatio = a.gamesPlayed >= filters.dataThreshold! ? a.gamesWon / a.gamesPlayed : -1;
           const bRatio = b.gamesPlayed >= filters.dataThreshold! ? b.gamesWon / b.gamesPlayed : -1;
           return bRatio - aRatio;
-        }).slice(0, 3);
+        }).slice(0, 4);
       },
       error: (err) => {
         console.error("Error in subscribeToData", err);
@@ -217,19 +217,28 @@ export class LandingPageComponent implements OnInit {
       if (!groupedData[key]) {
         groupedData[key] = 0;
       }
-      groupedData[key]++;
+      groupedData[key]+=0.5;
     });
 
-    const sortedGroupedData = Object.keys(groupedData).sort((a, b) => {
-      const [aYear, aMonth, aDay] = a.split('-').map(Number);
-      const [bYear, bMonth, bDay] = b.split('-').map(Number);
-      return new Date(aYear, aMonth - 1, aDay || 1).getTime() - new Date(bYear, bMonth - 1, bDay || 1).getTime();
+    const filteredGroupedData = Object.keys(groupedData).filter(key => {
+      const [year, month, day] = key.split('-').map(Number);
+      return new Date(year, month - 1 || 1, day || 1).getTime() <= new Date().getTime();
     }).reduce((acc, key) => {
       acc[key] = groupedData[key];
       return acc;
     }, {} as { [key: string]: number });
 
-    return sortedGroupedData;
+    // Sort the grouped data by date
+    //const sortedGroupedData = Object.keys(filteredGroupedData).sort((a, b) => {
+    //  const [aYear, aMonth, aDay] = a.split('-').map(Number);
+    //  const [bYear, bMonth, bDay] = b.split('-').map(Number);
+    //  return new Date(aYear, aMonth - 1, aDay || 1).getTime() - new Date(bYear, bMonth - 1, bDay || 1).getTime();
+    //}).reduce((acc, key) => {
+    //  acc[key] = filteredGroupedData[key];
+    //  return acc;
+    //}, {} as { [key: string]: number });
+
+    return filteredGroupedData;
   }
 
   getWeekNumber(date: Date): number {
@@ -246,5 +255,9 @@ export class LandingPageComponent implements OnInit {
   navigateToDeckCombiDetails(deckCombi: DeckCombiData) {
     console.log("navigateToDeckCombiDetails", `/main/dashboard/deck/${deckCombi.name1 + ' + ' + deckCombi.name2}`);
     this.router.navigate([`/main/dashboard/deck/${deckCombi.name1 + ' + ' + deckCombi.name2}`]);
+  }
+
+  openSubmitGameLink() {
+    window.open('https://docs.google.com/forms/d/e/1FAIpQLSchHKcWiMWNdlPXC6AgsFnWNtogONptF6vyW4gUC6fW584ibA/viewform', '_blank');
   }
 }
