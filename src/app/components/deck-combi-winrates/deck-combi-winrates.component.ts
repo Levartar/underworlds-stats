@@ -99,8 +99,8 @@ export class DeckCombiWinratesComponent {
     }
   
     navigateToDeckCombiDetails(deckCombi: any): void {
-      console.log(`/main/deck winrates/${deckCombi.name1+' + '+deckCombi.name2}`)
-      this.router.navigate([`/main/deck winrates/${deckCombi.name1+' + '+deckCombi.name2}`]);
+      console.log(`/main/deck-winrates/${deckCombi.name1+' + '+deckCombi.name2}`)
+      this.router.navigate([`/main/deck-winrates/${deckCombi.name1+' + '+deckCombi.name2}`]);
     }
   }
 

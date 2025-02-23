@@ -101,7 +101,7 @@ export class WinrateComponent {
   }
 
   navigateToWarbandDetails(warband: any): void {
-    console.log(`/main/warband winrates/${warband.name}`)
-    this.router.navigate([`/main/warband winrates/${warband.name}`]);
+    console.log(`/main/warband-winrates/${warband.name}`)
+    this.router.navigate([`/main/warband-winrates/${warband.name}`]);
   }
 }
