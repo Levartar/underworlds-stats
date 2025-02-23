@@ -29,7 +29,10 @@ export const routes: Routes = [
         data: { title: 'Dashboard' },
         children: [
           {
-            path: ':name', component: DecksDetailsCardComponent
+            path: 'deck/:name', component: DeckCombiDetailsCardComponent
+          },
+          {
+            path: 'warband/:name', component: WarbandDetailsCardComponent
           }
         ]
       },
@@ -39,10 +42,7 @@ export const routes: Routes = [
         data: { title: 'Decks' },
         children: [
           {
-            path: 'deck/:name', component: DecksDetailsCardComponent
-          },
-          {
-            path: 'warband/:name', component: WarbandDetailsCardComponent
+            path: ':name', component: DecksDetailsCardComponent
           }
         ]
       },
