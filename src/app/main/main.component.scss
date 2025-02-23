@@ -1,21 +1,5 @@
 @import '../../styles.scss';
 
-
-.layout {
-  //background-color: $background-color;
-  //color: $font-color;
-}
-
-.head-tabline {
-}
-
-.main {
-}
-
-.footer {
-}
-
-
 .main-layout {
   width: 100%;
   max-width: 100%;
@@ -26,30 +10,30 @@
     "header" auto "main" 1fr;
   gap: 8px;
   box-sizing: border-box;
+}
 
-  .header {
-    width: 100%;
-    max-width: 100%;
-    display: flex;
-    gap: 8px;
-    justify-content: space-between;
-    box-sizing: border-box;
+.header {
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
 
-    .headline-container{
-      grid-area: header;
-      width: 100%;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      align-items: center;
-      margin: 6px;
-      padding-left: 2px;
-    }
+.headline-container{
+  grid-area: header;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  margin: 6px;
+  padding-left: 2px;
+}
 
-    .sidebar-menu{
-      padding-right: 4px;
-    }
-  }
+.sidebar-menu{
+  padding-right: 4px;
 }
 
 .mat-stroked-button {
