@@ -51,6 +51,8 @@ export class FilterComponent {
       }),
       metas: '',
       selectedTag: '',
+      tournamentsOnly: false,
+      worldQualifiersOnly: false,
       dataThreshold: 15
     });
 
@@ -107,13 +109,21 @@ export class FilterComponent {
   }
 
   processSheetData(data: SheetData[]): void {
-    const tagsSet = new Set<string>();
+    const tagsMap = new Map<string, Date>();
     data.forEach(game => {
       if (game.tag) {
-        tagsSet.add(game.tag.trim());
+      const tag = game.tag.trim();
+      if (!tagsMap.has(tag) || new Date(game.date) < tagsMap.get(tag)!) {
+        tagsMap.set(tag, new Date(game.date));
+      }
       }
     });
-    this.tags = Array.from(tagsSet);
+    this.tags = Array.from(tagsMap.keys()).sort((a, b) => 
+      tagsMap.get(b)!.getTime() - tagsMap.get(a)!.getTime());
+  }
+
+  getTagName(tagName:string){
+    return tagName.split('%')[1];
   }
 
   clearFilters(): void {
@@ -126,6 +136,8 @@ export class FilterComponent {
       },
       metas: '',
       selectedTag: '',
+      tournamentsOnly: false,
+      worldQualifiersOnly: false,
       dataThreshold: 15
     });
   }

@@ -139,6 +139,8 @@ export interface Filters {
   timeFrame: { start: Date, end: Date } | null;
   metas: string | null;
   selectedTag: [string | null];
+  tournamentsOnly: boolean | null;
+  worldQualifiersOnly: boolean | null
   dataThreshold: number | null;
 }
 

@@ -85,10 +85,10 @@ export class LandingPageComponent implements OnInit {
   ngOnInit(): void {
     //this.setFiltersToLastMeta();
     this.subscribeToData();
-    //this.filterForm.valueChanges.subscribe(() => {
-    //  console.log("filterForm.valueChanges");
-    //  this.updateGamesPlayedData();
-    //});
+    this.filterForm.valueChanges.subscribe(() => {
+      console.log("filterForm.valueChanges");
+      this.updateGamesPlayedData();
+    });
 
     window.addEventListener('themeChange', (event) => {
       this.darkMode = document.body.classList.contains('dark-theme');
@@ -167,7 +167,7 @@ export class LandingPageComponent implements OnInit {
           const bRatio = b.gamesPlayed >= filters.dataThreshold! ? b.gamesWon / b.gamesPlayed : -1;
           return bRatio - aRatio;
         }).slice(0, 4);
-        
+
         this.minGamesThreshold = filters.dataThreshold!;
       },
       error: (err) => {
@@ -179,16 +179,16 @@ export class LandingPageComponent implements OnInit {
 
   updateGamesPlayedData(): void {
     this.dataStoreService.getFilteredGameSheet$().subscribe(data => {
-      if(data){
+      if (data) {
         const timeFrame = this.filterForm.get('timeFrame')?.value;
         console.log("data", data);
         const groupedData = this.groupGamesByTimeFrame(data, timeFrame);
         this.gamesPlayedData = {
-          labels: Object.keys(groupedData),
+          labels: groupedData.map(item => item.date),
           datasets: [
             {
               label: 'Games Played',
-              data: Object.values(groupedData),
+              data: groupedData.map(item => item.count),
               borderColor: '#42A5F5',
               fill: false
             }
@@ -199,7 +199,7 @@ export class LandingPageComponent implements OnInit {
     });
   }
 
-  groupGamesByTimeFrame(data: SheetData[], timeFrame: string): { [key: string]: number } {
+  groupGamesByTimeFrame(data: SheetData[], timeFrame: string): { date: string, count: number }[] {
     const groupedData: { [key: string]: number } = {};
 
     data.forEach(game => {
@@ -225,27 +225,24 @@ export class LandingPageComponent implements OnInit {
       if (!groupedData[key]) {
         groupedData[key] = 0;
       }
-      groupedData[key]+= (game.wins+game.losses+game.ties)* 0.5;
+      groupedData[key] += (game.wins + game.losses + game.ties) * 0.5;
     });
-    console.log("groupedDataLength", groupedData);
+    //console.log("groupedDataLength", groupedData);
 
     const filteredGroupedData = Object.keys(groupedData).filter(key => {
       const [year, month, day] = key.split('-').map(Number);
       return new Date(year, month - 1 || 1, day || 1).getTime() <= new Date().getTime();
-    }).reduce((acc, key) => {
-      acc[key] = groupedData[key];
-      return acc;
-    }, {} as { [key: string]: number });
+    }).map(key => ({
+      date: key,
+      count: groupedData[key]
+    }));
 
     // Sort the grouped data by date
-    //const sortedGroupedData = Object.keys(filteredGroupedData).sort((a, b) => {
-    //  const [aYear, aMonth, aDay] = a.split('-').map(Number);
-    //  const [bYear, bMonth, bDay] = b.split('-').map(Number);
-    //  return new Date(aYear, aMonth - 1, aDay || 1).getTime() - new Date(bYear, bMonth - 1, bDay || 1).getTime();
-    //}).reduce((acc, key) => {
-    //  acc[key] = filteredGroupedData[key];
-    //  return acc;
-    //}, {} as { [key: string]: number });
+    const sortedGroupedData = filteredGroupedData.sort((a, b) => {
+      const [aYear, aMonth, aDay] = a.date.split('-').map(Number);
+      const [bYear, bMonth, bDay] = b.date.split('-').map(Number);
+      return new Date(aYear, aMonth - 1, aDay || 1).getTime() - new Date(bYear, bMonth - 1, bDay || 1).getTime();
+    });
     console.log("FilteredgroupedDataLength", filteredGroupedData);
 
     return filteredGroupedData;

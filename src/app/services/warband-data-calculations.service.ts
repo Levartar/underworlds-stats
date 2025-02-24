@@ -45,6 +45,13 @@ export class WarbandDataCalculationsService {
         game => filters.selectedTag.includes(game.tag));
     }
 
+    if (filters.tournamentsOnly) {
+      filteredGameSheet = filteredGameSheet.filter(game => game.tag && ['T', 'TW'].includes(game.tag.split('%-')[0]));
+    }
+    if (filters.worldQualifiersOnly) {
+      filteredGameSheet = filteredGameSheet.filter(game => game.tag?.split('%-')[0] === 'TW');
+    }
+
     return filteredGameSheet;
   }
 

@@ -1,7 +1,9 @@
 <div class="filter-container">
   <form [formGroup]="filterForm">
-    <mat-checkbox formControlName="mirrorMatches">Mirror Matches</mat-checkbox>
-    <mat-checkbox formControlName="allowLegacyContent">Legacy Content</mat-checkbox>
+    <div class="over-under-container">
+      <mat-checkbox formControlName="mirrorMatches">Mirror Matches</mat-checkbox>
+      <mat-checkbox formControlName="allowLegacyContent">Legacy Content</mat-checkbox>
+    </div>
     <!-- <mat-checkbox formControlName="allowIllegalDecks">Legacy Decks</mat-checkbox> -->
 
     <mat-form-field appearance="fill">
@@ -30,9 +32,15 @@
       </mat-select>
     </mat-form-field>
 
+    <div class="over-under-container">
+      <mat-checkbox formControlName="tournamentsOnly">Tournaments Only</mat-checkbox>
+      <mat-checkbox formControlName="worldQualifiersOnly">World Qualifiers Only</mat-checkbox>
+    </div>
+
     <mat-form-field appearance="fill">
       <mat-label matTooltip="Min games needed for games to be statistically relevant">Min Games Threshold</mat-label>
-      <input matInput type="number" formControlName="dataThreshold" min="1" oninput="this.value = Math.max(this.value, 1)">
+      <input matInput type="number" formControlName="dataThreshold" min="1"
+        oninput="this.value = Math.max(this.value, 1)">
     </mat-form-field>
 
     <button mat-raised-button type="button" (click)="clearFilters()">Clear Filters</button>
