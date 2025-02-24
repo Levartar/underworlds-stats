@@ -64,6 +64,7 @@
 
 .sidenav-list {
   overflow: hidden;
+  padding-right: 4px;
 }
 
 ::ng-deep .mat-mdc-outlined-button {
@@ -71,5 +72,9 @@
 }
 
 .highlight {
+  border: 3px solid var(--primary-color);
+}
+
+.selected {
   background-color: var(--primary-color);
 }

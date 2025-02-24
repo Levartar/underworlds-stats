@@ -138,7 +138,7 @@ export interface Filters {
   allowLegacyContent: boolean | null
   timeFrame: { start: Date, end: Date } | null;
   metas: string | null;
-  selectedTag: string | null;
+  selectedTag: [string | null];
   dataThreshold: number | null;
 }
 

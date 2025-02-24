@@ -11,7 +11,7 @@ import { NgFor } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 
 import { DataStoreService } from '../../store/sheet-data.store';
-import { SheetData, SheetMeta, WarbandData } from '../../models/spreadsheet.model';
+import { Filters, SheetData, SheetMeta, WarbandData } from '../../models/spreadsheet.model';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 
@@ -90,8 +90,10 @@ export class FilterComponent {
         this.isPatching = false;
         console.log('selectedMeta', values.metas);
       }
-
-      this.dataStoreService.setFilters(values);
+      
+      this.dataStoreService.setFilters({...values,
+        selectedTag: [values.selectedTag],
+      } as Filters);
       console.log('filtervalues', values);
     });
   }
@@ -108,7 +110,7 @@ export class FilterComponent {
     const tagsSet = new Set<string>();
     data.forEach(game => {
       if (game.tag) {
-        game.tag.split(',').forEach(tag => tagsSet.add(tag.trim().toUpperCase()));
+        tagsSet.add(game.tag.trim());
       }
     });
     this.tags = Array.from(tagsSet);

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { DataStoreService } from '../../store/sheet-data.store';
-import { WarbandData, DeckCombiData, SheetData } from '../../models/spreadsheet.model';
+import { WarbandData, DeckCombiData, SheetData, Filters } from '../../models/spreadsheet.model';
 import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -82,10 +82,10 @@ export class LandingPageComponent implements OnInit {
   ngOnInit(): void {
     //this.setFiltersToLastMeta();
     this.subscribeToData();
-    this.filterForm.valueChanges.subscribe(() => {
-      console.log("filterForm.valueChanges");
-      this.updateGamesPlayedData();
-    });
+    //this.filterForm.valueChanges.subscribe(() => {
+    //  console.log("filterForm.valueChanges");
+    //  this.updateGamesPlayedData();
+    //});
 
     window.addEventListener('themeChange', (event) => {
       this.darkMode = document.body.classList.contains('dark-theme');
@@ -187,7 +187,7 @@ export class LandingPageComponent implements OnInit {
           }
         ]
       };
-      console.log("updateGamesPlayedData", this.gamesPlayedData);
+      console.log("GamesPlayedData", this.gamesPlayedData);
     });
   }
 
@@ -217,8 +217,9 @@ export class LandingPageComponent implements OnInit {
       if (!groupedData[key]) {
         groupedData[key] = 0;
       }
-      groupedData[key]+=0.5;
+      groupedData[key]+= (game.wins+game.losses+game.ties)* 0.5;
     });
+    console.log("groupedDataLength", groupedData);
 
     const filteredGroupedData = Object.keys(groupedData).filter(key => {
       const [year, month, day] = key.split('-').map(Number);
@@ -237,6 +238,7 @@ export class LandingPageComponent implements OnInit {
     //  acc[key] = filteredGroupedData[key];
     //  return acc;
     //}, {} as { [key: string]: number });
+    console.log("FilteredgroupedDataLength", filteredGroupedData);
 
     return filteredGroupedData;
   }

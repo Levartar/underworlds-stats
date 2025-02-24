@@ -13,7 +13,7 @@ body {
 $custom-typography: mat.define-typography-config(
     $font-family: "IBM Plex Mono, serif"
 );
-$light-primary: mat.define-palette($primary-palette);
+$light-primary: mat.define-palette(mat.$blue-gray-palette);
 $light-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
 $custom-warn: mat.define-palette(mat.$red-palette);
 
@@ -28,7 +28,7 @@ $light-theme: mat.define-light-theme(
     )
 );
 
-$dark-primary: mat.define-palette(mat.$blue-gray-palette);
+$dark-primary: mat.define-palette($primary-palette);
 $dark-accent: mat.define-palette(mat.$amber-palette,A200,A100,A400);
 
 $dark-theme: mat.define-dark-theme(

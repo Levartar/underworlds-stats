@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { combineLatest, filter, forkJoin, map, of } from 'rxjs';
 import { DataStoreService } from '../store/sheet-data.store'; // Update the path if necessary
-import { DeckCombiData, DeckData, SheetData, SheetDeck, WarbandData } from '../models/spreadsheet.model'; // Update the path if necessary
+import { DeckCombiData, DeckData, Filters, SheetData, SheetDeck, WarbandData } from '../models/spreadsheet.model'; // Update the path if necessary
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +10,7 @@ export class WarbandDataCalculationsService {
 
   constructor(private dataStoreService: DataStoreService) { }
 
-  private getFilteredGameSheet(gameSheet: SheetData[], filters: any, legalWarbands: string[], legalDecks: string[]): SheetData[] {
+  private getFilteredGameSheet(gameSheet: SheetData[], filters: Filters, legalWarbands: string[], legalDecks: string[]): SheetData[] {
     let filteredGameSheet = gameSheet;
 
     if (!filters.mirrorMatches) {
@@ -40,12 +40,40 @@ export class WarbandDataCalculationsService {
       });
     }
 
-    if (filters.selectedTag && filters.selectedTag.length > 0) {
+    if (filters.selectedTag[0] !== "" && filters.selectedTag.length > 0) {
       filteredGameSheet = filteredGameSheet.filter(
-        game => game.tag === filters.selectedTag);
+        game => filters.selectedTag.includes(game.tag));
     }
 
     return filteredGameSheet;
+  }
+
+  filterGameSheet(): void {
+    combineLatest([
+      this.dataStoreService.getGameSheet$(), // Observable for game data
+      this.dataStoreService.getWarbandSheet$(), // Observable for warband data
+      this.dataStoreService.getDeckSheet$(), // Observable for deck data
+      this.dataStoreService.getFilters$(), // Observable for filters
+    ])
+      .pipe(
+        filter(([gameSheet, warbandSheet]) => gameSheet !== null && warbandSheet !== null),
+        map(([gameSheet, warbandSheet, deckSheet, filters]) => {
+          // Apply filters to the gameSheet
+          const legalWarbands: string[] = warbandSheet!.map(warband => warband.legality === 'TRUE' ? warband.name : '');
+          const legalDecks: string[] = deckSheet!.map(deck => deck.legality === 'TRUE' ? deck.name : '');
+          const filteredGameSheet = this.getFilteredGameSheet(gameSheet!, filters, legalWarbands, legalDecks);
+
+          // Return the calculated warband data
+          return {
+            ...filteredGameSheet,
+          };
+        })
+      )
+      .subscribe((filteredGameSheet: SheetData[]) => {
+        // Store the calculated warband data
+        console.log("filteredGameSheetData", filteredGameSheet);
+        this.dataStoreService.setGameSheet(filteredGameSheet);
+      });
   }
 
   calculateWarbandData(): void {
@@ -159,8 +187,8 @@ export class WarbandDataCalculationsService {
 
           // Skip if either deck is missing or unknown or Rivals
           if (!p1Deck1 || !p1Deck2 ||
-            p1Deck1 === "Unknown" || p1Deck2 === "Unknown" 
-            || p1Deck2 === "Rivals" || entry.p2Deck2==="Rivals") return;
+            p1Deck1 === "Unknown" || p1Deck2 === "Unknown"
+            || p1Deck2 === "Rivals" || entry.p2Deck2 === "Rivals") return;
 
           const key = getDeckCombiKey(p1Deck1, p1Deck2);
 

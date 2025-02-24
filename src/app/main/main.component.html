@@ -5,30 +5,44 @@
   <mat-drawer-container class="main">
     <mat-drawer #drawer class="sidenav" mode="over" position="end">
       <mat-nav-list class="sidenav-list">
-        <mat-list-item routerLink="dashboard" (click)="drawer.toggle()">
+        <mat-list-item routerLink="dashboard" (click)="drawer.toggle()"
+          [ngClass]="currentRouteName==='Dashboard' ? 'selected' : ''">
           <div>Dashboard</div>
         </mat-list-item>
-        <mat-list-item routerLink="warbands" (click)="drawer.toggle()">
+        <mat-list-item routerLink="warbands" (click)="drawer.toggle()"
+          [ngClass]="currentRouteName==='Warbands' ? 'selected' : ''">
           <div>Warbands</div>
         </mat-list-item>
-        <mat-list-item routerLink="warband-winrates" (click)="drawer.toggle()">
+        <mat-list-item routerLink="warband-winrates" (click)="drawer.toggle()"
+          [ngClass]="currentRouteName==='Warband Winrates' ? 'selected' : ''">
           <div>Warband Winrates</div>
         </mat-list-item>
-        <mat-list-item routerLink="warband-meta" (click)="drawer.toggle()">
+        <mat-list-item routerLink="warband-meta" (click)="drawer.toggle()"
+          [ngClass]="currentRouteName==='Warband Meta' ? 'selected' : ''">
           <div>Warband Meta</div>
         </mat-list-item>
-        <mat-list-item routerLink="decks" (click)="drawer.toggle()">
+        <mat-list-item routerLink="decks" (click)="drawer.toggle()"
+          [ngClass]="currentRouteName==='Decks' ? 'selected' : ''">
           <div>Decks</div>
         </mat-list-item>
-        <mat-list-item routerLink="deck-winrates" (click)="drawer.toggle()">
+        <mat-list-item routerLink="deck-winrates" (click)="drawer.toggle()"
+          [ngClass]="currentRouteName==='Deck Winrates' ? 'selected' : ''">
           <div>Deck Winrates</div>
         </mat-list-item>
-        <mat-list-item routerLink="deck-meta" (click)="drawer.toggle()">
+        <mat-list-item routerLink="deck-meta" (click)="drawer.toggle()"
+          [ngClass]="currentRouteName==='Deck Meta' ? 'selected' : ''">
           <div>Deck Meta</div>
         </mat-list-item>
         <mat-list-item class="highlight">
           <div class="centered"><mat-icon>assignment</mat-icon>
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLSchHKcWiMWNdlPXC6AgsFnWNtogONptF6vyW4gUC6fW584ibA/viewform" target="_blank">Submission Form</a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSchHKcWiMWNdlPXC6AgsFnWNtogONptF6vyW4gUC6fW584ibA/viewform"
+              target="_blank">Submission Form</a>
+          </div>
+        </mat-list-item>
+        <mat-list-item>
+          <div class="centered"><mat-icon>table_chart</mat-icon>
+            <a href="https://docs.google.com/spreadsheets/d/1HIX_SvAZ6hOa0k65y_tVaNBxTHnZk-7IVPPgGYtcHdI/edit?gid=316203461#gid=316203461"
+              target="_blank">Full Stats</a>
           </div>
         </mat-list-item>
         <mat-list-item>
@@ -56,7 +70,7 @@
       <div class="header">
         <div class="headline-container">
           <div class="headline">{{currentRouteName}}</div>
-            <div><button mat-stroked-button (click)="openDialog()" class="custom-button">
+          <div><button mat-stroked-button (click)="openDialog()" class="custom-button">
               ?</button></div>
           <div><button mat-stroked-button (click)="toggleFilter()" matTooltip="Show Filters">
               <mat-icon style="margin-left: 8px;">filter_alt</mat-icon>
@@ -81,12 +95,11 @@
         </div>
       </div>
       <app-filter *ngIf="showFilter"></app-filter>
-      <router-outlet></router-outlet>
+      <router-outlet class="router-outlet"></router-outlet>
     </section>
 
+    <app-footer class="footer"></app-footer>
   </mat-drawer-container>
-
-  <app-footer class="footer"></app-footer>
 </div>
 
 <!-- 

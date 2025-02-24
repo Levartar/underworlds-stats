@@ -98,7 +98,8 @@ export class MainComponent implements OnInit {
   const firstChild = this.activatedRoute.firstChild;
 
     // Get the route's `data.title` or use a fallback name
-    this.currentRouteName = firstChild?.snapshot.data['title'] || 'Dashboard';  }
+    this.currentRouteName = firstChild?.snapshot.data['title'] || 'Dashboard';  
+  }
 
   toggleTheme() {
     if (this.darkmode) {

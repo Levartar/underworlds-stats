@@ -14,7 +14,7 @@ export class DataStoreService {
   private DeckSheetSubject = new BehaviorSubject<SheetDeck[] | null>(null);
   private DeckDataSubject = new BehaviorSubject<DeckData[]>([]);
   private DeckCombiDataSubject = new BehaviorSubject<DeckCombiData[]>([]);
-  private filtersSubject = new BehaviorSubject<Filters>({mirrorMatches: true, allowLegacyContent: true, timeFrame: null, metas: "none", selectedTag: "",dataThreshold: 15});
+  private filtersSubject = new BehaviorSubject<Filters>({mirrorMatches: true, allowLegacyContent: true, timeFrame: null, metas: "none", selectedTag: [''],dataThreshold: 15});
   private metasSubject = new BehaviorSubject<SheetMeta[]>([]);
 
   // Observables for components to subscribe to
