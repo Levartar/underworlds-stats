@@ -173,21 +173,24 @@ export class LandingPageComponent implements OnInit {
   }
 
   updateGamesPlayedData(): void {
-    this.dataStoreService.getGameSheet$().subscribe(data => {
-      const timeFrame = this.filterForm.get('timeFrame')?.value;
-      const groupedData = this.groupGamesByTimeFrame(data!, timeFrame);
-      this.gamesPlayedData = {
-        labels: Object.keys(groupedData),
-        datasets: [
-          {
-            label: 'Games Played',
-            data: Object.values(groupedData),
-            borderColor: '#42A5F5',
-            fill: false
-          }
-        ]
-      };
-      console.log("GamesPlayedData", this.gamesPlayedData);
+    this.dataStoreService.getFilteredGameSheet$().subscribe(data => {
+      if(data){
+        const timeFrame = this.filterForm.get('timeFrame')?.value;
+        console.log("data", data);
+        const groupedData = this.groupGamesByTimeFrame(data, timeFrame);
+        this.gamesPlayedData = {
+          labels: Object.keys(groupedData),
+          datasets: [
+            {
+              label: 'Games Played',
+              data: Object.values(groupedData),
+              borderColor: '#42A5F5',
+              fill: false
+            }
+          ]
+        };
+        console.log("GamesPlayedData", this.gamesPlayedData);
+      }
     });
   }
 

@@ -79,6 +79,7 @@ export class MainComponent implements OnInit {
       this.warbandDataCalculationsService.calculateWarbandData();
       this.warbandDataCalculationsService.calculateDeckData();
       this.warbandDataCalculationsService.calculateDeckCombiData();
+      this.warbandDataCalculationsService.filterGameSheet();
     });
 
     this.googleSheetService.fetchSheetData().subscribe(csv => {

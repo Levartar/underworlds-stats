@@ -9,6 +9,7 @@ import { DeckCombiData, DeckData, Filters, SheetData, SheetDeck, SheetMeta, Shee
 })
 export class DataStoreService {
   private gameSheetSubject = new BehaviorSubject<SheetData[]>([]);
+  private filteredGameSheetSubject = new BehaviorSubject<SheetData[]>([]);
   private warbandSheetSubject = new BehaviorSubject<SheetWarband[] | null>(null);
   private warbandDataSubject = new BehaviorSubject<WarbandData[]>([]);
   private DeckSheetSubject = new BehaviorSubject<SheetDeck[] | null>(null);
@@ -19,6 +20,7 @@ export class DataStoreService {
 
   // Observables for components to subscribe to
   gameSheet$: Observable<SheetData[]> = this.gameSheetSubject.asObservable();
+  filteredGameSheet$: Observable<SheetData[]> = this.filteredGameSheetSubject.asObservable();
   warbandSheet$: Observable<SheetWarband[] | null> = this.warbandSheetSubject.asObservable();
   warbandData$: Observable<WarbandData[]> = this.warbandDataSubject.asObservable();
   deckSheet$: Observable<SheetDeck[] | null> = this.DeckSheetSubject.asObservable();
@@ -31,6 +33,10 @@ export class DataStoreService {
   // Methods to set data in the store
   setGameSheet(data: SheetData[]): void {
     this.gameSheetSubject.next(data);
+  }
+
+  setFilteredGameSheet(data: SheetData[]): void {
+    this.filteredGameSheetSubject.next(data);
   }
 
   setWarbandSheet(data: SheetWarband[]): void {
@@ -66,6 +72,10 @@ export class DataStoreService {
   // Methods to get the current value
   getGameSheet$(): Observable<SheetData[] | null> {
     return this.gameSheet$;
+  }
+
+  getFilteredGameSheet$(): Observable<SheetData[] | null> {
+    return this.filteredGameSheet$;
   }
 
   getWarbandSheet$(): Observable<SheetWarband[] | null> {

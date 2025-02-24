@@ -64,43 +64,34 @@ export class WarbandDataCalculationsService {
           const filteredGameSheet = this.getFilteredGameSheet(gameSheet!, filters, legalWarbands, legalDecks);
 
           // Return the calculated warband data
-          return {
-            ...filteredGameSheet,
-          };
+          return filteredGameSheet;
         })
       )
       .subscribe((filteredGameSheet: SheetData[]) => {
         // Store the calculated warband data
         console.log("filteredGameSheetData", filteredGameSheet);
-        this.dataStoreService.setGameSheet(filteredGameSheet);
+        this.dataStoreService.setFilteredGameSheet(filteredGameSheet);
       });
   }
 
   calculateWarbandData(): void {
     combineLatest([
-      this.dataStoreService.getGameSheet$(), // Observable for game data
+      this.dataStoreService.getFilteredGameSheet$(), // Observable for game data
       this.dataStoreService.getWarbandSheet$(), // Observable for warband data
       this.dataStoreService.getDeckSheet$(), // Observable for deck data
-      this.dataStoreService.getFilters$(), // Observable for filters
     ])
       .pipe(
         filter(([gameSheet, warbandSheet]) => gameSheet !== null && warbandSheet !== null),
-        map(([gameSheet, warbandSheet, deckSheet, filters]) => {
+        map(([gameSheet, warbandSheet, deckSheet]) => {
           // Apply filters to the gameSheet
-          const legalWarbands: string[] = warbandSheet!.map(warband => warband.legality === 'TRUE' ? warband.name : '');
-          const legalDecks: string[] = deckSheet!.map(deck => deck.legality === 'TRUE' ? deck.name : '');
-          const filteredGameSheet = this.getFilteredGameSheet(gameSheet!, filters, legalWarbands, legalDecks);
-
-          const totalGames = filteredGameSheet?.reduce(
+          const totalGames = gameSheet?.reduce(
             (sum, game) => sum + game.wins + game.losses + game.ties,
             0
           );
 
-          const legalWarbandsSheet = warbandSheet!.filter(warband => filters.allowLegacyContent || warband.legality === 'TRUE');
-
           // Map gameSheet data to for every warband
-          return legalWarbandsSheet!.map((warband) => {
-            const warbandGames = filteredGameSheet!.filter((game) => game.p1Warband === warband.name);
+          return warbandSheet!.map((warband) => {
+            const warbandGames = gameSheet!.filter((game) => game.p1Warband === warband.name);
 
             // Calculate base stats
             const gamesWon = warbandGames.reduce((sum, game) => sum + game.wins, 0);
@@ -162,27 +153,19 @@ export class WarbandDataCalculationsService {
 
   calculateDeckCombiData(): void {
     combineLatest([
-      this.dataStoreService.getGameSheet$(), // Observable for game data
-      this.dataStoreService.getWarbandSheet$(), // Observable for warband data
+      this.dataStoreService.getFilteredGameSheet$(), // Observable for game data
       this.dataStoreService.getDeckSheet$(), // Observable for deck data
-      this.dataStoreService.getFilters$(), // Observable for filters
     ]).pipe(
       filter(([gameSheet, deckSheet]) => gameSheet !== null && deckSheet !== null),
-      map(([gameSheet, warbandSheet, deckSheet, filters]) => {
+      map(([gameSheet, deckSheet]) => {
         console.log("decksheet", deckSheet)
-        console.log("filters", filters)
-        // Apply filters to the gameSheet
-        const legalWarbands: string[] = warbandSheet!.map(warband => warband.legality === 'TRUE' ? warband.name : '');
-        const legalDecks: string[] = deckSheet!.map(deck => deck.legality === 'TRUE' ? deck.name : '');
-        const filteredGameSheet = this.getFilteredGameSheet(gameSheet!, filters, legalWarbands, legalDecks);
-
         const deckCombiMap: { [key: string]: DeckCombiData } = {};
 
         const getDeckCombiKey = (deck1: string, deck2: string): string => {
           return [deck1, deck2].sort().join('|'); // Sort to ensure consistent key regardless of order
         };
 
-        filteredGameSheet!.forEach((entry) => {
+        gameSheet!.forEach((entry) => {
           const { p1Deck1, p1Deck2, wins, losses, ties } = entry;
 
           // Skip if either deck is missing or unknown or Rivals
@@ -214,11 +197,11 @@ export class WarbandDataCalculationsService {
               colorB: deck1Data.colorB || '#000000',
               icon1: deck1Data.icon || '',
               icon2: deck2Data.icon || '',
-              warbandSynergies: filteredGameSheet!.reduce((acc, data) => {
+              warbandSynergies: gameSheet!.reduce((acc, data) => {
                 acc[data.p1Warband] = { wins: 0, losses: 0, ties: 0 };
                 return acc;
               }, {} as { [key: string]: { wins: number; losses: number; ties: number } }),
-              deckCombiMatchups: filteredGameSheet!.reduce((acc, data) => {
+              deckCombiMatchups: gameSheet!.reduce((acc, data) => {
                 acc[getDeckCombiKey(data.p2Deck1, data.p2Deck2)] = {
                   name1: data.p2Deck1, name2: data.p2Deck2, wins: 0, losses: 0, ties: 0
                 };
@@ -242,7 +225,7 @@ export class WarbandDataCalculationsService {
         });
 
         // Calculate metaScore for each combination
-        const totalGames = filteredGameSheet!.reduce((sum, entry) => sum + entry.wins + entry.losses + entry.ties, 0);
+        const totalGames = gameSheet!.reduce((sum, entry) => sum + entry.wins + entry.losses + entry.ties, 0);
         Object.values(deckCombiMap).forEach(deckCombi => {
           deckCombi.metaScore = totalGames > 0 ? (deckCombi.gamesWon / (totalGames! / 2)) * 1000 : 0;
         });
@@ -259,41 +242,35 @@ export class WarbandDataCalculationsService {
 
   calculateDeckData(): void {
     combineLatest([
-      this.dataStoreService.getGameSheet$(), // Observable for game data
-      this.dataStoreService.getWarbandSheet$(), // Observable for warband data
+      this.dataStoreService.getFilteredGameSheet$(), // Observable for game data
       this.dataStoreService.getDeckSheet$(), // Observable for deck data
-      this.dataStoreService.getFilters$(), // Observable for filters
     ]).pipe(
       filter(([gameSheet, deckSheet]) => gameSheet !== null && deckSheet !== null),
-      map(([gameSheet, warbandSheet, deckSheet, filters]) => {
+      map(([gameSheet, deckSheet]) => {
         console.log("decksheet", deckSheet)
-        // Apply filters to the gameSheet
-        const legalWarbands: string[] = warbandSheet!.map(warband => warband.legality === 'TRUE' ? warband.name : '');
-        const legalDecks: string[] = deckSheet!.map(deck => deck.legality === 'TRUE' ? deck.name : '');
-        const filteredGameSheet = this.getFilteredGameSheet(gameSheet!, filters, legalWarbands, legalDecks);
 
-        const totalGames = filteredGameSheet?.reduce(
+        const totalGames = gameSheet?.reduce(
           (sum, game) => sum + game.wins + game.losses + game.ties,
           0
         );
 
         // Map warband data to include calculated fields
         return deckSheet!.map((deck) => {
-          const gamesWon = filteredGameSheet!
+          const gamesWon = gameSheet!
             .filter((game) => game.p1Deck1 === deck.name || game.p1Deck2 === deck.name)
             .reduce((sum, game) => sum + game.wins, 0);
 
-          const gamesLost = filteredGameSheet!
+          const gamesLost = gameSheet!
             .filter((game) => game.p1Deck1 === deck.name || game.p1Deck2 === deck.name)
             .reduce((sum, game) => sum + game.losses, 0);
 
-          const gamesTied = filteredGameSheet!
+          const gamesTied = gameSheet!
             .filter((game) => game.p1Deck1 === deck.name || game.p1Deck2 === deck.name)
             .reduce((sum, game) => sum + game.ties, 0);
 
           const gamesPlayed = gamesWon + gamesLost + gamesTied;
           // Calculate warband synergies and deck combinations
-          const warbandSynergies = filteredGameSheet!.reduce((acc, game) => {
+          const warbandSynergies = gameSheet!.reduce((acc, game) => {
             if (game.p1Deck1 === deck.name || game.p1Deck2 === deck.name) {
               if (!acc[game.p1Warband]) {
                 acc[game.p1Warband] = { wins: 0, losses: 0, ties: 0 };
@@ -305,7 +282,7 @@ export class WarbandDataCalculationsService {
             return acc;
           }, {} as { [key: string]: { wins: number; losses: number; ties: number } });
 
-          const combinations = filteredGameSheet!.reduce((acc, game) => {
+          const combinations = gameSheet!.reduce((acc, game) => {
             if (game.p1Deck1 === deck.name) {
               if (!acc[game.p1Deck2]) {
                 acc[game.p1Deck2] = { wins: 0, losses: 0, ties: 0 };
