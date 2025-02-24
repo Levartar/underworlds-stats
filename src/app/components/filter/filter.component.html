@@ -32,8 +32,7 @@
 
     <mat-form-field appearance="fill">
       <mat-label matTooltip="Min games needed for games to be statistically relevant">Min Games Threshold</mat-label>
-      <input matInput type="number" formControlName="dataThreshold" 
->
+      <input matInput type="number" formControlName="dataThreshold" min="1" oninput="this.value = Math.max(this.value, 1)">
     </mat-form-field>
 
     <button mat-raised-button type="button" (click)="clearFilters()">Clear Filters</button>

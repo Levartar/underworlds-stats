@@ -12,6 +12,7 @@ import { MatListModule } from '@angular/material/list';
 import { Router, RouterOutlet } from '@angular/router';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-landing-page',
@@ -25,12 +26,14 @@ import { MatButtonModule } from '@angular/material/button';
     MatListModule,
     MatTooltipModule,
     RouterOutlet,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule,
   ],
   templateUrl: './landing-page.component.html',
   styleUrls: ['./landing-page.component.scss']
 })
 export class LandingPageComponent implements OnInit {
+  minGamesThreshold: number = 15;
   darkMode: boolean = document.body.classList.contains('dark-theme');
   topWarbands: WarbandData[] = [];
   topDeckCombis: DeckCombiData[] = [];
@@ -164,6 +167,8 @@ export class LandingPageComponent implements OnInit {
           const bRatio = b.gamesPlayed >= filters.dataThreshold! ? b.gamesWon / b.gamesPlayed : -1;
           return bRatio - aRatio;
         }).slice(0, 4);
+        
+        this.minGamesThreshold = filters.dataThreshold!;
       },
       error: (err) => {
         console.error("Error in subscribeToData", err);

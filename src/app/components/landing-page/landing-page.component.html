@@ -6,13 +6,13 @@
         <div *ngFor="let warband of topWarbands" class="winrate-list-item">
           <!-- Dynamic Button -->
           <button mat-raised-button class="winrate-button"
-            [ngStyle]="{ width: warband.gamesWon/warband.gamesPlayed*100 + '%'}"
-            [ngClass]="{'not-legal': !warband.legality, 'dark': darkMode, 'light': !darkMode}"
+            [ngStyle]="warband.gamesPlayed >= this.minGamesThreshold ?{ width: warband.gamesWon/warband.gamesPlayed*100 + '%'}: {width:'220px'}"
+            [ngClass]="{'not-legal': warband.legality=='FALSE', 'dark': darkMode, 'light': !darkMode}"
             (click)="navigateToWarbandDetails(warband)" matTooltip="{{warband.gamesPlayed}} Games">
             <!-- Icon -->
             <div class="button-content">
               <img matListAvatar [src]="warband.icon" alt="{{ warband.name }}" class="warband-icon" />
-              <div>
+              <div *ngIf="warband.gamesPlayed>=this.minGamesThreshold; else notEnoughData">
                 {{ warband.gamesWon/warband.gamesPlayed*100 | number:'1.1-1'}}%</div>
             </div>
           </button>
@@ -50,14 +50,14 @@
         <div *ngFor="let deckCombi of topDeckCombis" class="winrate-list-item">
           <!-- Dynamic Button -->
           <button mat-raised-button class="winrate-button"
-            [ngStyle]="{ width: deckCombi.gamesWon/deckCombi.gamesPlayed*100 + '%'}"
+            [ngStyle]="deckCombi.gamesPlayed >= this.minGamesThreshold?{ width: deckCombi.gamesWon/deckCombi.gamesPlayed*100 + '%'}: {width:'260px'}"
             [ngClass]="{'not-legal': !deckCombi.legality, 'dark': darkMode, 'light': !darkMode}"
             (click)="navigateToDeckCombiDetails(deckCombi)" matTooltip="{{deckCombi.gamesPlayed}} Games">
             <!-- Icon -->
             <div class="button-content">
               <img matListAvatar [src]="deckCombi.icon1" alt="{{ deckCombi.name1 }}" class="warband-icon" />
               <img matListAvatar [src]="deckCombi.icon2" alt="{{ deckCombi.name2 }}" class="warband-icon" />
-              <div>
+              <div *ngIf="deckCombi.gamesPlayed>=this.minGamesThreshold; else notEnoughData">
                 {{ deckCombi.gamesWon/deckCombi.gamesPlayed*100 | number:'1.1-1'}}%</div>
             </div>
           </button>
@@ -68,3 +68,8 @@
 </div>
 
 <router-outlet></router-outlet>
+
+<!--/*alternative if Not Enough Data Threshhold cuts*/-->
+<ng-template #notEnoughData>
+  <mat-icon>warning</mat-icon> Not Enough Data
+</ng-template>
