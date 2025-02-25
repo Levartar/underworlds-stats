@@ -5,7 +5,7 @@
 <section class="layout">
   <div *ngFor="let warband of filteredWarbandData" 
   class="warband-button-container">
-    <button mat-raised-button class="warband-button" 
+    <button mat-raised-button class="warband-button"
     [ngClass]="warband.legality?'':'not-legal'"
     (click)="navigateToWarbandDetails(warband)">
       <img [src]="warband.iconLink" alt="{{ warband.name }}" class="warband-icon" />

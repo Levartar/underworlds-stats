@@ -122,6 +122,12 @@ export class MainComponent implements OnInit {
   }
 
   openDialog(): void {
-    this.dialog.open(SimpleDialogComponent);
+    this.dialog.open(SimpleDialogComponent, {
+      data: {
+        title: 'Information',
+        content: 'The Underworlds Statistics Project is a community-driven effort to collect global statistics on the game Warhammer Underworlds using the Nemesis format. Game data is submitted by players, organizers, and volunteers. It is maintained by Borni (AKA raumzeit77 / R77). Submit your game data now!',
+        link: "https://docs.google.com/forms/d/e/1FAIpQLSchHKcWiMWNdlPXC6AgsFnWNtogONptF6vyW4gUC6fW584ibA/viewform"
+      }
+    });
   }
 }

@@ -1,8 +1,6 @@
-<h1 mat-dialog-title>Information</h1>
-<div mat-dialog-content>
-  <p>The Underworlds Statistics Project is a community-driven effort to collect global statistics on the game Warhammer Underworlds using the Nemesis format. Game data is submitted by players, organizers, and volunteers. It is maintained by Borni (AKA raumzeit77 / R77). Submit your game data now!</p>
-</div>
+<h1 *ngIf="data.title" mat-dialog-title>{{ data.title }}</h1>
+<div *ngIf="safeContent" mat-dialog-content [innerHTML]="safeContent"></div>
 <div mat-dialog-actions>
-    <button mat-button mat-dialog (click)="openSubmitGameLink()">Submit your game</button>
+  <a *ngIf="data.link" mat-button mat-dialog href="{{ data.link }}" target="_blank">Submit your game</a>
   <button mat-button mat-dialog-close>Close</button>
 </div>

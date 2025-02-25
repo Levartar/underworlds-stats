@@ -1,0 +1,16 @@
+#kofiframe {
+    height: 600px;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.5);
+}
+
+:host {
+    display: block;
+    > div {
+        max-height: 95vh;
+    }
+}
+
+.mat-dialog-content {
+    height: 600px;
+    overflow: hidden;
+}

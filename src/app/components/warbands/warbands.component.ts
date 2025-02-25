@@ -6,6 +6,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { DataStoreService } from '../../store/sheet-data.store';
 import { WarbandData } from '../../models/spreadsheet.model';
+import { MatButtonModule } from '@angular/material/button';
 
 
 @Component({

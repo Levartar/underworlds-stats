@@ -1,4 +1,4 @@
-import { Component, OnInit, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2, SimpleChanges } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -22,17 +22,19 @@ export class DeckCombiDetailsCardComponent {
   minGamesThreshhold: number = 15;
   winrateByDeckCombiChartData: {
     name: string, winrate: number,
-    iconLink1: string,iconLink2: string, metaScore: number, 
+    iconLink1: string, iconLink2: string, metaScore: number,
     gamesPlayed: number, legality: boolean,
-    bestSynergy: { name: string, winrate: number, games:number },
-    bestMatchup: { name: string, winrate: number, games:number },
-    worstMatchup: { name: string, winrate: number, games:number },
+    bestSynergy: { name: string, winrate: number, games: number },
+    bestMatchup: { name: string, winrate: number, games: number },
+    worstMatchup: { name: string, winrate: number, games: number },
   }[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private dataStoreService: DataStoreService,
+    private el: ElementRef,
+    private renderer: Renderer2
   ) { }
 
   ngOnInit() {
@@ -41,10 +43,10 @@ export class DeckCombiDetailsCardComponent {
       routeParams: this.route.paramMap,
       deckCombiData: this.dataStoreService.deckCombiData$,
       filters: this.dataStoreService.filters$,
-    }).subscribe(({ routeParams, deckCombiData, filters}) => {
+    }).subscribe(({ routeParams, deckCombiData, filters }) => {
       const deckName = routeParams.get('name');
       if (deckName && deckCombiData.length > 0) {
-        if (filters.dataThreshold){
+        if (filters.dataThreshold) {
           this.minGamesThreshhold = filters.dataThreshold
           console.log('minGamesThreshhold', this.minGamesThreshhold)
         }
@@ -52,6 +54,16 @@ export class DeckCombiDetailsCardComponent {
         this.updateWarbandDetails(deckName);
       }
     });
+
+    // Add scroll event listener
+    window.addEventListener('scroll', this.onScroll.bind(this));
+    this.onScroll(); //Call double to fix initial position
+    this.onScroll();
+  }
+
+  ngOnDestroy() {
+    // Remove scroll event listener
+    window.removeEventListener('scroll', this.onScroll.bind(this));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -66,45 +78,45 @@ export class DeckCombiDetailsCardComponent {
     this.winrateByDeckCombiChartData = data.slice().map((deckCombi) => {
       // Calculate the best synergy
       const bestSynergy = Object.entries(deckCombi.warbandSynergies)
-          .map(([warbandName, stats]) => {
-            const gamesWithWarband = stats.wins + stats.losses + stats.ties;
-            const winrate = gamesWithWarband > 0 ? (stats.wins / gamesWithWarband) * 100 : 0;
-            return { name:warbandName, winrate, games:gamesWithWarband };
-          })
-          .reduce(
-            (best, current) => (current.winrate > best.winrate && 
-              current.games>=this.minGamesThreshhold ? current : best),
-            { name: "", winrate: 0, games:0 }
-          );
+        .map(([warbandName, stats]) => {
+          const gamesWithWarband = stats.wins + stats.losses + stats.ties;
+          const winrate = gamesWithWarband > 0 ? (stats.wins / gamesWithWarband) * 100 : 0;
+          return { name: warbandName, winrate, games: gamesWithWarband };
+        })
+        .reduce(
+          (best, current) => (current.winrate > best.winrate &&
+            current.games >= this.minGamesThreshhold ? current : best),
+          { name: "", winrate: 0, games: 0 }
+        );
 
-        // Calculate the best combination
-        const bestMatchup = Object.entries(deckCombi.deckCombiMatchups)
-          .map(([opponentDCName, stats]) => {
-            const bestGames = stats.wins + stats.losses + stats.ties;
-            const winrate = bestGames > 0 ? (stats.wins / bestGames) * 100 : 0;
-            return { name:opponentDCName, winrate, games:bestGames };
-          })
-          .reduce(
-            (best, current) => (current.winrate > best.winrate && 
-              current.games>=this.minGamesThreshhold ? current : best),
-            { name: "", winrate: 0, games: 0 }
-          );
+      // Calculate the best combination
+      const bestMatchup = Object.entries(deckCombi.deckCombiMatchups)
+        .map(([opponentDCName, stats]) => {
+          const bestGames = stats.wins + stats.losses + stats.ties;
+          const winrate = bestGames > 0 ? (stats.wins / bestGames) * 100 : 0;
+          return { name: opponentDCName, winrate, games: bestGames };
+        })
+        .reduce(
+          (best, current) => (current.winrate > best.winrate &&
+            current.games >= this.minGamesThreshhold ? current : best),
+          { name: "", winrate: 0, games: 0 }
+        );
 
-        // Calculate the worst matchup
-        const worstMatchup = Object.entries(deckCombi.deckCombiMatchups)
-          .map(([opponentDCName, stats]) => {
-            const worstGames = stats.wins + stats.losses + stats.ties;
-            const winrate = worstGames > 0 ? (stats.wins / worstGames) * 100 : 0;
-            return { name:opponentDCName, winrate, games:worstGames };
-          })
-          .reduce(
-            (worst, current) => (current.winrate < worst.winrate &&
-              current.games>=this.minGamesThreshhold ? current : worst),
-            { name: "", winrate: 100, games:0 }
-          );
+      // Calculate the worst matchup
+      const worstMatchup = Object.entries(deckCombi.deckCombiMatchups)
+        .map(([opponentDCName, stats]) => {
+          const worstGames = stats.wins + stats.losses + stats.ties;
+          const winrate = worstGames > 0 ? (stats.wins / worstGames) * 100 : 0;
+          return { name: opponentDCName, winrate, games: worstGames };
+        })
+        .reduce(
+          (worst, current) => (current.winrate < worst.winrate &&
+            current.games >= this.minGamesThreshhold ? current : worst),
+          { name: "", winrate: 100, games: 0 }
+        );
 
       // Push to chart data
-      return{
+      return {
         name: deckCombi.name1 + ' + ' + deckCombi.name2,
         winrate: deckCombi.gamesPlayed > 0 ? (deckCombi.gamesWon / deckCombi.gamesPlayed) * 100 : 0,
         iconLink1: deckCombi.icon1,
@@ -134,6 +146,28 @@ export class DeckCombiDetailsCardComponent {
   }
 
   closeCard() {
+    //const contentElement = document.querySelector('.footer-spacer');
+    //if (contentElement) {
+    //  this.renderer.setStyle(contentElement, 'margin-bottom', `0px`);
+    //}
+    window.removeEventListener('scroll', this.onScroll.bind(this));
     this.router.navigate(['..'], { relativeTo: this.route });
+  }
+
+  onScroll() {
+    const cardElement = this.el.nativeElement.querySelector('.warband-details-card');
+    const footerElement = document.querySelector('app-footer');
+    const footerRect = footerElement?.getBoundingClientRect();
+    const cardRect = cardElement.getBoundingClientRect();
+
+    if (footerRect && cardRect) {
+      if (footerRect.top <= window.innerHeight) {
+        // Fix the card above the footer
+        this.renderer.setStyle(cardElement, 'position', 'absolute');
+        this.renderer.setStyle(cardElement, 'bottom', `${window.innerHeight - footerRect.top + 16}px`);
+      } else {
+        this.renderer.setStyle(cardElement, 'bottom', `${16}px`);
+      }
+    }
   }
 }

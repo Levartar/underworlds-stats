@@ -21,6 +21,7 @@ $light-theme: mat.define-light-theme(
     (
         color: (
             primary:$light-primary,
+            secondary: mat.define-palette(mat.$grey-palette, 800),
             accent:$light-accent,
             warn:$custom-warn,
         ),
@@ -35,6 +36,7 @@ $dark-theme: mat.define-dark-theme(
     (
         color: (
             primary:$dark-primary,
+            secondary: mat.define-palette(mat.$grey-palette, 50),
             accent:$dark-accent,
             warn:$custom-warn,
             background: $dark-theme-background,

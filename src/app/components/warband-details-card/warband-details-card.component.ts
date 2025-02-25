@@ -1,4 +1,4 @@
-import { Component, OnInit, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2, SimpleChanges } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -23,15 +23,17 @@ export class WarbandDetailsCardComponent implements OnInit {
   winrateByWarbandChartData: {
     name: string, winrate: number,
     iconLink: string, metaScore: number, gamesPlayed: number, legality: boolean,
-    bestSynergy: { deckCombiName: string, winrate: number, gamesWithDeckCombi:number },
-    bestMatchup: { opponentName: string, winrate: number, bestGames:number },
-    worstMatchup: { opponentName: string, winrate: number, worstGames:number },
+    bestSynergy: { deckCombiName: string, winrate: number, gamesWithDeckCombi: number },
+    bestMatchup: { opponentName: string, winrate: number, bestGames: number },
+    worstMatchup: { opponentName: string, winrate: number, worstGames: number },
   }[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private dataStoreService: DataStoreService,
+    private el: ElementRef,
+    private renderer: Renderer2
   ) { }
 
   ngOnInit() {
@@ -40,17 +42,27 @@ export class WarbandDetailsCardComponent implements OnInit {
       routeParams: this.route.paramMap,
       warbandData: this.dataStoreService.warbandData$,
       filters: this.dataStoreService.filters$,
-    }).subscribe(({ routeParams, warbandData, filters}) => {
+    }).subscribe(({ routeParams, warbandData, filters }) => {
       const warbandName = routeParams.get('name');
-      console.log("subscribtion runs",warbandName,warbandData)
+      console.log("subscribtion runs", warbandName, warbandData)
       if (warbandName && warbandData.length > 0) {
-        if (filters.dataThreshold){
+        if (filters.dataThreshold) {
           this.minGamesThreshhold = filters.dataThreshold
         }
         this.processWarbandsForChart(warbandData);
         this.updateWarbandDetails(warbandName);
       }
     });
+
+    // Add scroll event listener
+    window.addEventListener('scroll', this.onScroll.bind(this));
+    this.onScroll(); //Call double to fix initial position
+    this.onScroll();
+  }
+
+  ngOnDestroy() {
+    // Remove scroll event listener
+    window.removeEventListener('scroll', this.onScroll.bind(this));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -61,8 +73,8 @@ export class WarbandDetailsCardComponent implements OnInit {
   }
 
   processWarbandsForChart(data: WarbandData[]): void {
-    this.winrateByWarbandChartData= CardDataCalculationsService.processWarbandsforChartData(
-      data,this.minGamesThreshhold)
+    this.winrateByWarbandChartData = CardDataCalculationsService.processWarbandsforChartData(
+      data, this.minGamesThreshhold)
     console.log('warbandDetailsCardloadedWarbands', this.winrateByWarbandChartData)
   }
 
@@ -79,6 +91,24 @@ export class WarbandDetailsCardComponent implements OnInit {
   }
 
   closeCard() {
+    window.removeEventListener('scroll', this.onScroll.bind(this));
     this.router.navigate(['..'], { relativeTo: this.route });
+  }
+
+  onScroll() {
+    const cardElement = this.el.nativeElement.querySelector('.warband-details-card');
+    const footerElement = document.querySelector('app-footer');
+    const footerRect = footerElement?.getBoundingClientRect();
+    const cardRect = cardElement.getBoundingClientRect();
+
+    if (footerRect && cardRect) {
+      if (footerRect.top <= window.innerHeight) {
+        // Fix the card above the footer
+        this.renderer.setStyle(cardElement, 'position', 'absolute');
+        this.renderer.setStyle(cardElement, 'bottom', `${window.innerHeight - footerRect.top + 16}px`);
+      } else {
+        this.renderer.setStyle(cardElement, 'bottom', `${16}px`);
+      }
+    }
   }
 }
