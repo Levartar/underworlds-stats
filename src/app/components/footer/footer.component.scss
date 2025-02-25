@@ -28,10 +28,12 @@
           margin-right: 8px;
         }
   
-        a {
+        a, button {
           text-decoration: none;
           color: #007bff;
+          font-weight: bold;
           font-size: 14px;
+          font:600 16px 'IBM Plex Mono', serif;
   
           &:hover {
             text-decoration: underline;
