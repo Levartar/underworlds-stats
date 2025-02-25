@@ -125,7 +125,7 @@ export class MainComponent implements OnInit {
     this.dialog.open(SimpleDialogComponent, {
       data: {
         title: 'Information',
-        content: 'The Underworlds Statistics Project is a community-driven effort to collect global statistics on the game Warhammer Underworlds using the Nemesis format. Game data is submitted by players, organizers, and volunteers. It is maintained by Borni (AKA raumzeit77 / R77). Submit your game data now!',
+        content: '<div>The Underworlds Statistics Project is a community-driven effort to collect global statistics on the game Warhammer Underworlds using the Nemesis format. Game data is submitted by players, organizers, and volunteers. It is maintained by Borni (AKA raumzeit77 / R77). Submit your game data now!</div><br> <p>The <b>Filters</b> allow you to sort by Meta, Tournaments and specific Events. Filters apply to all data anywhere</p><br> <p>The <b>Metascore</b> is a value of 1000 based on popularity and winrate, calculated like (gamesWon / totalGames) * 1000 </p> ',
         link: "https://docs.google.com/forms/d/e/1FAIpQLSchHKcWiMWNdlPXC6AgsFnWNtogONptF6vyW4gUC6fW584ibA/viewform"
       }
     });

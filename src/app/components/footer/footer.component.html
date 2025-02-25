@@ -39,5 +39,8 @@
         <mat-icon>volunteer_activism</mat-icon>
         <button mat-button (click)="openDialog()">Support Me</button>
     </div>
-    <p>😺💻 by Iba. 🎨 by Henri. 📁 by Borni</p>
+    <p (click)="easterEgg()">😺💻 by Iba. 🎨 by Henri. 📁 by Borni</p>
+    <div class="easter-egg-container">
+      <img *ngFor="let image of easterEggImages" [src]="image" class="easter-egg-image" />
+    </div>
   </div>
