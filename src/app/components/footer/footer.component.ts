@@ -19,7 +19,7 @@ export class FooterComponent {
   openDialog() {
     this.dialog.open(SimpleDialogComponent, {
       data: {
-        content: "<p><iframe id='kofiframe' src='https://ko-fi.com/ibastrawberry/?hidefeed=true&widget=true&embed=true&preview=true' style='border-radius:10px;border:none;width:100%;padding:4px;background:#333;' height='570' title='ibastrawberry'></iframe></p>",
+      content: "<p><iframe id='kofiframe' src='https://ko-fi.com/ibastrawberry/?hidefeed=true&widget=true&embed=true&preview=true' style='border-radius:10px;border:none;width:100%;padding:4px;background:#333;' height='576' title='ibastrawberry'></iframe></p> <div style='flex-shrink: 0;'>Uni is starting in a few weeks and i need a new Laptop. My old Surface isn't doing it anymore. Love You all and thanks for all the support i got from this Community ♥</div>",
       }
     });
   }
