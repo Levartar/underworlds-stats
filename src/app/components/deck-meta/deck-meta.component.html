@@ -1,5 +1,5 @@
 <div class="meta-container">
-    <div class="chart-container">
+    <div class="chart-container" *ngIf="deckCombiMetaData.length>0; else lowerFilters">
         <canvas baseChart [data]="chartData" [options]="chartOptions" [type]="'doughnut'">
         </canvas>
     </div>
@@ -61,4 +61,9 @@
 <ng-template #notEnoughData>
     <mat-icon>warning</mat-icon>
     <p>Not Enough Data</p>
+</ng-template>
+
+<ng-template #lowerFilters>
+    <mat-icon color="warn">warning</mat-icon>
+    <p>No Data To Show. Lower Your Filters!</p>
 </ng-template>

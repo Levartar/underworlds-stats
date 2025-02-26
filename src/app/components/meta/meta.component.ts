@@ -75,12 +75,10 @@ export class MetaComponent implements OnInit {
       warbandData: this.dataStoreService.warbandData$,
       filters: this.dataStoreService.filters$,
     }).subscribe(({ warbandData, filters }) => {
-      if (warbandData.length > 0) {
-        this.processMetaForChart(warbandData);
-        if (filters.dataThreshold) {
-          this.minGamesThreshhold = filters.dataThreshold
-        }
+      if (filters.dataThreshold) {
+        this.minGamesThreshhold = filters.dataThreshold
       }
+      this.processMetaForChart(warbandData);
     });
 
     this.updateChartColors();

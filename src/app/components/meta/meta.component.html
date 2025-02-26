@@ -1,62 +1,70 @@
 <div class="meta-container">
-    <div class="chart-container">
+    <div class="chart-container" *ngIf="warbandMetaData.length>0; else lowerFilters">
         <canvas baseChart [data]="chartData" [options]="chartOptions" [type]="'doughnut'">
         </canvas>
     </div>
 
-        <div class="warband-info-container-scrollable">
-            <mat-card class="warband-info" *ngFor="let warband of warbandMetaData; let i = index" [id]="'warband-' + i"
+    <div class="warband-info-container-scrollable">
+        <mat-card class="warband-info" *ngFor="let warband of warbandMetaData; let i = index" [id]="'warband-' + i"
             [ngClass]="{'selected': selectedWarbandIndex === i}" (click)="onWarbandCardClick(i)">
-                <mat-card-title class="title">
-                    {{ warband?.name }}
-                    <img matListAvatar *ngIf="warband" [src]="warband.iconLink" alt="{{ warband.name }}"
-                        class="warband-icon" />
-                </mat-card-title>
-                <mat-card-content class="content" *ngIf="warband">
-                    <div class="main">
-                        <div class="over-under-container">
-                            <p class="fat">{{ warband.metaScore | number: '0.0-0' }}</p>
-                            <p>Meta Score</p>
-                        </div>
-                        <div class="over-under-container">
-                            <p class="fat">{{ warband.winrate | number: '0.0-0' }}%</p>
-                            <p>Winrate</p>
-                        </div>
-                        <div class="over-under-container">
-                            <p class="fat">{{ warband.gamesPlayed }}</p>
-                            <p>Games Played</p>
-                        </div>
-                        <div class="over-under-container">
-                        </div>
+            <mat-card-title class="title">
+                {{ warband?.name }}
+                <img matListAvatar *ngIf="warband" [src]="warband.iconLink" alt="{{ warband.name }}"
+                    class="warband-icon" />
+            </mat-card-title>
+            <mat-card-content class="content" *ngIf="warband">
+                <div class="main">
+                    <div class="over-under-container">
+                        <p class="fat">{{ warband.metaScore | number: '0.0-0' }}</p>
+                        <p>Meta Score</p>
                     </div>
-                    <mat-divider></mat-divider>
+                    <div class="over-under-container">
+                        <p class="fat">{{ warband.winrate | number: '0.0-0' }}%</p>
+                        <p>Winrate</p>
+                    </div>
+                    <div class="over-under-container">
+                        <p class="fat">{{ warband.gamesPlayed }}</p>
+                        <p>Games Played</p>
+                    </div>
+                    <div class="over-under-container">
+                    </div>
+                </div>
+                <mat-divider></mat-divider>
 
-                    <div class="footer">
-                        <div class="over-under-container">
-                                <p *ngIf="warband.bestSynergy?.deckCombiName; else notEnoughData"
-                                class="fat" matTooltip="{{warband.bestSynergy.gamesWithDeckCombi}} Games"> 
-                                    {{warband.bestSynergy.winrate | number:'0.0-0' }}% - {{ warband.bestSynergy.deckCombiName }}</p>
-                            <p>Best Deck Synergy</p>
-                        </div>
-                        <div class="over-under-container">
-                                <p *ngIf="warband.bestMatchup?.opponentName; else notEnoughData"
-                                class="fat" matTooltip="{{warband.bestMatchup.bestGames}} Games"> 
-                                    {{warband.bestMatchup.winrate | number:'0.0-0' }}% - {{ warband.bestMatchup.opponentName }}</p>
-                            <p>Best Matchup</p>
-                        </div>
-                        <div class="over-under-container">
-                                <p *ngIf="warband.bestMatchup?.opponentName; else notEnoughData"
-                                class="fat" matTooltip="{{warband.worstMatchup.worstGames}} Games"> 
-                                    {{warband.worstMatchup.winrate | number:'0.0-0' }}% - {{ warband.worstMatchup.opponentName }}</p>
-                            <p>Worst Matchup</p>
-                        </div>
+                <div class="footer">
+                    <div class="over-under-container">
+                        <p *ngIf="warband.bestSynergy?.deckCombiName; else notEnoughData" class="fat"
+                            matTooltip="{{warband.bestSynergy.gamesWithDeckCombi}} Games">
+                            {{warband.bestSynergy.winrate | number:'0.0-0' }}% - {{ warband.bestSynergy.deckCombiName }}
+                        </p>
+                        <p>Best Deck Synergy</p>
                     </div>
-                </mat-card-content>
-            </mat-card>
-        </div>
+                    <div class="over-under-container">
+                        <p *ngIf="warband.bestMatchup?.opponentName; else notEnoughData" class="fat"
+                            matTooltip="{{warband.bestMatchup.bestGames}} Games">
+                            {{warband.bestMatchup.winrate | number:'0.0-0' }}% - {{ warband.bestMatchup.opponentName }}
+                        </p>
+                        <p>Best Matchup</p>
+                    </div>
+                    <div class="over-under-container">
+                        <p *ngIf="warband.bestMatchup?.opponentName; else notEnoughData" class="fat"
+                            matTooltip="{{warband.worstMatchup.worstGames}} Games">
+                            {{warband.worstMatchup.winrate | number:'0.0-0' }}% - {{ warband.worstMatchup.opponentName
+                            }}</p>
+                        <p>Worst Matchup</p>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
 </div>
 
 <ng-template #notEnoughData>
     <mat-icon>warning</mat-icon>
     <p>Not Enough Data</p>
+</ng-template>
+
+<ng-template #lowerFilters>
+    <mat-icon color="warn">warning</mat-icon>
+    <p>No Data To Show. Lower Your Filters!</p>
 </ng-template>

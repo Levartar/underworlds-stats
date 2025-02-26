@@ -31,11 +31,11 @@ export class DeckMetaComponent implements OnInit {
 
   deckCombiMetaData: {
     name: string, winrate: number,
-    iconLink1: string, iconLink2: string, metaScore: number, 
+    iconLink1: string, iconLink2: string, metaScore: number,
     gamesPlayed: number, legality: boolean,
-    bestSynergy: { name: string, winrate: number, games:number },
-    bestMatchup: { name: string, winrate: number, games:number },
-    worstMatchup: { name: string, winrate: number, games:number },
+    bestSynergy: { name: string, winrate: number, games: number },
+    bestMatchup: { name: string, winrate: number, games: number },
+    worstMatchup: { name: string, winrate: number, games: number },
   }[] = [];
 
   selectedWarbandIndex: number | null = null;
@@ -77,12 +77,10 @@ export class DeckMetaComponent implements OnInit {
       deckCombiData: this.dataStoreService.deckCombiData$,
       filters: this.dataStoreService.filters$,
     }).subscribe(({ deckCombiData, filters }) => {
-      if (deckCombiData.length > 0) {
-        if (filters.dataThreshold) {
-          this.minGamesThreshhold = filters.dataThreshold
-        }
-        this.processMetaForChart(deckCombiData);
+      if (filters.dataThreshold) {
+        this.minGamesThreshhold = filters.dataThreshold
       }
+      this.processMetaForChart(deckCombiData);
     });
 
     this.updateChartColors();
@@ -99,50 +97,50 @@ export class DeckMetaComponent implements OnInit {
     const otherGamesPlayed = otherDeckCombis.reduce((sum, dc) => sum + dc.gamesPlayed, 0);
     const otherWinrate = otherGamesPlayed > 0 ? (otherDeckCombis.reduce((sum, dc) => sum + dc.gamesWon, 0) / otherGamesPlayed) * 100 : 0;
 
-    this.deckCombiMetaData =data.filter(
+    this.deckCombiMetaData = data.filter(
       wb => wb.metaScore >= otherCutOff).slice().map((dc) => {
         // Calculate the best synergy
         const bestSynergy = Object.entries(dc.warbandSynergies)
-            .map(([name, stats]) => {
-              const games = stats.wins + stats.losses + stats.ties;
-              const winrate = games > 0 ? (stats.wins / games) * 100 : 0;
-              return { name, winrate, games };
-            })
-            .reduce(
-              (best, current) => (current.winrate > best.winrate && 
-                current.games>=this.minGamesThreshhold ? current : best),
-              { name: "", winrate: 0, games:0 }
-            );
-  
-          // Calculate the best matchup
-          const bestMatchup = Object.entries(dc.deckCombiMatchups)
-            .map(([name, stats]) => {
-              const games = stats.wins + stats.losses + stats.ties;
-              const winrate = games > 0 ? (stats.wins / games) * 100 : 0;
-              return { name, winrate, games };
-            })
-            .reduce(
-              (best, current) => (current.winrate > best.winrate && 
-                current.games>=this.minGamesThreshhold ? current : best),
-              { name: "", winrate: 0, games: 0 }
-            );
-  
-          // Calculate the worst matchup
-          const worstMatchup = Object.entries(dc.deckCombiMatchups)
-            .map(([name, stats]) => {
-              const games = stats.wins + stats.losses + stats.ties;
-              const winrate = games > 0 ? (stats.wins / games) * 100 : 0;
-              return { name, winrate, games };
-            })
-            .reduce(
-              (worst, current) => (current.winrate < worst.winrate &&
-                current.games>=this.minGamesThreshhold ? current : worst),
-              { name: "", winrate: 100, games:0 }
-            );
-  
+          .map(([name, stats]) => {
+            const games = stats.wins + stats.losses + stats.ties;
+            const winrate = games > 0 ? (stats.wins / games) * 100 : 0;
+            return { name, winrate, games };
+          })
+          .reduce(
+            (best, current) => (current.winrate > best.winrate &&
+              current.games >= this.minGamesThreshhold ? current : best),
+            { name: "", winrate: 0, games: 0 }
+          );
+
+        // Calculate the best matchup
+        const bestMatchup = Object.entries(dc.deckCombiMatchups)
+          .map(([name, stats]) => {
+            const games = stats.wins + stats.losses + stats.ties;
+            const winrate = games > 0 ? (stats.wins / games) * 100 : 0;
+            return { name, winrate, games };
+          })
+          .reduce(
+            (best, current) => (current.winrate > best.winrate &&
+              current.games >= this.minGamesThreshhold ? current : best),
+            { name: "", winrate: 0, games: 0 }
+          );
+
+        // Calculate the worst matchup
+        const worstMatchup = Object.entries(dc.deckCombiMatchups)
+          .map(([name, stats]) => {
+            const games = stats.wins + stats.losses + stats.ties;
+            const winrate = games > 0 ? (stats.wins / games) * 100 : 0;
+            return { name, winrate, games };
+          })
+          .reduce(
+            (worst, current) => (current.winrate < worst.winrate &&
+              current.games >= this.minGamesThreshhold ? current : worst),
+            { name: "", winrate: 100, games: 0 }
+          );
+
         // Push to chart data
-        return{
-          name: dc.name1+' + '+dc.name2,
+        return {
+          name: dc.name1 + ' + ' + dc.name2,
           winrate: dc.gamesPlayed > 0 ? (dc.gamesWon / dc.gamesPlayed) * 100 : 0,
           iconLink1: dc.icon1,
           iconLink2: dc.icon2,

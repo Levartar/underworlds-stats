@@ -74,7 +74,6 @@ export class DeckCombiDetailsCardComponent {
   }
 
   processDecksForChart(data: DeckCombiData[]): void {
-    //  data,this.minGamesThreshhold)
     this.winrateByDeckCombiChartData = data.slice().map((deckCombi) => {
       // Calculate the best synergy
       const bestSynergy = Object.entries(deckCombi.warbandSynergies)

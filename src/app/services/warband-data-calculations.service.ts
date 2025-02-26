@@ -70,12 +70,12 @@ export class WarbandDataCalculationsService {
           const legalDecks: string[] = deckSheet!.map(deck => deck.legality === 'TRUE' ? deck.name : '');
           const filteredGameSheet = this.getFilteredGameSheet(gameSheet!, filters, legalWarbands, legalDecks);
 
-          // Return the calculated warband data
+          // Return the calculated GameSheet
           return filteredGameSheet;
         })
       )
       .subscribe((filteredGameSheet: SheetData[]) => {
-        // Store the calculated warband data
+        // Store the calculated GameSheet
         console.log("filteredGameSheetData", filteredGameSheet);
         this.dataStoreService.setFilteredGameSheet(filteredGameSheet);
       });
@@ -166,6 +166,7 @@ export class WarbandDataCalculationsService {
       filter(([gameSheet, deckSheet]) => gameSheet !== null && deckSheet !== null),
       map(([gameSheet, deckSheet]) => {
         console.log("decksheet", deckSheet)
+        console.log("calculateDeckCombiData gameSheet", gameSheet)
         const deckCombiMap: { [key: string]: DeckCombiData } = {};
 
         const getDeckCombiKey = (deck1: string, deck2: string): string => {
