@@ -47,7 +47,8 @@
                             <p>Best Matchup</p>
                         </div>
                         <div class="over-under-container">
-                                <p *ngIf="warband.bestMatchup?.name; else notEnoughData"
+                                <p *ngIf="warband.worstMatchup?.name && warband.bestMatchup?.name!=warband.worstMatchup?.name; 
+                                else notEnoughData"
                                 class="fat" matTooltip="{{warband.worstMatchup.games}} Games"> 
                                     {{warband.worstMatchup.winrate | number:'0.0-0' }}% - {{ warband.worstMatchup.name }}</p>
                             <p>Worst Matchup</p>

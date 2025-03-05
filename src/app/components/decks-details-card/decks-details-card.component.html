@@ -43,7 +43,8 @@
                 <p>Best Deck Combination</p>
             </div>
             <div class="over-under-container">
-                <p *ngIf="selectedWarband.worstMatchup?.name!=''; else notEnoughData"
+                <p *ngIf="selectedWarband.worstMatchup?.name!='' && selectedWarband.bestMatchup?.name!=selectedWarband.worstMatchup?.name;
+                else notEnoughData"
                 class="fat" matTooltip="{{selectedWarband.worstMatchup.games}} Games"> 
                     {{ selectedWarband.worstMatchup?.name }} - Winrate: {{
                     selectedWarband.worstMatchup?.winrate | number:'1.1-1' }}%</p>
